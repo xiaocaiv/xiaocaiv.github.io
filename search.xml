@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>Butterfly主题博客之添加相册和音乐页</title>
+      <link href="/posts/14927/"/>
+      <url>/posts/14927/</url>
+      
+        <content type="html"><![CDATA[<h2 id="一、插件的安装与配置"><a href="#一、插件的安装与配置" class="headerlink" title="一、插件的安装与配置"></a>一、插件的安装与配置</h2><h3 id="1-安装hexo-tag-aplayer插件"><a href="#1-安装hexo-tag-aplayer插件" class="headerlink" title="1.安装hexo-tag-aplayer插件"></a>1.安装hexo-tag-aplayer插件</h3><p>执行命令：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save hexo-tag-aplayer</span><br></pre></td></tr></table></figure><h3 id="2-配置插件"><a href="#2-配置插件" class="headerlink" title="2.配置插件"></a>2.配置插件</h3><p>找到项目文件夹根目录下的 _config.yml文件，添加如下代码：</p><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">aplayer:</span></span><br><span class="line">  <span class="attr">meting:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">asset_inject:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure><p>之后打开 _config.butterfly.yml文件，进行修改，这是为了引入刚才下载的插件。</p><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Inject the css and script (aplayer/meting)</span></span><br><span class="line"><span class="attr">aplayerInject:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">per_page:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure><h2 id="二、音乐页面"><a href="#二、音乐页面" class="headerlink" title="二、音乐页面"></a>二、音乐页面</h2><h3 id="1-配置index-md文件"><a href="#1-配置index-md文件" class="headerlink" title="1.配置index.md文件"></a>1.配置index.md文件</h3><p>如果还没有创建音乐页面，那就用以下命令创建：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new page music</span><br></pre></td></tr></table></figure><p>运行之后就会在source文件夹下生成一个music文件夹</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251031144813931.png" alt="image-20251031144812633"></p><p>打开music文件夹下的index.md文件，添加如下代码：</p><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;% meting &quot;17375390739&quot; &quot;netease&quot; &quot;playlist&quot; &quot;autoplay&quot; &quot;mutex:false&quot; &quot;listmaxheight:400px&quot; &quot;preload:none&quot; &quot;theme:#ad7a86&quot;%&#125;</span><br></pre></td></tr></table></figure><p><a href="https://github.com/metowolf/MetingJS">MetingJS</a> 是基于<a href="https://github.com/metowolf/Meting">Meting API</a> 的 APlayer 衍生播放器，引入 MetingJS 后，播放器将支持对于 QQ音乐、网易云音乐、虾米、酷狗、百度等平台的音乐播放。</p><div class="note info no-icon flat"><p><code>server</code>：netease（网易云音乐），tencent（QQ音乐），kugou（酷狗音乐），xiami（虾米音乐），baidu（百度音乐）。</p></div><div class="note info no-icon flat"><p>type：song（歌曲），playlist（歌单），album（专辑），search（搜索关键字），artist（歌手）。添加单曲选的歌曲，歌单选择playlist，可以自行尝试。</p></div><div class="note info no-icon flat"><p>id：就是在网页版上自己歌单的ID号，但是需要注意的是歌单中不能包含VIP音乐，不然无法播放。建议使用网易云音乐。</p></div><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251031150930011.png" alt="image-20251031150929690"></p><p>有关 <code>&#123;% meting %&#125;</code> 的选项列表如下:</p><table><thead><tr><th>选项</th><th>默认值</th><th>描述</th></tr></thead><tbody><tr><td>id</td><td><strong>必须值</strong></td><td>歌曲 id &#x2F; 播放列表 id &#x2F; 相册 id &#x2F; 搜索关键字</td></tr><tr><td>server</td><td><strong>必须值</strong></td><td>音乐平台: <code>netease</code>, <code>tencent</code>, <code>kugou</code>, <code>xiami</code>, <code>baidu</code></td></tr><tr><td>type</td><td><strong>必须值</strong></td><td><code>song</code>, <code>playlist</code>, <code>album</code>, <code>search</code>, <code>artist</code></td></tr><tr><td>fixed</td><td><code>false</code></td><td>开启固定模式</td></tr><tr><td>mini</td><td><code>false</code></td><td>开启迷你模式</td></tr><tr><td>loop</td><td><code>all</code></td><td>列表循环模式：<code>all</code>, <code>one</code>,<code>none</code></td></tr><tr><td>order</td><td><code>list</code></td><td>列表播放模式： <code>list</code>, <code>random</code></td></tr><tr><td>volume</td><td>0.7</td><td>播放器音量</td></tr><tr><td>lrctype</td><td>0</td><td>歌词格式类型</td></tr><tr><td>listfolded</td><td><code>false</code></td><td>指定音乐播放列表是否折叠</td></tr><tr><td>storagename</td><td><code>metingjs</code></td><td>LocalStorage 中存储播放器设定的键名</td></tr><tr><td>autoplay</td><td><code>true</code></td><td>自动播放，移动端浏览器暂时不支持此功能</td></tr><tr><td>mutex</td><td><code>true</code></td><td>该选项开启时，如果同页面有其他 aplayer 播放，该播放器会暂停</td></tr><tr><td>listmaxheight</td><td><code>340px</code></td><td>播放列表的最大长度</td></tr><tr><td>preload</td><td><code>auto</code></td><td>音乐文件预载入模式，可选项： <code>none</code>, <code>metadata</code>, <code>auto</code></td></tr><tr><td>theme</td><td><code>#ad7a86</code></td><td>播放器风格色彩设置</td></tr></tbody></table>]]></content>
+      
+      
+      <categories>
+          
+          <category> Butterfly </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Hexo </tag>
+            
+            <tag> Butterfly </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Butterfly主题博客之页脚美化</title>
       <link href="/posts/14926/"/>
       <url>/posts/14926/</url>
