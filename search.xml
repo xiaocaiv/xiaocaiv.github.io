@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>Butterfly主题博客之域名申请及解析</title>
+      <link href="/posts/20070/"/>
+      <url>/posts/20070/</url>
+      
+        <content type="html"><![CDATA[<h1 id="阿里云域名申请-Vercel解析"><a href="#阿里云域名申请-Vercel解析" class="headerlink" title="阿里云域名申请+Vercel解析"></a>阿里云域名申请+Vercel解析</h1><h2 id="一、Vercel"><a href="#一、Vercel" class="headerlink" title="一、Vercel"></a>一、Vercel</h2><h3 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h3><p>Vercel 是一个提供网站部署和前端开发服务的云平台，它支持静态网站和动态网站的应用部署、预览和上线。Vercel 特别以与 JavaScript 框架 Next.js 的无缝集成而闻名，尽管它也支持从其他框架和技术部署。它提供了快速部署、自动化部署、无服务器功能、<a href="https://zhida.zhihu.com/search?content_id=246095808&content_type=Article&match_order=1&q=%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F%E5%90%8D&zhida_source=entity">自定义域名</a>、HTTPS 支持、分支部署、团队协作等功能，确保应用程序具有高性能和可靠性。</p><h3 id="2-部署Vercel"><a href="#2-部署Vercel" class="headerlink" title="2. 部署Vercel"></a>2. 部署Vercel</h3><h4 id="2-1-注册账号"><a href="#2-1-注册账号" class="headerlink" title="2.1 注册账号"></a>2.1 注册账号</h4><p>打开<a href="https://link.zhihu.com/?target=https://vercel.com/">Vercel官网</a>登录页面，点击右上角的 <code>Sign Up</code> 进行注册</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251102095458528.png" alt="image-20251102095429070"></p><p>个人用户就选择第一项“Hobby”的选项，然后输入一个用户名</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251102100024039.png" alt="image-20251102100023950"></p><p>之后跳转到新的页面，点击<code>Continue with GitHub</code></p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251102100138485.png" alt="image-20251102100138395"></p><p>在连接GitHub的页面中，如果这个浏览器之后登陆过GitHub，直接点击 <code>Authorize Vercel</code> 授权即可；如果没有登录过，则需要先登录自己的GitHub账号</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251102100614597.png" alt="image-20251102100614533"></p><h4 id="2-2-添加新项目"><a href="#2-2-添加新项目" class="headerlink" title="2.2 添加新项目"></a>2.2 添加新项目</h4><ol><li><p>点击 <code>Install</code> 按钮进入仓库选择界面</p></li><li><p>在选择仓库界面选择你GitHub中博客所在的仓库，点击<code>Install</code>按钮导入。</p></li><li><p>输入GitHub密码，点击<code>Confirm</code>按钮确认导入项目。</p></li><li><p>项目导入成功之后，在首页点击<code>Import</code>按钮将项目导入到容器。</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251102101545899.png" alt="image-20251102101545788"></p></li></ol><h4 id="2-3-部署项目到容器"><a href="#2-3-部署项目到容器" class="headerlink" title="2.3 部署项目到容器"></a>2.3 部署项目到容器</h4><p>选项保持默认即可，点击 Deploy 部署</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251102101730515.png" alt="image-20251102101730428"></p><p>部署成功。点击<code>Continue to Dashboard</code>按钮跳转到首页</p><p>点击右上角的 Setting 进入设置页面，可以更改项目名称，也可保持默认。</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251102101830519.png" alt="image-20251102101830430"></p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251102102027646.png" alt="image-20251102102027551"></p><p>至此，Vercel设置已经完成。可以通过项目主页的<code>Domain</code>来访问你的博客。</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251102102134514.png" alt="image-20251102102134392"></p><h2 id="二、域名申请"><a href="#二、域名申请" class="headerlink" title="二、域名申请"></a>二、域名申请</h2><p>登录<a href="https://www.aliyun.com/">阿里云平台</a>，将鼠标放到“产品”，点击“域名与网站”</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251102102547590.png" alt="image-20251102102547459"></p><p>在这个页面可以注册自己想要的域名</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251102102739320.png" alt="image-20251102102739219"></p><p>不过第一次注册需要先创建自己的信息模板，完成实名验证</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251102102934811.png" alt="image-20251102102934698"></p><p>购买完成之后就可以看到自己的域名了</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251102103039211.png" alt="image-20251102103039057"></p><h2 id="三、配置Vercel"><a href="#三、配置Vercel" class="headerlink" title="三、配置Vercel"></a>三、配置Vercel</h2><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251102141525706.png" alt="image-20251102141525533"></p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251102141550148.png" alt="image-20251102141550096"></p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251102141638368.png" alt="image-20251102141638243"></p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251102141845463.png" alt="image-20251102141845363"></p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251102142120137.png" alt="image-20251102142120027"></p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251102142202116.png" alt="image-20251102142202024"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Butterfly </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 阿里云 </tag>
+            
+            <tag> Vercel </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Butterfly主题博客之添加相册和音乐页</title>
       <link href="/posts/14927/"/>
       <url>/posts/14927/</url>
