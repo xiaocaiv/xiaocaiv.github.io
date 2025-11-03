@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>Typora更换主题及插件</title>
+      <link href="/posts/11292/"/>
+      <url>/posts/11292/</url>
+      
+        <content type="html"><![CDATA[<h2 id="一、更换主题"><a href="#一、更换主题" class="headerlink" title="一、更换主题"></a>一、更换主题</h2><p>如果觉得Typora自带的主题不够好看，可以去Typora官网下载其他的主题。</p><h3 id="1-主题官网"><a href="#1-主题官网" class="headerlink" title="1. 主题官网"></a>1. 主题官网</h3><p>点击这个官网链接<a href="https://theme.typora.io/">Typora主题官网</a></p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251103193752316.png" alt="image-20251103193752184"></p><p>可以任意选择自己喜欢的主题。</p><div class="note info no-icon flat"><p>注意：有时候打开比较慢或者打不开，这时候就需要用点“魔法”。</p></div><h3 id="2-下载主题"><a href="#2-下载主题" class="headerlink" title="2.下载主题"></a>2.下载主题</h3><p>选择好自己的主题后，点击 Download</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251103194433830.png" alt="image-20251103194433653"></p><p>跳转到GitHub下载页面，根据下载要求，看是只需要下载 .css文件即可还是要下载整个文件夹，我这里展示的是只需要下载 .css文件就行。</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251103194502316.png" alt="image-20251103194502215"></p><h3 id="3-文件配置"><a href="#3-文件配置" class="headerlink" title="3. 文件配置"></a>3. 文件配置</h3><p>说是文件配置，其实只需要将下载的文件或者文件夹复制到 Typora 主题文件夹里面即可。</p><p>打开Typora左上角的文件-&gt;偏好设置，点击“打开主题文件夹”，就会跳转过去。</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251103195110523.png" alt="image-20251103195110466"></p><p>然后将下载的主题复制过去，关掉Typora，再重新打开，选中下载的主题即可。</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251103195306982.png" alt="image-20251103195306921"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Typora </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Typora </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Butterfly主题博客之域名申请及解析</title>
       <link href="/posts/20070/"/>
       <url>/posts/20070/</url>
