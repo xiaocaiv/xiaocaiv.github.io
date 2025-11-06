@@ -4,6 +4,46 @@
   
     
     <entry>
+      <title>11-Linux学习笔记一</title>
+      <link href="/posts/64611/"/>
+      <url>/posts/64611/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Linux学习笔记（一）"><a href="#Linux学习笔记（一）" class="headerlink" title="Linux学习笔记（一）"></a>Linux学习笔记（一）</h1><p>安装Ubuntu22.04的详细教程：</p><p><a href="https://blog.csdn.net/qq_42417071/article/details/136327674">基于VMware虚拟机的Ubuntu22.04系统安装和配置（新手保姆级教程）_虚拟机ubuntu22.04安装教程-CSDN博客</a></p><h2 id="一、基本操作命令"><a href="#一、基本操作命令" class="headerlink" title="一、基本操作命令"></a>一、基本操作命令</h2><h3 id="1-ls-文件信息列表"><a href="#1-ls-文件信息列表" class="headerlink" title="1. ls 文件信息列表"></a>1. ls 文件信息列表</h3><p>ls 命令用于查看当前目录的文件信息</p><div class="note info no-icon flat"><p>常用参数：</p><p>-l: 查看文件详细信息。</p><p>-a: 查看当前目录所有文件，包括隐藏文件。</p><p>-al: 综合了列表查看和全部查看内容</p></div><h3 id="2-pwd-查看当前目录路径"><a href="#2-pwd-查看当前目录路径" class="headerlink" title="2. pwd 查看当前目录路径"></a>2. pwd 查看当前目录路径</h3><p>pwd 命令用于打印当前工作目录的绝对路径</p><h3 id="3-cd-目录切换命令"><a href="#3-cd-目录切换命令" class="headerlink" title="3. cd 目录切换命令"></a>3. cd 目录切换命令</h3><p>cd 命令用于在目录间切换，常用方式为 <code>cd 目录参数</code>，目录参数只能是相对路径或者绝对路径。</p><p><code>cd ~</code>：表示用户切换到用户目录</p><p><code>cd /</code>：表示用户切换到根目录</p><p><code>cd ..</code>：表示返回上一级目录</p><div class="note info no-icon flat"><p>＄：表示普通用户</p><p>#：表示超级用户</p><p>~：表示home目录</p><p>&#x2F;：表示根目录</p></div><h3 id="4-mkdir-文件夹创建命令"><a href="#4-mkdir-文件夹创建命令" class="headerlink" title="4. mkdir 文件夹创建命令"></a>4. mkdir 文件夹创建命令</h3><p>mkdir 用于创建目录</p><h3 id="5-touch-创建文件命令"><a href="#5-touch-创建文件命令" class="headerlink" title="5. touch 创建文件命令"></a>5. touch 创建文件命令</h3><p>touch 创建文件时要加上后缀名，比如：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">touch hello.c</span><br></pre></td></tr></table></figure><h3 id="6-rm-删除命令"><a href="#6-rm-删除命令" class="headerlink" title="6. rm 删除命令"></a>6. rm 删除命令</h3><p>rm 命令用于删除文件或者文件夹，<code>rm 文件名</code> 表示删除文件</p><div class="note info no-icon flat"><p>-r：表示删除文件夹</p><p>-rm：表示递归删除文件夹及其里面所有的文件</p></div><h3 id="7-mv-文件移动命令"><a href="#7-mv-文件移动命令" class="headerlink" title="7. mv 文件移动命令"></a>7. mv 文件移动命令</h3><p>mv 是文件或者目录移动命令，也可以重命名文件和目录。</p><table><thead><tr><th align="left">命令格式</th><th align="left">运行结果</th></tr></thead><tbody><tr><td align="left"><code>mv source_file(文件) dest_file(文件)</code></td><td align="left">将源文件名 source_file 改为目标文件名 dest_file</td></tr><tr><td align="left"><code>mv source_file(文件) dest_directory(目录)</code></td><td align="left">将文件 source_file 移动到目标目录 dest_directory 中</td></tr><tr><td align="left"><code>mv source_directory(目录) dest_directory(目录)</code></td><td align="left">目录名 dest_directory 已存在，将 source_directory 移动到目录名 dest_directory 中；目录名 dest_directory 不存在则 source_directory 改名为目录名 dest_directory</td></tr><tr><td align="left"><code>mv source_directory(目录) dest_file(文件)</code></td><td align="left">出错</td></tr></tbody></table><h3 id="8-apt-get-安装包管理工具命令"><a href="#8-apt-get-安装包管理工具命令" class="headerlink" title="8. apt-get 安装包管理工具命令"></a>8. apt-get 安装包管理工具命令</h3><p>apt 全称为 advanced packaging tool，即高级包装工具</p><table><thead><tr><th>命令</th><th>说明</th></tr></thead><tbody><tr><td>apt-get install 软件名</td><td>安装软件包</td></tr><tr><td>apt-get upgrade</td><td>升级所有已安装的软件包</td></tr><tr><td>apt-get remove 软件名</td><td>移除已安装的软件包</td></tr></tbody></table><div class="note info no-icon flat"><p>注意：apt-get 的安装和卸载都是在线的，即Ubuntu必须联网才能使用apt-get</p></div><h2 id="二、vi和vim编辑器"><a href="#二、vi和vim编辑器" class="headerlink" title="二、vi和vim编辑器"></a>二、vi和vim编辑器</h2><p>vi编辑器是Linux文本编辑器里最流行的编辑器之一，类似于Windows自带的记事本编辑软件。</p><p>vi 编辑器有三种工作模式，分别是命令模式、输入模式和底行模式</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251106194001887.png" alt="image-20251106194001428"></p><h3 id="1-vi-基本操作命令"><a href="#1-vi-基本操作命令" class="headerlink" title="1. vi 基本操作命令"></a>1. vi 基本操作命令</h3><ul><li><strong>i</strong> – 切换到输入模式，在光标当前位置开始输入文本。</li><li><strong>x</strong> – 删除当前光标所在处的字符。</li><li><strong>:</strong> – 切换到底线命令模式，以在最底一行输入命令。</li><li><strong>a</strong> – 进入插入模式，在光标下一个位置开始输入文本。</li><li><strong>o</strong>：在当前行的下方插入一个新行，并进入插入模式。</li><li><strong>:w</strong> – 保存文件。</li><li><strong>:q</strong> – 退出 Vim 编辑器。</li><li><strong>:q!</strong> – 强制退出Vim 编辑器，不保存修改。</li></ul><h3 id="2-vim操作"><a href="#2-vim操作" class="headerlink" title="2. vim操作"></a>2. vim操作</h3><p>vim 编辑器是vi编辑器的升级版，对于嵌入式Linux系统开发来说，使用vim编辑器更加方便，在编写代码时，有高亮提示。</p><p>操作命令与vi编辑器的命令相兼容，就不再赘述。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Linux </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 嵌入式 </tag>
+            
+            <tag> Linux </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>10-嵌入式Linux入门</title>
+      <link href="/posts/53677/"/>
+      <url>/posts/53677/</url>
+      
+        <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>现在已经研二了，下一年马上就要面临着找工作，但是现在所面临的问题是自己所做的课题方向与自己将来要找的工作不怎么沾边，所以现在是一边学自己的技能知识，一边还要兼顾课题，有时候还得给导师干横向项目，可能也有很多同学跟我又一样的感受，就是这也要学，导师那边也要干活，搞的自己很累很烦，我的建议是做一个计划表，比如上午要干嘛，下午要干嘛，有可能不会严格执行，但起码自己心里有数，不会那么慌乱。好像有点跑题了，咳咳，回到正题。</p><p>我所感兴趣的方向是嵌入式Linux，但是这里面又细分出好多分支，这个暂时还没想好，所以就先把最基础的Linux基础打好，边学边寻找适合自己的工作方向。</p><h2 id="一、嵌入式系统"><a href="#一、嵌入式系统" class="headerlink" title="一、嵌入式系统"></a>一、嵌入式系统</h2><p>嵌入式系统是区别于通用计算机系统的，它是内嵌在设备或者机器内部，是能够独自运行的计算机系统单元，相当于计算机系统经过裁剪使之适用于某个领域或者行业的计算机处理单元。</p><p>未完待续</p><hr>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>09-Git使用教程</title>
       <link href="/posts/16019/"/>
       <url>/posts/16019/</url>
