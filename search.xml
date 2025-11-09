@@ -4,7 +4,7 @@
   
     
     <entry>
-      <title>13-Luckfox_RV1106开发板学习</title>
+      <title>Luckfox_RV1106开发板学习</title>
       <link href="/posts/40617/"/>
       <url>/posts/40617/</url>
       
@@ -31,13 +31,27 @@
     
     
     <entry>
-      <title>12-Linux学习笔记二</title>
+      <title>Linux学习笔记（二）</title>
       <link href="/posts/35857/"/>
       <url>/posts/35857/</url>
       
-        <content type="html"><![CDATA[]]></content>
+        <content type="html"><![CDATA[<h1 id="Linux学习笔记（二）"><a href="#Linux学习笔记（二）" class="headerlink" title="Linux学习笔记（二）"></a>Linux学习笔记（二）</h1><h2 id="一、计算机系统架构"><a href="#一、计算机系统架构" class="headerlink" title="一、计算机系统架构"></a>一、计算机系统架构</h2><p>计算机体系结构总体分为两类，分别是冯 · 诺依曼体系结构和哈佛体系结构。</p><h3 id="1-冯-·-诺依曼计算系统"><a href="#1-冯-·-诺依曼计算系统" class="headerlink" title="1. 冯 · 诺依曼计算系统"></a>1. 冯 · 诺依曼计算系统</h3><p>主要包含两部分：</p><p>（1）计算机结构采用二进制表示指令和数据</p><p>（2）程序指令存储器和数据存储器合并在一起的存储器结构（<strong>最为显著的特点</strong>）</p><p>这样的结构有利于统一编址，所以要求程序指令和数据的位宽要保持一致。</p><h3 id="2-哈佛计算系统"><a href="#2-哈佛计算系统" class="headerlink" title="2. 哈佛计算系统"></a>2. 哈佛计算系统</h3><p>这是一种存储器并行体系结构，主要特点是将程序和数据存储在不同的存储空间中。每个存储器独立编址、独立访问。</p><p>这样的优点在于程序指令存储和数据存储分开，可以使指令和数据有不同的数据宽度，且不会相互干扰。</p><div class="note info no-icon flat"><p>指令集划分：复杂指令集（CISC）和精简指令集（RISC）</p></div>  <h2 id="二、微处理器的内核架构"><a href="#二、微处理器的内核架构" class="headerlink" title="二、微处理器的内核架构"></a>二、微处理器的内核架构</h2><h3 id="1-x86内核架构"><a href="#1-x86内核架构" class="headerlink" title="1. x86内核架构"></a>1. x86内核架构</h3><p>x86内核架构最早是由Intel 发布的8086型微处理器，采用复杂指令集系统，内存空间采用的是冯 · 诺依曼体系结构，因为内存空间不区分数据与指令；以x86内核架构制作的芯片则是采用哈佛结构。</p>]]></content>
       
       
+      <categories>
+          
+          <category> Linux </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 嵌入式 </tag>
+            
+            <tag> Linux </tag>
+            
+        </tags>
       
     </entry>
     
@@ -71,20 +85,34 @@
     
     
     <entry>
-      <title>10-嵌入式Linux入门</title>
+      <title>嵌入式Linux入门</title>
       <link href="/posts/53677/"/>
       <url>/posts/53677/</url>
       
         <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>现在已经研二了，下一年马上就要面临着找工作，但是现在所面临的问题是自己所做的课题方向与自己将来要找的工作不怎么沾边，所以现在是一边学自己的技能知识，一边还要兼顾课题，有时候还得给导师干横向项目，可能也有很多同学跟我又一样的感受，就是这也要学，导师那边也要干活，搞的自己很累很烦，我的建议是做一个计划表，比如上午要干嘛，下午要干嘛，有可能不会严格执行，但起码自己心里有数，不会那么慌乱。好像有点跑题了，咳咳，回到正题。</p><p>我所感兴趣的方向是嵌入式Linux，但是这里面又细分出好多分支，这个暂时还没想好，所以就先把最基础的Linux基础打好，边学边寻找适合自己的工作方向。</p><h2 id="一、嵌入式系统"><a href="#一、嵌入式系统" class="headerlink" title="一、嵌入式系统"></a>一、嵌入式系统</h2><p>嵌入式系统是区别于通用计算机系统的，它是内嵌在设备或者机器内部，是能够独自运行的计算机系统单元，相当于计算机系统经过裁剪使之适用于某个领域或者行业的计算机处理单元。</p><p>未完待续</p><hr>]]></content>
       
       
+      <categories>
+          
+          <category> Linux </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 嵌入式 </tag>
+            
+            <tag> Linux </tag>
+            
+        </tags>
       
     </entry>
     
     
     
     <entry>
-      <title>09-Git使用教程</title>
+      <title>Git使用教程</title>
       <link href="/posts/16019/"/>
       <url>/posts/16019/</url>
       
@@ -93,7 +121,7 @@
       
       <categories>
           
-          <category> 技术 </category>
+          <category> Git </category>
           
       </categories>
       
