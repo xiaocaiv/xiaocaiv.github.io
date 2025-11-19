@@ -1,0 +1,354 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>嵌入式Linux之交叉编译 | XiaoCai's Blog</title><meta name="author" content="Alice"><meta name="copyright" content="Alice"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一、gcc编译器的工作流程包含四个部分，分别是预处理、编译、汇编和链接。 1. 预处理在预处理阶段，编译器会将所包含的头文件以及宏定义的值找到并替换成最终的内容，也会将代码的注释部分自动删除，但是预处理之后依旧是一个文本文件，只是这个文件比源文件大得多。以下就是预处理阶段主要做的事情： （1）将所有的宏定义关键字#define 删除，并且展开所有的宏定义，然后进行字符替换。 （2）处理所有的条件编">
+<meta property="og:type" content="article">
+<meta property="og:title" content="嵌入式Linux之交叉编译">
+<meta property="og:url" content="http://xiaocaiv.github.io/posts/8862/index.html">
+<meta property="og:site_name" content="XiaoCai&#39;s Blog">
+<meta property="og:description" content="一、gcc编译器的工作流程包含四个部分，分别是预处理、编译、汇编和链接。 1. 预处理在预处理阶段，编译器会将所包含的头文件以及宏定义的值找到并替换成最终的内容，也会将代码的注释部分自动删除，但是预处理之后依旧是一个文本文件，只是这个文件比源文件大得多。以下就是预处理阶段主要做的事情： （1）将所有的宏定义关键字#define 删除，并且展开所有的宏定义，然后进行字符替换。 （2）处理所有的条件编">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251119100552983.png">
+<meta property="article:published_time" content="2025-11-14T01:44:21.000Z">
+<meta property="article:modified_time" content="2025-11-19T02:07:03.439Z">
+<meta property="article:author" content="Alice">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="交叉编译">
+<meta property="article:tag" content="嵌入式">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251119100552983.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "嵌入式Linux之交叉编译",
+  "url": "http://xiaocaiv.github.io/posts/8862/",
+  "image": "https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251119100552983.png",
+  "datePublished": "2025-11-14T01:44:21.000Z",
+  "dateModified": "2025-11-19T02:07:03.439Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Alice",
+      "url": "http://xiaocaiv.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/favicon1.png"><link rel="canonical" href="http://xiaocaiv.github.io/posts/8862/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '嵌入式Linux之交叉编译',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href= "/css/my.css"><meta name="generator" content="Hexo 8.1.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/ali.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">16</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">15</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251029174839451.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">XiaoCai's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">嵌入式Linux之交叉编译</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">嵌入式Linux之交叉编译</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-11-14T01:44:21.000Z" title="发表于 2025-11-14 09:44:21">2025-11-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-11-19T02:07:03.439Z" title="更新于 2025-11-19 10:07:03">2025-11-19</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/">嵌入式</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="一、gcc编译器的工作流程"><a href="#一、gcc编译器的工作流程" class="headerlink" title="一、gcc编译器的工作流程"></a>一、gcc编译器的工作流程</h2><p>包含四个部分，分别是预处理、编译、汇编和链接。</p>
+<h3 id="1-预处理"><a href="#1-预处理" class="headerlink" title="1. 预处理"></a>1. 预处理</h3><p>在预处理阶段，编译器会将所包含的头文件以及宏定义的值找到并替换成最终的内容，也会将代码的注释部分自动删除，但是预处理之后依旧是一个文本文件，只是这个文件比源文件大得多。以下就是预处理阶段主要做的事情：</p>
+<p>（1）将所有的宏定义关键字#define 删除，并且展开所有的宏定义，然后进行字符替换。</p>
+<p>（2）处理所有的条件编译指令，包括#ifdef、#ifndef、#endif等</p>
+<p>（3）将头文件关键字#include 删除，将#include 指向的文件插入到该行并删除所有的注释内容。</p>
+<p>（4）添加行号和文件标识，方便之后的调试。</p>
+<p>例如：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -E hello.c -o hello.i</span><br></pre></td></tr></table></figure>
+
+<p>这是将源文件hello.c预处理生成hello.i文件</p>
+<h3 id="2-编译"><a href="#2-编译" class="headerlink" title="2. 编译"></a>2. 编译</h3><p>编译阶段就是将预处理好的文件翻译成汇编文件的过程。在这个阶段能够检查出程序是否有错误，并且显示出错误类型。</p>
+<p>例如：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -S hello.i -o hello.s</span><br></pre></td></tr></table></figure>
+
+<p>将预处理之后的hello.i 文件编译生成hello.s文件。</p>
+<h3 id="3-汇编"><a href="#3-汇编" class="headerlink" title="3. 汇编"></a>3. 汇编</h3><p>汇编过程就是将编译后形成的汇编文件转换为目标文件的过程，即通过汇编阶段生成中间目标文件。</p>
+<p>例如：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -c hello.s -o hello.o</span><br></pre></td></tr></table></figure>
+
+<p>这一步将编译之后的hello.s文件汇编生成hello.o文件，是二进制格式，这个中间目标文件此时还不能直接运行，需要链接之后才可以被执行。</p>
+<h3 id="4-链接"><a href="#4-链接" class="headerlink" title="4. 链接"></a>4. 链接</h3><p>链接是链接器ld把中间目标文件和相应的库链接为可执行文件，相应库包括静态链接库和动态链接库。</p>
+<p>例如：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc hello.o -o hello</span><br></pre></td></tr></table></figure>
+
+<p>通过以上代码将汇编之后的hello.o文件与相应的库文件链接之后生成可执行文件hello，在运行时只需要调用<code>./hello</code> 即可执行代码。</p>
+<p>链接静态库文件成为静态链接，其特点是在编译链接时，把库文件代码全部加入可执行文件中，因此生成的文件代码比较大。</p>
+<p>链接动态库文件称为动态链接，其特点是在编译链接时，没有把库文件代码加入到可执行文件中，而是在程序执行时由链接文件加载库，这样可以节省系统的开销，但是运行时需要依赖库文件的支持。</p>
+<h3 id="5-总结"><a href="#5-总结" class="headerlink" title="5.总结"></a>5.总结</h3><p>gcc编译器在Linux系统下将一个 .c 的源文件经过预处理、编译、汇编和链接四个步骤才能生成可执行文件，需要用到如下命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">gcc -E hello.c -o hello.i	//预处理</span><br><span class="line">gcc -S hello.i -o hello.s	//编译</span><br><span class="line">gcc -c hello.s -o hello.o	//汇编</span><br><span class="line">gcc hello.o -o hello		//链接</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、GDB调试"><a href="#二、GDB调试" class="headerlink" title="二、GDB调试"></a>二、GDB调试</h2><p>在Windows系统进行代码调试的时候，因为有IDE集成开发环境的存在，所以调试很方便直观地看到调试信息，但是在Linux系统下没有强大的图像调试工具，这时候就需要借助GDB调试工具。</p>
+<p>GDB(GNU Debugger)是一个纯命令行的调试工具，也是有GNU组织开发和维护的。</p>
+<h3 id="1-安装GDB"><a href="#1-安装GDB" class="headerlink" title="1. 安装GDB"></a>1. 安装GDB</h3><p>可以运行以下代码来确认Linux系统上是否安装了gdb调试工具</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gdb -v</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20251118105930150.png" alt="image-20251118105930150"></p>
+<p>如果出现版本信息，则说明安装了gdb工具</p>
+<p>若是没有，可以执行下面的命令进行安装</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install gdb</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-GDB调试命令"><a href="#2-GDB调试命令" class="headerlink" title="2. GDB调试命令"></a>2. GDB调试命令</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>简写</th>
+<th>命令说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>clear</td>
+<td></td>
+<td>删除设置的断点</td>
+</tr>
+<tr>
+<td>break</td>
+<td>b</td>
+<td>设置断点</td>
+</tr>
+<tr>
+<td>run</td>
+<td>r</td>
+<td>开始运行程序</td>
+</tr>
+<tr>
+<td>next</td>
+<td>n</td>
+<td>执行当前行语句，若该语句为函数调用，不会进入函数内部执行</td>
+</tr>
+<tr>
+<td>step</td>
+<td>s</td>
+<td>若有调用函数，进入调用的函数内部；否则，和 next 命令的功能一样</td>
+</tr>
+<tr>
+<td>print</td>
+<td>p</td>
+<td>显示变量值，如 p value</td>
+</tr>
+<tr>
+<td>continue</td>
+<td>c</td>
+<td>继续程序的运行，直到遇到下一个断点</td>
+</tr>
+<tr>
+<td>quit</td>
+<td>q</td>
+<td>退出gdb调试环境</td>
+</tr>
+</tbody></table>
+<p>另外还可以使用<code>set var name=value</code> 来设置变量的值。</p>
+<h3 id="3-效果展示"><a href="#3-效果展示" class="headerlink" title="3. 效果展示"></a>3. 效果展示</h3><p>首先在任意的文件夹下新建一个test1.c文件，代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">Max</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">int</span> max_value = <span class="number">0</span>;</span><br><span class="line">	max_value = ((a &gt; b) ? a : b);</span><br><span class="line">	<span class="keyword">return</span> max_value;</span><br><span class="line">&#125;</span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">int</span> n = <span class="number">0</span>, m = <span class="number">0</span>;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;intput two numbers please!\n&quot;</span>);</span><br><span class="line">	<span class="built_in">scanf</span>(<span class="string">&quot;%d %d&quot;</span>, &amp;n, &amp;m);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;output max value is = %d\n&quot;</span>, Max(n, m));</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20251118141859183.png" alt="image-20251118141859183"></p>
+<h4 id="1-编译"><a href="#1-编译" class="headerlink" title="(1)编译"></a>(1)编译</h4><p>使用gcc编译器进行编译，注意，要想编译后的程序可以被调试，编译的时候要加上-g 的参数。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -g -o test1 test1.c</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-进入调试模式"><a href="#2-进入调试模式" class="headerlink" title="(2)进入调试模式"></a>(2)进入调试模式</h4><p>编译后之后使用gdb命令进入调试模式</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gdb test1</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20251118142416875.png" alt="image-20251118142416875"></p>
+<h4 id="3-run-命令"><a href="#3-run-命令" class="headerlink" title="(3)run 命令"></a>(3)run 命令</h4><p>该命令可以执行整个程序</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gdb run</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20251118142634844.png" alt="image-20251118142634844"></p>
+<h4 id="4-break-命令"><a href="#4-break-命令" class="headerlink" title="(4)break 命令"></a>(4)break 命令</h4><p>使用break命令可以设置断点，后面接要打断点的代码行数，如</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">b 5</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20251118142956225.png" alt="image-20251118142956225"></p>
+<h4 id="5-step-命令"><a href="#5-step-命令" class="headerlink" title="(5)step 命令"></a>(5)step 命令</h4><p>step 命令是单步进行操作，会一行一行地执行代码，如果遇到调用函数，会进入到函数内部。</p>
+<p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20251118143458586.png" alt="image-20251118143458586"></p>
+<h4 id="6-continue-命令"><a href="#6-continue-命令" class="headerlink" title="(6)continue 命令"></a>(6)continue 命令</h4><p>continue 命令是当程序在某一断点处停止后，用该指令可以继续执行，纸质遇到断点或者程序结束。</p>
+<p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20251118144036883.png" alt="image-20251118144036883"></p>
+<h4 id="7-设置变量和查看变量操作"><a href="#7-设置变量和查看变量操作" class="headerlink" title="(7)设置变量和查看变量操作"></a>(7)设置变量和查看变量操作</h4><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20251118144935120.png" alt="image-20251118144935120"></p>
+<p>next 命令也是一步一步执行代码，但是它与step的不同之处在于它遇到调用的函数不进入函数内部，而step 则是进入到函数内部执行。</p>
+<p>print命令则是打印处当前变量的值。</p>
+<h4 id="8-quit-命令"><a href="#8-quit-命令" class="headerlink" title="(8)quit 命令"></a>(8)quit 命令</h4><p>clear命令用来清除所有的断点，quit 命令是用来退出gdb调试模式。</p>
+<p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20251118151725185.png" alt="image-20251118151725185"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://xiaocaiv.github.io">Alice</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://xiaocaiv.github.io/posts/8862/">http://xiaocaiv.github.io/posts/8862/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://xiaocaiv.github.io" target="_blank">XiaoCai's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/">嵌入式</a><a class="post-meta__tags" href="/tags/Linux/">Linux</a><a class="post-meta__tags" href="/tags/%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91/">交叉编译</a></div><div class="post-share"><div class="social-share" data-image="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251119100552983.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/posts/60891/" title="基于Ubuntu的Samba服务器搭建"><img class="cover" src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251112153241590.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">基于Ubuntu的Samba服务器搭建</div></div><div class="info-2"><div class="info-item-1">基于Ubuntu的Samba服务器搭建一、安装Samba软件安装之前可以先更新一下软件源（近期操作过可以忽略） 1sudo apt update  输入以下命令安装 Samba 服务器 1sudo apt install samba -y  二、创建Samba共享文件夹可以在任何路径下创建共享文件夹，只要更改文件夹的权限即可。我这里是在桌面创建了一个共享文件夹Share。  使用chmod命令更改文件夹权限 1chmod 777 Share   三、配置Samba文件使用 vim 命令编辑配置sam.conf文件，添加共享目录。 1sudo cp /etc/samba/smb.conf /etc/samba/smb.conf.bak  进入文件之后，使用 Shift+g 跳转到文件最后，添加如下文本，其中path路径要根据自己创建共享文件夹的路径修改。  简单说明一下配置信息的含义： [Ubuntu_22.04]：这是共享的名称，你可以在网络上访问该共享时使用。comment：这是关于共享的描述或注释，显示给用户看。path：这是共享的实际路径。public：这表示该共享是否为公...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/64611/" title="Linux学习笔记(一)"><img class="cover" src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251112164333226.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-06</div><div class="info-item-2">Linux学习笔记(一)</div></div><div class="info-2"><div class="info-item-1">Linux学习笔记（一）安装Ubuntu22.04的详细教程： 基于VMware虚拟机的Ubuntu22.04系统安装和配置（新手保姆级教程）_虚拟机ubuntu22.04安装教程-CSDN博客 一、基本操作命令1. ls 文件信息列表ls 命令用于查看当前目录的文件信息 常用参数： -l: 查看文件详细信息。 -a: 查看当前目录所有文件，包括隐藏文件。 -al: 综合了列表查看和全部查看内容   2. pwd 查看当前目录路径pwd 命令用于打印当前工作目录的绝对路径 3. cd 目录切换命令cd 命令用于在目录间切换，常用方式为 cd 目录参数，目录参数只能是相对路径或者绝对路径。 cd ~：表示用户切换到用户目录 cd /：表示用户切换到根目录 cd ..：表示返回上一级目录 ＄：表示普通用户 #：表示超级用户 ~：表示home目录 &#x2F;：表示根目录   4. mkdir 文件夹创建命令mkdir 用于创建目录 5. touch 创建文件命令touch 创建文件时要加上后缀名，比如： 1touch hello.c  6. rm 删除命令rm 命令用于删除文件或者文...</div></div></div></a><a class="pagination-related" href="/posts/53677/" title="嵌入式Linux入门"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-06</div><div class="info-item-2">嵌入式Linux入门</div></div><div class="info-2"><div class="info-item-1">前言现在已经研二了，下一年马上就要面临着找工作，但是现在所面临的问题是自己所做的课题方向与自己将来要找的工作不怎么沾边，所以现在是一边学自己的技能知识，一边还要兼顾课题，有时候还得给导师干横向项目，可能也有很多同学跟我又一样的感受，就是这也要学，导师那边也要干活，搞的自己很累很烦，我的建议是做一个计划表，比如上午要干嘛，下午要干嘛，有可能不会严格执行，但起码自己心里有数，不会那么慌乱。好像有点跑题了，咳咳，回到正题。 我所感兴趣的方向是嵌入式Linux，但是这里面又细分出好多分支，这个暂时还没想好，所以就先把最基础的Linux基础打好，边学边寻找适合自己的工作方向。 一、嵌入式系统嵌入式系统是区别于通用计算机系统的，它是内嵌在设备或者机器内部，是能够独自运行的计算机系统单元，相当于计算机系统经过裁剪使之适用于某个领域或者行业的计算机处理单元。 未完待续  </div></div></div></a><a class="pagination-related" href="/posts/35857/" title="Linux学习笔记（二）"><img class="cover" src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251112164519471.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-07</div><div class="info-item-2">Linux学习笔记（二）</div></div><div class="info-2"><div class="info-item-1">Linux学习笔记（二）一、计算机系统架构计算机体系结构总体分为两类，分别是冯 · 诺依曼体系结构和哈佛体系结构。 1. 冯 · 诺依曼计算系统主要包含两部分： （1）计算机结构采用二进制表示指令和数据 （2）程序指令存储器和数据存储器合并在一起的存储器结构（最为显著的特点） 这样的结构有利于统一编址，所以要求程序指令和数据的位宽要保持一致。 2. 哈佛计算系统这是一种存储器并行体系结构，主要特点是将程序和数据存储在不同的存储空间中。每个存储器独立编址、独立访问。 这样的优点在于程序指令存储和数据存储分开，可以使指令和数据有不同的数据宽度，且不会相互干扰。 指令集划分：复杂指令集（CISC）和精简指令集（RISC）     二、微处理器的内核架构1. x86内核架构x86内核架构最早是由Intel 发布的8086型微处理器，采用复杂指令集系统，内存空间采用的是冯 · 诺依曼体系结构，因为内存空间不区分数据与指令；以x86内核架构制作的芯片则是采用哈佛结构。 </div></div></div></a><a class="pagination-related" href="/posts/25414/" title="Ubuntu设置静态IP"><img class="cover" src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251112165006680.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-11-12</div><div class="info-item-2">Ubuntu设置静态IP</div></div><div class="info-2"><div class="info-item-1">Ubuntu设置静态IP前言在Ubuntu系统中，设置静态IP地址可以确保您的设备在网络中拥有固定的IP地址，从而避免每次启动后IP地址变动的问题。这不仅提高了网络连接的稳定性，也便于网络管理和资源分配。 优点：  网络稳定性：静态IP地址确保了设备在网络中的唯一性和稳定性，避免因IP地址变动导致的网络连接中断。 便于管理：静态IP地址便于网络管理员进行网络资源的分配和管理。 安全性：静态IP地址有助于防止恶意攻击者利用动态IP地址的随机性进行攻击。  一、安装网络工具如果Ubuntu 系统还没有安装网络工具，可以使用以下命令来安装 1sudo apt install net-tools  如果已安装则可以跳过上面的步骤。 查看IP地址 1ifconfig   二、网关和DNS服务器1. 查看网关使用以下命令来查看当前局域网下的默认网关和子网掩码 1route -n   其中Gateway是网关地址，Genmask是子网掩码 2. DNS 服务器以下是一些常见的国内可用 DNS 服务器： 123456789101112131415161718#114 DNS：	IPv4：114....</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/ali.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Alice</div><div class="author-info-description">记录美好生活，分享技术知识。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">16</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">15</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xiaocaiv"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/xiaocaiv" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:2961197321@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">允许别人做别人，允许自己做自己</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81gcc%E7%BC%96%E8%AF%91%E5%99%A8%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="toc-text">一、gcc编译器的工作流程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E9%A2%84%E5%A4%84%E7%90%86"><span class="toc-text">1. 预处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%BC%96%E8%AF%91"><span class="toc-text">2. 编译</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%B1%87%E7%BC%96"><span class="toc-text">3. 汇编</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E9%93%BE%E6%8E%A5"><span class="toc-text">4. 链接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E6%80%BB%E7%BB%93"><span class="toc-text">5.总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81GDB%E8%B0%83%E8%AF%95"><span class="toc-text">二、GDB调试</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%AE%89%E8%A3%85GDB"><span class="toc-text">1. 安装GDB</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-GDB%E8%B0%83%E8%AF%95%E5%91%BD%E4%BB%A4"><span class="toc-text">2. GDB调试命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%95%88%E6%9E%9C%E5%B1%95%E7%A4%BA"><span class="toc-text">3. 效果展示</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E7%BC%96%E8%AF%91"><span class="toc-text">(1)编译</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E8%BF%9B%E5%85%A5%E8%B0%83%E8%AF%95%E6%A8%A1%E5%BC%8F"><span class="toc-text">(2)进入调试模式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-run-%E5%91%BD%E4%BB%A4"><span class="toc-text">(3)run 命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-break-%E5%91%BD%E4%BB%A4"><span class="toc-text">(4)break 命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-step-%E5%91%BD%E4%BB%A4"><span class="toc-text">(5)step 命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-continue-%E5%91%BD%E4%BB%A4"><span class="toc-text">(6)continue 命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-%E8%AE%BE%E7%BD%AE%E5%8F%98%E9%87%8F%E5%92%8C%E6%9F%A5%E7%9C%8B%E5%8F%98%E9%87%8F%E6%93%8D%E4%BD%9C"><span class="toc-text">(7)设置变量和查看变量操作</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-quit-%E5%91%BD%E4%BB%A4"><span class="toc-text">(8)quit 命令</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/8862/" title="嵌入式Linux之交叉编译">嵌入式Linux之交叉编译</a><time datetime="2025-11-14T01:44:21.000Z" title="发表于 2025-11-14 09:44:21">2025-11-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/60891/" title="基于Ubuntu的Samba服务器搭建">基于Ubuntu的Samba服务器搭建</a><time datetime="2025-11-12T01:27:19.000Z" title="发表于 2025-11-12 09:27:19">2025-11-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/25414/" title="Ubuntu设置静态IP">Ubuntu设置静态IP</a><time datetime="2025-11-12T01:01:40.000Z" title="发表于 2025-11-12 09:01:40">2025-11-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/40617/" title="Luckfox_RV1106开发板学习">Luckfox_RV1106开发板学习</a><time datetime="2025-11-09T02:05:25.000Z" title="发表于 2025-11-09 10:05:25">2025-11-09</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/35857/" title="Linux学习笔记（二）">Linux学习笔记（二）</a><time datetime="2025-11-07T07:01:36.000Z" title="发表于 2025-11-07 15:01:36">2025-11-07</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20251029174839451.jpg);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 By Alice</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.1</a></span></div><div class="footer_custom_text"><p> <a style="margin-inline:5px"target="_blank" href="https://hexo.io/zh-cn/"><img src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&logo=hexo" title="博客框架为 Hexo v8.1.0"></a> <a style="margin-inline:5px"target="_blank" href="https://butterfly.js.org/"><img src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=flat&logo=butterfly" title="主题为 Butterfly v5.5.1"></a> <a style="margin-inline:5px"target="_blank" href="https://github.com"><img src="https://img.shields.io/badge/Source-Github-d021d6?style=flat&logo=github" title="本站项目由 Github 托管"></a> <a style="margin-inline:5px"target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img src="https://img.shields.io/badge/Copyright-BY--NC--SA-red?style=flat&logo=alchemy" title="本站采用知识共享署名-非商业性使用"></a> </p></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.1"></script><script src="/js/main.js?v=5.5.1"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script src="/scripts/footer_time.js"></script><div class="aplayer no-destroy" data-id="17375390739" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="false" data-listFolded="true" data-lrcType="-1"> </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"]):not([href="/scripts/footer_time.js/"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      const usePjax = true
+      true
+        ? (usePjax ? pjax.loadUrl('/404.html') : window.location.href = '/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.1"></script></div></div></body></html>
