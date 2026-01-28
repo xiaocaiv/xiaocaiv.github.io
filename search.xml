@@ -4,6 +4,85 @@
   
     
     <entry>
+      <title>19-课题进度01</title>
+      <link href="/posts/35256/"/>
+      <url>/posts/35256/</url>
+      
+        <content type="html"><![CDATA[<h1 id="课题进度01-双平台纯方位目标跟踪"><a href="#课题进度01-双平台纯方位目标跟踪" class="headerlink" title="课题进度01-双平台纯方位目标跟踪"></a>课题进度01-双平台纯方位目标跟踪</h1><p>使用双平台被动纯方位角跟踪，目标做匀速直线运动，采用扩展卡尔曼滤波。</p><h2 id="1-参数设置"><a href="#1-参数设置" class="headerlink" title="1. 参数设置"></a>1. 参数设置</h2><p>采样周期：1s</p><p>总仿真时间：100s</p><p>平台1位置：（-400，0），单位：m；速度：（0，1），单位：m/s</p><p>平台2位置：（400，0），单位：m；速度：（0，1），单位m/s</p><p>两个平台向正北方向前进</p><p>目标初始状态（x, y, vx, vy）：(100,100,-2,5)，朝着西北方向前进。</p><h2 id="2-扩展卡尔曼滤波"><a href="#2-扩展卡尔曼滤波" class="headerlink" title="2. 扩展卡尔曼滤波"></a>2. 扩展卡尔曼滤波</h2><p>首先介绍一下<strong>卡尔曼滤波(KF)</strong>，它是将一个系统的观测值和预测值进行贝叶斯融合，得出一个最优估计，但是针对的只是线性系统，所以对于非线性系统就需要用到<strong>扩展卡尔曼滤波(EKF)</strong>。</p><p>扩展卡尔曼滤波(EKF)</p><p>用一阶泰勒展开将非线性系统近似为线性系统，然后在这个线性化的系统中使用传统的卡尔曼滤波进行状态更新。</p><p>状态转移方程（系统模型）:</p><script type="math/tex; mode=display">x_k=f(x_{k-1},u_{k-1})+w_{k-1}</script><script type="math/tex; mode=display">f(x_{k-1})\approx f(\hat{x}_{k-1})+F_{k-1}(x_{k-1}-\hat{x}_{k-1})</script><p>观测方程（测量模型）：</p><script type="math/tex; mode=display">z_k=h(x_k)+v_k</script><p>$x_k$：系统在第k步的状态向量</p><p>$u_{k-1}$：控制输入</p><p>$w_{k-1}$：过程噪声，假设服从零均值，协方差为Q的高斯分布</p><p>$z_k$：测量值</p><p>$v_k$：测量噪声，服从协方差为R的高斯分布</p><p>$f()$ 和 $h()$ 是非线性函数</p><p>核心思想：非线性函数局部线性化</p><ol><li><p>状态预测的线性化</p><p>用一阶泰勒展开对$f(x<em>{k-1})$在上一步估计值$\hat{x}</em>{k-1}$附近进行近似</p></li></ol><script type="math/tex; mode=display">f(x_{k-1})\approx f(\hat{x}_{k-1})+F_{k-1}(x_{k-1}-\hat{x}_{k-1})</script><p>其中$F_{k-1}$是函数f对x的雅可比矩阵</p><script type="math/tex; mode=display">F_{k-1}=\left.\frac{\partial f}{\partial\mathbf{x}}\right|_{\mathbf{x}=\hat{\mathbf{x}}_{k-1},\mathbf{u}=\mathbf{u}_{k-1}}</script><ol><li><p>观测更新的线性化</p><p>同理，对$h(x_k)$在预测点$\hat{x}$附近一阶展开</p><script type="math/tex; mode=display">h(\mathbf{x}_k)\approx h(\hat{\mathbf{x}}_k)+H_k(\mathbf{x}_k-\hat{\mathbf{x}}_k)</script></li></ol><p>其中$H_k$是h对x的雅可比矩阵：</p><script type="math/tex; mode=display">H_k=\left.\frac{\partial h}{\partial\mathbf{x}}\right|_{\mathbf{x}=\hat{\mathbf{x}}_{k}}</script>]]></content>
+      
+      
+      <categories>
+          
+          <category> 水声相关 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 目标跟踪 </tag>
+            
+            <tag> 多基地 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>18-Ubuntu连接USB设备</title>
+      <link href="/posts/7424/"/>
+      <url>/posts/7424/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Ubuntu连接USB设备"><a href="#Ubuntu连接USB设备" class="headerlink" title="Ubuntu连接USB设备"></a>Ubuntu连接USB设备</h1><h2 id="1-连接设备"><a href="#1-连接设备" class="headerlink" title="1. 连接设备"></a>1. 连接设备</h2><p>在Windows和Ubuntu虚拟机同时打开的情况下，将USB设备连接到电脑上，虚拟机会弹出以下窗口，如下图所示：</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260127161619834.png" alt="image-20260127161619834"></p><p>如果想要将USB设备连接到虚拟机上，只需要选择对应的虚拟机就行</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260127162929285.png" alt="image-20260127162929285"></p><p>点击“确定”之后，USB设备即可连接到虚拟机。</p><p>点击左侧边框的图标即可打开USB设备的文件夹。</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260127163722953.png" alt="image-20260127163722953"></p><h2 id="2-切换设备"><a href="#2-切换设备" class="headerlink" title="2. 切换设备"></a>2. 切换设备</h2><p>在虚拟机底部边框中点击这个小图标，选择“断开连接(连接主机)”，就可以连接到Windows电脑上。</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260127164009034.png" alt="image-20260127164009034"></p><h2 id="3-其他设置"><a href="#3-其他设置" class="headerlink" title="3. 其他设置"></a>3. 其他设置</h2><p>在连接USB设备的时候每次都会弹出连接到哪个设备，有点繁琐，这时就可以设置固定连接一个设备，就不用每次都点击选择。</p><p>在虚拟机中依次点击“编辑-&gt;首选项-&gt;USB”即可更改连接的设备。</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260127165438397.png" alt="image-20260127165438397"></p><h2 id="4-注意事项"><a href="#4-注意事项" class="headerlink" title="4. 注意事项"></a>4. 注意事项</h2><p>如果插入U盘在ubuntu中不显示，需要我们对U盘进行配置，点击设置→USB兼容性，选择USB 3.0（这一块看你U盘传输属性，如果是3.0，你就选择3.0；如果是2.0，你就选择2.0），我的Ubuntu版本较高，所以支持3.1。</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260127165751916.png" alt="image-20260127165751916"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Ubuntu </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Ubuntu </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>17-GEBCO数据读取</title>
+      <link href="/posts/3607/"/>
+      <url>/posts/3607/</url>
+      
+        <content type="html"><![CDATA[<h1 id="GEBCO数据读取方法"><a href="#GEBCO数据读取方法" class="headerlink" title="GEBCO数据读取方法"></a>GEBCO数据读取方法</h1><h2 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h2><p>GEBCO（General Bathymetric Chart of the Oceans）全球 DEM数据集（Geo-Engineering Digital Savage）是基于“全球地球系统计划”（Global Earth System Project）的最新数据集，可以获得高分辨率海洋 DEM和高分辨率陆地 DEM，以及全球海陆结合的 DEM数据集，可为研究地球系统与全球变化、海洋与大气相互作用等提供有力的科学支持。</p><p>官网：<a href="https://www.gebco.net/">GEBCO | General Bathymetric Chart of the Oceans</a></p><h2 id="2-数据下载"><a href="#2-数据下载" class="headerlink" title="2. 数据下载"></a>2. 数据下载</h2><p>官网有三种下载方式</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260109155035696.png" alt="image-20260109155035696"></p><p>Ice-surface elevation ：存在冰面时，以冰表面为准的高程数据</p><p>under-ice topography：存在冰面时，以冰底面为准的地形数据</p><p>Type Identifier (TID) Grid：类型标识网格，标识了区域数据获取方式 </p><h2 id="3-数据读取"><a href="#3-数据读取" class="headerlink" title="3. 数据读取"></a>3. 数据读取</h2><p>以下载的GEBCO_2025 Grid(Ice surface elevation)为例，绘制中国南海的海深图。</p><p>matlab代码如下：</p><figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">clc;</span><br><span class="line">clear;</span><br><span class="line">close all;</span><br><span class="line">ncdisp(<span class="string">&#x27;GEBCO_2025_sub_ice.nc&#x27;</span>);<span class="comment">%查看文件内容</span></span><br><span class="line">filename=(<span class="string">&#x27;GEBCO_2025_sub_ice.nc&#x27;</span>);</span><br><span class="line">lon=ncread(filename,<span class="string">&#x27;lon&#x27;</span>);<span class="comment">%读入经度</span></span><br><span class="line">lat=ncread(filename,<span class="string">&#x27;lat&#x27;</span>);<span class="comment">%读入纬度</span></span><br><span class="line">elevation=ncread(filename,<span class="string">&#x27;elevation&#x27;</span>);<span class="comment">%读入海拔高度</span></span><br><span class="line">lonS=<span class="number">105</span>;<span class="comment">%经度范围[-180,180]，lonE&gt;lonS</span></span><br><span class="line">lonE=<span class="number">123</span>;</span><br><span class="line">latS=<span class="number">6</span>;<span class="comment">%纬度范围[-90,90]，latE&gt;latS</span></span><br><span class="line">latE=<span class="number">22</span>;</span><br><span class="line">lon1=lon((lonS+<span class="number">180</span>)*<span class="number">240</span>+<span class="number">1</span>:(lonE+<span class="number">180</span>)*<span class="number">240</span>);</span><br><span class="line">lat1=lat((latS+<span class="number">90</span>)*<span class="number">240</span>+<span class="number">1</span>:(latE+<span class="number">90</span>)*<span class="number">240</span>);</span><br><span class="line">elevation1=elevation((lonS+<span class="number">180</span>)*<span class="number">240</span>+<span class="number">1</span>:(lonE+<span class="number">180</span>)*<span class="number">240</span>,(latS+<span class="number">90</span>)*<span class="number">240</span>+<span class="number">1</span>:(latE+<span class="number">90</span>)*<span class="number">240</span>);</span><br><span class="line">elevation2=double(elevation1);<span class="comment">%转换数据类型</span></span><br><span class="line">elevation3=elevation2&#x27;;<span class="comment">%转置得到常用的经纬度标识</span></span><br><span class="line"><span class="built_in">figure</span></span><br><span class="line">m_proj(<span class="string">&#x27;miller&#x27;</span>,<span class="string">&#x27;lon&#x27;</span>,[lonS,lonE],<span class="string">&#x27;lat&#x27;</span>,[latS,latE]);</span><br><span class="line">m_pcolor(lon1,lat1,elevation3);</span><br><span class="line">shading flat;</span><br><span class="line">colormap([m_colmap(<span class="string">&#x27;blue&#x27;</span>,-<span class="built_in">min</span>(<span class="built_in">min</span>(elevation3))); m_colmap(<span class="string">&#x27;gland&#x27;</span>,<span class="built_in">max</span>(<span class="built_in">max</span>(elevation3)))]);</span><br><span class="line">brighten(<span class="number">.2</span>);</span><br><span class="line">m_grid(<span class="string">&#x27;linestyle&#x27;</span>,<span class="string">&#x27;none&#x27;</span>,<span class="string">&#x27;box&#x27;</span>,<span class="string">&#x27;fancy&#x27;</span>,<span class="string">&#x27;tickdir&#x27;</span>,<span class="string">&#x27;in&#x27;</span>);</span><br><span class="line">c=colorbar(<span class="string">&#x27;eastoutside&#x27;</span>,<span class="string">&#x27;fontsize&#x27;</span>,<span class="number">10</span>);</span><br><span class="line">set(get(c,<span class="string">&#x27;title&#x27;</span>),<span class="string">&#x27;string&#x27;</span>,<span class="string">&#x27;[m]&#x27;</span>);</span><br></pre></td></tr></table></figure><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260109160242984.png" alt="image-20260109160242984"></p><h2 id="4-注意"><a href="#4-注意" class="headerlink" title="4. 注意"></a>4. 注意</h2><p>需要注意的是上图的绘制要用到m_map函数，可以到官网下载函数包，再导入到matlab中就可以使用。</p><p>m_map函数官网：<a href="https://www-old.eoas.ubc.ca/~rich/map.html">M_Map: A Mapping package for Matlab</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 水声相关 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> GEBCO </tag>
+            
+            <tag> 海洋深度图 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>嵌入式Linux之交叉编译</title>
       <link href="/posts/8862/"/>
       <url>/posts/8862/</url>
