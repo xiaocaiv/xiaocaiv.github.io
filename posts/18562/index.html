@@ -1,0 +1,327 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>课题进度02 | XiaoCai's Blog</title><meta name="author" content="Alice"><meta name="copyright" content="Alice"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="课题进度02-双平台单目标跟踪仿真使用双平台单目标被动纯方位角跟踪，目标做匀速直线运动，采用扩展卡尔曼滤波。   跟踪误差的大小不仅取决于传感器的精度，还取决于目标与两个平台相对位置的几何形状 纯方位跟踪： 理想情况：当两个平台与目标形成的夹角接近90°时，定位最准，误差最小 糟糕情况：当目标运动到两个平台的连线附近，或者目标与两个平台的夹角变得非常小（趋于 0°或 180°）时，几何形状发生“退">
+<meta property="og:type" content="article">
+<meta property="og:title" content="课题进度02">
+<meta property="og:url" content="http://xiaocaiv.github.io/posts/18562/index.html">
+<meta property="og:site_name" content="XiaoCai&#39;s Blog">
+<meta property="og:description" content="课题进度02-双平台单目标跟踪仿真使用双平台单目标被动纯方位角跟踪，目标做匀速直线运动，采用扩展卡尔曼滤波。   跟踪误差的大小不仅取决于传感器的精度，还取决于目标与两个平台相对位置的几何形状 纯方位跟踪： 理想情况：当两个平台与目标形成的夹角接近90°时，定位最准，误差最小 糟糕情况：当目标运动到两个平台的连线附近，或者目标与两个平台的夹角变得非常小（趋于 0°或 180°）时，几何形状发生“退">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20260319121300136.jpg">
+<meta property="article:published_time" content="2026-03-19T01:57:20.000Z">
+<meta property="article:modified_time" content="2026-03-19T04:13:33.027Z">
+<meta property="article:author" content="Alice">
+<meta property="article:tag" content="多基地">
+<meta property="article:tag" content="扩展卡尔曼滤波">
+<meta property="article:tag" content="目标跟踪">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20260319121300136.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "课题进度02",
+  "url": "http://xiaocaiv.github.io/posts/18562/",
+  "image": "https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20260319121300136.jpg",
+  "datePublished": "2026-03-19T01:57:20.000Z",
+  "dateModified": "2026-03-19T04:13:33.027Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Alice",
+      "url": "http://xiaocaiv.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/favicon1.png"><link rel="canonical" href="http://xiaocaiv.github.io/posts/18562/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '课题进度02',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href= "/css/my.css"><meta name="generator" content="Hexo 8.1.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/ali.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">22</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">20</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20260319121300136.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">XiaoCai's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">课题进度02</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">课题进度02</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-03-19T01:57:20.000Z" title="发表于 2026-03-19 09:57:20">2026-03-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-03-19T04:13:33.027Z" title="更新于 2026-03-19 12:13:33">2026-03-19</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%B0%B4%E5%A3%B0%E7%9B%B8%E5%85%B3/">水声相关</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="课题进度02-双平台单目标跟踪仿真"><a href="#课题进度02-双平台单目标跟踪仿真" class="headerlink" title="课题进度02-双平台单目标跟踪仿真"></a>课题进度02-双平台单目标跟踪仿真</h1><p>使用双平台单目标被动纯方位角跟踪，目标做匀速直线运动，采用扩展卡尔曼滤波。</p>
+<p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/%E8%B7%9F%E8%B8%AA%E7%BB%93%E6%9E%9C2.png" alt="跟踪结果2"></p>
+<p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/%E8%B7%9F%E8%B8%AA%E8%AF%AF%E5%B7%AE.png" alt="跟踪误差"></p>
+<p>跟踪误差的大小不仅取决于传感器的精度，还取决于<strong>目标与两个平台相对位置的几何形状</strong></p>
+<p>纯方位跟踪：</p>
+<p>理想情况：当两个平台与目标形成的夹角接近90°时，定位最准，误差最小</p>
+<p>糟糕情况：当目标运动到两个平台的连线附近，或者目标与两个平台的夹角变得非常小（趋于 0°或 180°）时，几何形状发生“退化”。</p>
+<p>图中在19s左右出现的误差高峰，可能是因为目标恰好穿过了<strong>两个平台连线的延长线方向</strong>。在这个瞬间，两个方位角几乎平行，算法很难通过两条几乎平行的线交汇出准确的点。</p>
+<h3 id="几何精度因子-GDOP-："><a href="#几何精度因子-GDOP-：" class="headerlink" title="几何精度因子(GDOP)："></a>几何精度因子(GDOP)：</h3><p>平台的几何分布影响最终的跟踪误差。</p>
+<p>数学表达式：</p>
+<script type="math/tex; mode=display">
+\mathrm{GDOP}=\sqrt{\mathrm{trace}[(H^TR^{-1}H)^{-1}]}</script><ul>
+<li><em>H</em> 是<strong>观测矩阵（雅可比矩阵）</strong>，描述测量值对状态的敏感度</li>
+<li>R<em>R</em> 是<strong>测量噪声协方差矩阵</strong></li>
+<li>(HTR−1H)−1(<em>H<strong>T</strong>R</em>−1<em>H</em>)−1 是<strong>估计协方差矩阵的一部分</strong>，反映了定位不确定度</li>
+</ul>
+<p><strong>GDOP 越小，定位精度越高；GDOP 越大，定位精度越差。</strong></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://xiaocaiv.github.io">Alice</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://xiaocaiv.github.io/posts/18562/">http://xiaocaiv.github.io/posts/18562/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://xiaocaiv.github.io" target="_blank">XiaoCai's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%9B%AE%E6%A0%87%E8%B7%9F%E8%B8%AA/">目标跟踪</a><a class="post-meta__tags" href="/tags/%E5%A4%9A%E5%9F%BA%E5%9C%B0/">多基地</a><a class="post-meta__tags" href="/tags/%E6%89%A9%E5%B1%95%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/">扩展卡尔曼滤波</a></div><div class="post-share"><div class="social-share" data-image="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20260319121300136.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/34883/" title="课题进度03"><img class="cover" src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20260319121544074.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">课题进度03</div></div><div class="info-2"><div class="info-item-1">课题进度03使用均方根误差(RMSE)来描述跟踪误差。 1. 已知目标的真实轨迹(理论分析/仿真时)假设你在某一时刻 kk 对目标的位置估计值是(x_k,y_k)，而目标的真实位置是(x_k^{true},y_k^{true}) 第一步：计算单点误差 该时刻的定位误差平方为： \text{误差平方}_k=(x_k-x_k^{true})^2+(y_k-y_k^{true})^2第二步：计算累积后的均方根误差 如果你进行了 N 次独立的蒙特卡洛仿真，或者在某一时间段内有 N 个时刻的跟踪数据，那么位置均方根误差的计算公式为： 2. 不知道目标的真实轨迹(实际工程中)在真实的水下跟踪场景中，我们往往无法知道目标的确切位置（如果知道了就不需要跟踪了）。这种情况下，我们无法直接使用上面的公式。此时，均方根误差通常被用来衡量滤波器输出本身的稳定性，即一致性。 在这种情况下，计算依据的是滤波器提供的协方差矩阵 P_k 第一步：提取协方差 卡尔曼滤波或粒子滤波在给出位置估计(\hat{x}, \hat{y}) 的同时，还会给出一个协方差矩阵，它描述了滤波器对自己估计结果的“不确定度”。 对于二...</div></div></div></a><a class="pagination-related" href="/posts/35256/" title="课题进度01"><img class="cover" src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20260319110239524.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">课题进度01</div></div><div class="info-2"><div class="info-item-1">课题进度01-双平台纯方位目标跟踪使用双平台被动纯方位角跟踪，目标做匀速直线运动，采用扩展卡尔曼滤波。 1. 参数设置采样周期：1s 总仿真时间：100s 平台1位置：（-400，0），单位：m；速度：（0，1），单位：m/s 平台2位置：（400，0），单位：m；速度：（0，1），单位m/s 两个平台向正北方向前进 目标初始状态（x, y, vx, vy）：(100,100,-2,5)，朝着西北方向前进。 2. 扩展卡尔曼滤波首先介绍一下卡尔曼滤波(KF)，它是将一个系统的观测值和预测值进行贝叶斯融合，得出一个最优估计，但是针对的只是线性系统，所以对于非线性系统就需要用到扩展卡尔曼滤波(EKF)。 扩展卡尔曼滤波(EKF) 用一阶泰勒展开将非线性系统近似为线性系统，然后在这个线性化的系统中使用传统的卡尔曼滤波进行状态更新。 状态转移方程（系统模型）:  x_k=f(x_{k-1},u_{k-1})+w_{k-1}观测方程（测量模型）：  z_k=h(x_k)+v_k$x_k$：系统在第k步的状态向量 $u_{k-1}$：控制输入 $w_{k-1}$：过程噪声，假设服从零均值，协...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/35256/" title="课题进度01"><img class="cover" src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20260319110239524.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-01-28</div><div class="info-item-2">课题进度01</div></div><div class="info-2"><div class="info-item-1">课题进度01-双平台纯方位目标跟踪使用双平台被动纯方位角跟踪，目标做匀速直线运动，采用扩展卡尔曼滤波。 1. 参数设置采样周期：1s 总仿真时间：100s 平台1位置：（-400，0），单位：m；速度：（0，1），单位：m/s 平台2位置：（400，0），单位：m；速度：（0，1），单位m/s 两个平台向正北方向前进 目标初始状态（x, y, vx, vy）：(100,100,-2,5)，朝着西北方向前进。 2. 扩展卡尔曼滤波首先介绍一下卡尔曼滤波(KF)，它是将一个系统的观测值和预测值进行贝叶斯融合，得出一个最优估计，但是针对的只是线性系统，所以对于非线性系统就需要用到扩展卡尔曼滤波(EKF)。 扩展卡尔曼滤波(EKF) 用一阶泰勒展开将非线性系统近似为线性系统，然后在这个线性化的系统中使用传统的卡尔曼滤波进行状态更新。 状态转移方程（系统模型）:  x_k=f(x_{k-1},u_{k-1})+w_{k-1}观测方程（测量模型）：  z_k=h(x_k)+v_k$x_k$：系统在第k步的状态向量 $u_{k-1}$：控制输入 $w_{k-1}$：过程噪声，假设服从零均值，协...</div></div></div></a><a class="pagination-related" href="/posts/18946/" title="课题进度04"><img class="cover" src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20260319121956154.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-03-19</div><div class="info-item-2">课题进度04</div></div><div class="info-2"><div class="info-item-1">课题进度04-滤波算法对比1. 无迹卡尔曼滤波(Unscented Kalman Filter, UKF)定义： 是一种适用于非线性系统的滤波算法，被看作是扩展卡尔曼滤波(EKF)的改进版本，解决了 EKF 在处理强非线性系统时的精度低或不稳定问题。 基本思想：  UKF 的核心思想是使用一组经过精心选择的采样点（称为 sigma 点）来统计地近似非线性系统的传播特性，而不是像 EKF 那样通过一阶泰勒展开对非线性函数进行线性化处理。 这些 sigma 点经过非线性系统的传播后，UKF 使用这些点的加权求和来估计状态和协方差，而无需显式计算雅可比矩阵。  数学框架： （1）状态模型 UKF 适用于如下的离散非线性系统模型：  状态转移方程： \mathbf{x}_{k} = f(\mathbf{x}_{k-1}, \mathbf{u}_{k-1}) + \mathbf{w}_{k-1} 观测方程： $\mathbf{z}_{k} = h(\mathbf{x}_k) + \mathbf{v}_k$  其中 $\mathbf{x}_k$是状态变量 $\mathbf{u}_k$是控制输...</div></div></div></a><a class="pagination-related" href="/posts/34883/" title="课题进度03"><img class="cover" src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20260319121544074.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-03-19</div><div class="info-item-2">课题进度03</div></div><div class="info-2"><div class="info-item-1">课题进度03使用均方根误差(RMSE)来描述跟踪误差。 1. 已知目标的真实轨迹(理论分析/仿真时)假设你在某一时刻 kk 对目标的位置估计值是(x_k,y_k)，而目标的真实位置是(x_k^{true},y_k^{true}) 第一步：计算单点误差 该时刻的定位误差平方为： \text{误差平方}_k=(x_k-x_k^{true})^2+(y_k-y_k^{true})^2第二步：计算累积后的均方根误差 如果你进行了 N 次独立的蒙特卡洛仿真，或者在某一时间段内有 N 个时刻的跟踪数据，那么位置均方根误差的计算公式为： 2. 不知道目标的真实轨迹(实际工程中)在真实的水下跟踪场景中，我们往往无法知道目标的确切位置（如果知道了就不需要跟踪了）。这种情况下，我们无法直接使用上面的公式。此时，均方根误差通常被用来衡量滤波器输出本身的稳定性，即一致性。 在这种情况下，计算依据的是滤波器提供的协方差矩阵 P_k 第一步：提取协方差 卡尔曼滤波或粒子滤波在给出位置估计(\hat{x}, \hat{y}) 的同时，还会给出一个协方差矩阵，它描述了滤波器对自己估计结果的“不确定度”。 对于二...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/ali.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Alice</div><div class="author-info-description">记录美好生活，分享技术知识。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">22</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">20</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xiaocaiv"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/xiaocaiv" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:2961197321@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">允许别人做别人，允许自己做自己</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%BE%E9%A2%98%E8%BF%9B%E5%BA%A602-%E5%8F%8C%E5%B9%B3%E5%8F%B0%E5%8D%95%E7%9B%AE%E6%A0%87%E8%B7%9F%E8%B8%AA%E4%BB%BF%E7%9C%9F"><span class="toc-text">课题进度02-双平台单目标跟踪仿真</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%A0%E4%BD%95%E7%B2%BE%E5%BA%A6%E5%9B%A0%E5%AD%90-GDOP-%EF%BC%9A"><span class="toc-text">几何精度因子(GDOP)：</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/18946/" title="课题进度04">课题进度04</a><time datetime="2026-03-19T02:16:41.000Z" title="发表于 2026-03-19 10:16:41">2026-03-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/34883/" title="课题进度03">课题进度03</a><time datetime="2026-03-19T02:12:44.000Z" title="发表于 2026-03-19 10:12:44">2026-03-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/18562/" title="课题进度02">课题进度02</a><time datetime="2026-03-19T01:57:20.000Z" title="发表于 2026-03-19 09:57:20">2026-03-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/35256/" title="课题进度01">课题进度01</a><time datetime="2026-01-28T02:20:00.000Z" title="发表于 2026-01-28 10:20:00">2026-01-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/7424/" title="Ubuntu连接USB设备">Ubuntu连接USB设备</a><time datetime="2026-01-28T01:56:39.000Z" title="发表于 2026-01-28 09:56:39">2026-01-28</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/20260319121300136.jpg);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Alice</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.1</a></span></div><div class="footer_custom_text"><p> <a style="margin-inline:5px"target="_blank" href="https://hexo.io/zh-cn/"><img src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&logo=hexo" title="博客框架为 Hexo v8.1.0"></a> <a style="margin-inline:5px"target="_blank" href="https://butterfly.js.org/"><img src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=flat&logo=butterfly" title="主题为 Butterfly v5.5.1"></a> <a style="margin-inline:5px"target="_blank" href="https://github.com"><img src="https://img.shields.io/badge/Source-Github-d021d6?style=flat&logo=github" title="本站项目由 Github 托管"></a> <a style="margin-inline:5px"target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img src="https://img.shields.io/badge/Copyright-BY--NC--SA-red?style=flat&logo=alchemy" title="本站采用知识共享署名-非商业性使用"></a> </p></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.1"></script><script src="/js/main.js?v=5.5.1"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script></div><script src="/scripts/footer_time.js"></script><div class="aplayer no-destroy" data-id="17375390739" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="false" data-listFolded="true" data-lrcType="-1"> </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"]):not([href="/scripts/footer_time.js/"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      const usePjax = true
+      true
+        ? (usePjax ? pjax.loadUrl('/404.html') : window.location.href = '/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.1"></script></div></div></body></html>
