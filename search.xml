@@ -4,19 +4,6 @@
   
     
     <entry>
-      <title>课题进度05-数据关联算法</title>
-      <link href="/posts/1154/"/>
-      <url>/posts/1154/</url>
-      
-        <content type="html"><![CDATA[<h1 id="课题进度05-数据关联算法"><a href="#课题进度05-数据关联算法" class="headerlink" title="课题进度05-数据关联算法"></a>课题进度05-数据关联算法</h1><h2 id="1-数据关联"><a href="#1-数据关联" class="headerlink" title="1. 数据关联"></a>1. 数据关联</h2><p>包括量测与目标航迹之间的关联，以及不同传感器之间的航迹关联</p><p>方法：</p><p>确定性数据关联：最近邻、全局最近邻、多假设跟踪</p><p>概率性数据关联：概率性数据关联、联合概率性数据关联、概率多假设跟踪</p><p>确定性关联计算效率高，在环境简单、量测和目标之间的关系明确时效果较好，然而在目标密集或量测噪声大的场景易于出现关联错误。</p><p>概率性关联能够更加全面地处理量测数据的不确定性和目标之间的相互影响，可以更好地应对似然模糊的数据。</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260316112015409.png" alt="image-20260316112015409"></p><h2 id="2-确定性关联"><a href="#2-确定性关联" class="headerlink" title="2. 确定性关联"></a>2. 确定性关联</h2><h3 id="2-1-最近邻数据关联算法（NN）"><a href="#2-1-最近邻数据关联算法（NN）" class="headerlink" title="2.1 最近邻数据关联算法（NN）"></a>2.1 最近邻数据关联算法（NN）</h3><p>核心原理：在某一时刻的所有量测中，只将距离跟踪目标预测位置最近的量测认定为与跟踪目标相关的真实量测。</p><p>工作步骤：</p><p>（1）<strong>状态预测</strong>：基于目标的上一时刻状态（位置、速度），利用卡尔曼滤波等滤波算法，预测出目标在当前时刻的<strong>位置</strong>（即预测位置）。</p><p>（2）<strong>建立关联门</strong>：以预测位置为中心，划定一个特定的区域，称为“关联门”或“波门”（Gate）。只有落入这个区域内的观测点迹，才有可能与该目标关联。关联门的大小通常由预测的不确定性（如协方差矩阵）决定，是筛选候选观测的第一道关卡。</p><p>（3）<strong>计算统计距离</strong>：对于落入关联门内的每一个候选观测，计算其与目标预测位置之间的“距离”。这个距离不是简单的欧氏距离，而是一个经过加权的<strong>统计距离</strong>（也称为马氏距离）。计算公式通常如下：</p><ul><li><p>残差（观测值与预测值的差）：</p><script type="math/tex; mode=display">e_{i j} ( k )=Z_{j} ( k )-H \hat{X}_{i} ( k | k-1 )</script><p>其中，$Z_j(k)$是第$j$个观测，$\hat{X}_i(k|k-1)$是目标$i$的状态预测，$H$是观测矩阵。</p></li><li><p>统计距离：</p><script type="math/tex; mode=display">d_{i j}^{2}=e_{i j} ( k )^{T} S ( k )^{-1} e_{i j} ( k )</script><p>其中，$S(k)$是残差的协方差矩阵。这个距离综合考虑了预测的不确定性，使得算法能更智能地判断“接近程度”。</p></li></ul><p>（4）<strong>确定关联对</strong>：在所有候选观测中，选择<strong>统计距离最小</strong>的那个观测，作为与该目标当前时刻关联的观测点迹。如果一个观测同时落入多个目标的关联门内，通常会根据距离最近的原则分配给其中一个目标，或者采用更复杂的分配策略。</p><p>（5）<strong>更新目标状态</strong>：将最终关联上的观测值用于卡尔曼滤波等跟踪算法中，更新目标的当前状态，为下一时刻的预测做准备。</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/%E6%9C%80%E8%BF%91%E9%82%BB%E5%85%B3%E8%81%94%E6%B5%81%E7%A8%8B%E5%9B%BE.png" alt="最近邻关联流程图"></p><p><strong>优缺点分析</strong></p><p>优点：</p><p>计算量小，易于实现：原理直观，计算简单，对计算资源要求低，非常适合于工程应用。</p><p>在稀疏目标环境下表现良好：当目标数量少且距离较远时，关联关系明确，算法能可靠地工作。</p><p>缺点：</p><p>抗干扰能力差：在目标密集或杂波（虚警）多的环境中，很容易将杂波点或邻近目标的点误认为是当前目标的点，导致<strong>错误关联</strong>和<strong>目标丢失</strong>。</p><p>缺少全局观念：只追求每个目标的“局部最优”，可能导致整体关联效果变差。</p><h3 id="2-2-全局最近邻数据关联（GNN）"><a href="#2-2-全局最近邻数据关联（GNN）" class="headerlink" title="2.2 全局最近邻数据关联（GNN）"></a>2.2 全局最近邻数据关联（GNN）</h3><p><strong>含义</strong>：是一种在目标跟踪中用于解决“观测-航迹”关联问题的优化方法，将关联视为一个全局优化问题，通过求解一个“一对一”的最优分配，使所有已确认航迹与其关联观测的总代价最小。</p><h4 id="（1）核心思想"><a href="#（1）核心思想" class="headerlink" title="（1）核心思想"></a>（1）核心思想</h4><p><strong>在满足每个航迹最多关联一个观测、每个观测最多关联一个航迹的约束下，找到一组关联对，使得所有关联对的总代价（如统计距离之和）最小</strong>。</p><h4 id="（2）算法流程"><a href="#（2）算法流程" class="headerlink" title="（2）算法流程"></a>（2）算法流程</h4><p>GNN通常在每一帧（每个采样时刻）执行以下步骤：</p><p><strong>1.状态预测</strong>：利用上一时刻的目标状态（如位置、速度），通过卡尔曼滤波等预测模型，计算每个航迹在当前时刻的预测位置及预测协方差。</p><p><strong>2.门限筛选（Gating）</strong>：为每个航迹设定一个关联门（如马氏距离阈值），将落在门内的观测作为候选。这一步可以剔除明显不合理的观测，减小后续分配问题的规模。</p><p><strong>3.构建代价矩阵</strong>：对于所有通过了门限的“航迹-观测”对，计算一个代价（通常是统计距离）。若某对组合未通过门限，则代价设为无穷大或一个很大的值，表示不可关联。同时，还需考虑<strong>虚警（观测可能源于杂波）</strong>和<strong>漏检（航迹可能没有对应观测）</strong>的可能性，通常会为每个航迹增加一个虚拟的“漏检”选项，为每个观测增加一个虚拟的“新航迹”或“杂波”选项。</p><p><strong>4.求解最优分配</strong>：将代价矩阵输入分配求解算法（匈牙利算法），得到一组“一对一”的关联对，使得总代价最小。</p><p><strong>5.关联结果处理：</strong></p><ul><li>关联上的航迹：用对应的观测更新状态（如卡尔曼更新）。</li><li>未关联到观测的航迹：进行漏检处理（如延长预测、降低置信度），若连续多次漏检则终止航迹。</li><li>未关联到航迹的观测：用于启动新航迹（航迹起始）或作为虚警丢弃。</li></ul><h4 id="（3）代价矩阵的构建"><a href="#（3）代价矩阵的构建" class="headerlink" title="（3）代价矩阵的构建"></a>（3）代价矩阵的构建</h4><p>代价矩阵是GNN的核心。代价通常定义为<strong>统计距离的平方</strong>，即马氏距离的平方：</p><script type="math/tex; mode=display">d_{i j}^{2}=\mathbf{e}_{i j}^{\top} \mathbf{S}_{i}^{-1} \mathbf{e}_{i j}</script><p>其中：</p><ul><li>$\mathbf{e}<em>{i j}=\mathbf{z}</em>{j}-\mathbf{H} \hat{\mathbf{x}}_{i}$ :观测$z_j$与航迹$i$的预测观测之间的残差。</li><li>$\mathbf{S}<em>{i}=\mathbf{H} \mathbf{P}</em>{i} \mathbf{H}^{\top}+\mathbf{R}$: 残差协方差矩阵（$P_i$为状态预测协方差，$R$为观测噪声协方差）</li><li>这个代价反映了观测与预测之间的“异常程度”，考虑了预测的不确定性。</li></ul><p>在构建代价矩阵时，还需考虑以下几种情况：</p><ul><li><strong>航迹-观测</strong>对：若观测未通过航迹的门限，则代价设为∞∞。</li><li><strong>航迹-漏检</strong>：每个航迹都有一个“漏检”的虚拟观测，其代价通常设为与航迹相关的常数（如对数似然比阈值），用于表示“宁愿不关联也不随意关联”的容忍度。</li><li><strong>杂波-观测</strong>：每个观测都有一个“杂波”或“新航迹”的虚拟航迹，其代价设为与观测相关的常数（如基于杂波密度计算）。</li></ul>]]></content>
-      
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>Ubuntu与IMX6ULL开发板网络通讯设置</title>
       <link href="/posts/41396/"/>
       <url>/posts/41396/</url>
@@ -61,6 +48,383 @@
         <tags>
             
             <tag> Hexo </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>课题进度21-舰船辐射噪声</title>
+      <link href="/posts/33693/"/>
+      <url>/posts/33693/</url>
+      
+        <content type="html"><![CDATA[<h1 id="课题进展21-舰船辐射噪声"><a href="#课题进展21-舰船辐射噪声" class="headerlink" title="课题进展21-舰船辐射噪声"></a>课题进展21-舰船辐射噪声</h1><h2 id="1-舰船辐射噪声的组成"><a href="#1-舰船辐射噪声的组成" class="headerlink" title="1. 舰船辐射噪声的组成"></a>1. 舰船辐射噪声的组成</h2><p> 根据大量的舰船噪声数据分析，可确认噪声源主要由三部分组成，分别是<strong>水动力</strong>、<strong>机械振动</strong>和<strong>螺旋桨</strong></p><h3 id="1-1-机械振动噪声"><a href="#1-1-机械振动噪声" class="headerlink" title="1.1 机械振动噪声"></a>1.1 机械振动噪声</h3><p>机械噪声指的是航行或作业船上的各种机械的振动，通过船体向水中辐射而形成的噪声，是低航速时舰船辐射噪声的主要成分。<br><strong>频谱特征</strong>：以低频线谱为主，集中在1kHz以下，具有显著的周期性。<br><strong>识别价值</strong>：这些线谱如同舰船的“<strong>声学指纹</strong>”，是进行目标分类和识别（判断舰船类型）的关键特征</p><h3 id="1-2-螺旋桨噪声"><a href="#1-2-螺旋桨噪声" class="headerlink" title="1.2 螺旋桨噪声"></a>1.2 螺旋桨噪声</h3><p>螺旋桨在旋转过程中与水流相互作用直接产生并辐射的噪声，主要还是空化噪声。</p><h3 id="1-3-水动力噪声"><a href="#1-3-水动力噪声" class="headerlink" title="1.3 水动力噪声"></a>1.3 水动力噪声</h3><p>水动力噪声是由不规则的水流流过运动船只表面而形成，一般情况下，舰船水动力噪声在强度方面往往被机械噪声和螺旋桨噪声所覆盖。<br>频率特征：连续谱，通常类似于“白噪声”</p><h2 id="2-噪声特征提取方法"><a href="#2-噪声特征提取方法" class="headerlink" title="2. 噪声特征提取方法"></a>2. 噪声特征提取方法</h2><h3 id="2-1-LOFAR谱分析（Low-Frequency-Analysis-and-Recording）"><a href="#2-1-LOFAR谱分析（Low-Frequency-Analysis-and-Recording）" class="headerlink" title="2.1 LOFAR谱分析（Low Frequency Analysis and Recording）"></a>2.1 LOFAR谱分析（Low Frequency Analysis and Recording）</h3><p>低谱分析与记录谱，通过短时傅里叶变换对输入的舰船辐射噪声进行分析，从而得出其时频变化数据。</p><p>LOFAR 直接对原始声信号的<strong>低频段做频谱分析</strong>，捕获舰船机械设备产生的离散线谱和宽带连续谱。</p><p><strong>为什么是线谱？</strong> 机械设备的振动通常是周期性的（旋转、往复、啮合），在频域中表现为窄带离散峰。这些峰就像舰船的”机械指纹”——同一型号的船用同一批设备，线谱结构高度相似；不同型号搭载不同设备，线谱集合差异显著。</p><h3 id="2-2-DEMON谱分析（Detection-of-Envelope-Modulation-On-Noise）"><a href="#2-2-DEMON谱分析（Detection-of-Envelope-Modulation-On-Noise）" class="headerlink" title="2.2 DEMON谱分析（Detection of Envelope Modulation On Noise）"></a>2.2 DEMON谱分析（Detection of Envelope Modulation On Noise）</h3><p>噪声包络调制检测法，主要处理的是噪声调制信号，从舰船辐射噪声的高频宽带成分中提取螺旋桨旋转产生的周期性调制。处理流程分为四个部分：</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/DEMON%E8%B0%B1%E5%88%86%E6%9E%90%E6%B5%81%E7%A8%8B%E5%9B%BE.png" alt="DEMON谱分析流程图"></p><p>（1）<strong>带通滤波</strong>：截取具有调制分量的频带信号</p><p>（2）<strong>包络检波</strong>：提取幅度变化，获取包络信息，通常采用平方解调和绝对值解调的方法进行。<br>绝对解调：先对带通信号取绝对值（全波整流），会产生直流分量+调制频率分量，然后再进行低通滤波去除载波残余，保留调制包络<br>平方解调：平方后低频调制分量出现在差频处，经低通滤波提取，等效于“能量包络”而非“幅度包络”</p><p>（3）<strong>低通滤波：</strong>因为舰船辐射噪声的轴频、叶频及其谐波分类引起的调制主要分布在 0-100Hz范围内所以需要再采用低通滤波器对信号进行处理以截取有效信息。</p><h3 id="2-3-MFCC梅尔倒谱分析（Mel-Frequency-Cepstral-Coefficient）"><a href="#2-3-MFCC梅尔倒谱分析（Mel-Frequency-Cepstral-Coefficient）" class="headerlink" title="2.3 MFCC梅尔倒谱分析（Mel-Frequency Cepstral Coefficient）"></a>2.3 MFCC梅尔倒谱分析（Mel-Frequency Cepstral Coefficient）</h3><p>梅尔刻度以平均刻度出现在各个频段，与人耳听觉的吻合程度更高。MFCC 模拟<strong>人耳对声音的感知方式</strong>来表征音频信号。</p><p>人耳对频率的感知不是线性的</p><ul><li><strong>对低频信号更敏感</strong>：能轻易区分 500Hz 和 1000Hz 的差别。</li><li><strong>对高频信号较迟钝</strong>：很难区分 10000Hz 和 10500Hz 的差别。</li></ul><p>梅尔刻度是一个<strong>非线性频率刻度</strong>，它模拟了这种听觉特性。频率 <em>f</em>（Hz）与梅尔频率 <em>m</em>（Mel）的近似转换公式为：</p><script type="math/tex; mode=display">m=2595×log_{10}(1+f/700)</script><p><strong>简单理解</strong>：在低频区域，梅尔刻度变化快（分辨率高）；在高频区域，梅尔刻度变化慢（分辨率低）。</p><h3 id="2-4-噪声特征综合构建"><a href="#2-4-噪声特征综合构建" class="headerlink" title="2.4 噪声特征综合构建"></a>2.4 噪声特征综合构建</h3><p>将LOFAR谱分析和DEMON谱分析结合起来，综合构建噪声特征</p><p><strong>核心差异</strong>：LOFAR 告诉你”船上装了什么设备”（机械特征），DEMON 告诉你”螺旋桨怎么转”（推进特征）。同型号船装同样设备→LOFAR 线谱接近；但螺旋桨磨损程度和转速不同→DEMON 谱仍有差异。两类特征互补是天然成立的。</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/LOFAR%2BDEMON%E8%9E%8D%E5%90%88%E6%A1%86%E6%9E%B6.png" alt="LOFAR+DEMON融合框架"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 水声相关 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 舰船辐射噪声 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>课题进度20-撰写小论文</title>
+      <link href="/posts/21575/"/>
+      <url>/posts/21575/</url>
+      
+        <content type="html"><![CDATA[<h1 id="课题进展20-撰写小论文"><a href="#课题进展20-撰写小论文" class="headerlink" title="课题进展20-撰写小论文"></a>课题进展20-撰写小论文</h1><h2 id="1-投稿"><a href="#1-投稿" class="headerlink" title="1. 投稿"></a>1. 投稿</h2><p>投稿方向：《水下无人系统学报》</p><h2 id="2-补充工作"><a href="#2-补充工作" class="headerlink" title="2. 补充工作"></a>2. 补充工作</h2><h3 id="2-1-Monte-Carlo-统计分析"><a href="#2-1-Monte-Carlo-统计分析" class="headerlink" title="2.1 Monte Carlo 统计分析"></a>2.1 Monte Carlo 统计分析</h3><p>当前只有1个随机种子，1次运行，需要：</p><ul><li>至少 <strong>100 次独立 Monte Carlo 运行</strong>（不同随机种子）</li><li>报告<strong>均值 ± 标准差</strong>的 RMSE</li><li>统计显著性检验（t 检验或 Wilcoxon）</li></ul><h3 id="2-2-多场景对比"><a href="#2-2-多场景对比" class="headerlink" title="2.2 多场景对比"></a>2.2 多场景对比</h3><p>当前仅1组目标初始条件，至少需要两组</p><p>平行运动、交叉运动，并且每种场景下再分3种杂波密度（λ_fa ∈ {2, 4, 6}）</p><h3 id="2-3-增加对照基线"><a href="#2-3-增加对照基线" class="headerlink" title="2.3 增加对照基线"></a>2.3 增加对照基线</h3><p>当前仅有 GNN vs JPDA 对比。至少需要增加 <strong>2 种基线</strong>：</p><ul><li><strong>固定平台轨迹</strong>（无 GDOP 机动）：验证自适应机动的收益</li><li><strong>随机平台机动</strong>：验证 GDOP 优化的有效性（而非随机游走）</li></ul><h2 id="3-论文结构"><a href="#3-论文结构" class="headerlink" title="3. 论文结构"></a>3. 论文结构</h2><p>题目：《基于GDOP优化的双AUV协同纯方位目标跟踪方法》</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">1. 引言（水下声呐跟踪背景 + 传感器管理问题）</span><br><span class="line">2. 问题建模（双平台纯方位量测模型 + GDOP定义）</span><br><span class="line">3. GDOP驱动的自适应AUV机动策略</span><br><span class="line">4. 多目标数据关联算法（GNN / JPDA 简述）</span><br><span class="line">5. 仿真验证</span><br><span class="line">   5.1 仿真参数设置</span><br><span class="line">   5.2 Monte Carlo 统计分析</span><br><span class="line">   5.3 不同杂波密度下的性能对比</span><br><span class="line">   5.4 不同平台机动策略的消融实验</span><br><span class="line">   5.5 目标交叉场景的鲁棒性验证</span><br><span class="line">6. 结论</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> 水声相关 </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>课题进度19-增加杂波</title>
+      <link href="/posts/6215/"/>
+      <url>/posts/6215/</url>
+      
+        <content type="html"><![CDATA[<h1 id="课题进展19-增加杂波"><a href="#课题进展19-增加杂波" class="headerlink" title="课题进展19-增加杂波"></a>课题进展19-增加杂波</h1><p>在没有杂波干扰的情况下，GNN算法的跟踪误差是要比JPDA算法的跟踪误差要小的。这是因为在没有杂波的干净环境里，JPDA的软分配反而把清晰的正确量测给“模糊化”了，导致跟踪效果变差。                    </p><h2 id="1-解决办法"><a href="#1-解决办法" class="headerlink" title="1. 解决办法"></a>1. 解决办法</h2><p><strong>虚假量测生成：从“随机散布”改为“近目标扰动”</strong><br>在真实目标附近高斯扰动（σ=70m）→ 虚假方位角天然接近真实值 → 频繁落入门限</p><h2 id="2-仿真结果"><a href="#2-仿真结果" class="headerlink" title="2. 仿真结果"></a>2. 仿真结果</h2><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260511145129606.png" alt="image-20260511145129606"></p><center>图1 GNN算法的机动轨迹</center><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260511145148186.png" alt="image-20260511145148186"></p><center>图2 JPDA算法的机动轨迹</center><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/%E6%94%B9%E8%BF%9B%E4%B9%8B%E5%90%8E.png" alt="改进之后"></p><center>图3 位置误差和速度误差</center><p>从图1中可以看出，由于在目标周围增加了杂波，增大了GNN算法的虚假量测，导致在跟踪交叉目标时出现了误跟踪，但是又由于平台的机动机制，后期调整过来了。</p><p>图2是JPDA算法的跟踪轨迹图，可以看出虽然有杂波的存在，但是对于JPDA的影响较小，所以对于目标的跟踪比较稳定，相较于GNN算法误差小。</p><p>从图3中也可以明显看出JPDA算法在位置误差和速度误差上都要优于GNN算法。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 水声相关 </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>课题进展18-目标检测前跟踪方法文献阅读</title>
+      <link href="/posts/24704/"/>
+      <url>/posts/24704/</url>
+      
+        <content type="html"><![CDATA[<h1 id="课题进展18-文献阅读"><a href="#课题进展18-文献阅读" class="headerlink" title="课题进展18-文献阅读"></a>课题进展18-文献阅读</h1><h2 id="《基于概率数据互联的水下目标检测前跟踪方法》"><a href="#《基于概率数据互联的水下目标检测前跟踪方法》" class="headerlink" title="《基于概率数据互联的水下目标检测前跟踪方法》"></a>《基于概率数据互联的水下目标检测前跟踪方法》</h2><h3 id="1-基本概念"><a href="#1-基本概念" class="headerlink" title="1. 基本概念"></a>1. 基本概念</h3><p>检测前跟踪（Track-Before-Detect, TBD）是一种针对低信噪比（SNR）环境下弱目标检测与跟踪的信号处理方法。<br>核心思想：不预先设置检测门限，而是直接利用原始量测数据进行多帧递推处理，同时估计目标的存在概率和运动状态。</p><p>跟踪前检测（Detect Before Track, DBT）<br>将声纳处理过的信号通过检测门限阈值来判断是否为目标的量测，在经过数据融合和滤波算法将目标轨迹平滑处理以实现目标跟踪。<br><strong>需设置检测门限，低SNR时漏检率高，高杂波时虚警率高</strong></p><h3 id="2-研究问题"><a href="#2-研究问题" class="headerlink" title="2. 研究问题"></a>2. 研究问题</h3><ul><li>跟踪前检测（DBT）需设置检测门限，门限过低导致虚警，过高导致漏检</li><li>传统检测前跟踪（TBD）虽避免了门限设置，但在高杂波密度下跟踪精度和收敛速度较差。</li></ul><h3 id="3-算法创新"><a href="#3-算法创新" class="headerlink" title="3. 算法创新"></a>3. 算法创新</h3><p><strong>创新点</strong>：将数据互联算法（PDA/JPDA）与粒子滤波检测前跟踪（PF-TBD）</p><ul><li>PDA-PF-TBD：适用于单目标跟踪，概率数据互联+粒子滤波TBD</li><li>JPDA-PF-TBD：适用于多目标跟踪，联合概率数据互联+粒子滤波TBD</li></ul><p><strong>核心思想</strong></p><ul><li>使用<strong>概率数据互联（PDA）</strong> 或<strong>联合概率数据互联（JPDA）</strong> 计算量测数据的后验概率；</li><li>结合<strong>粒子滤波（PF）</strong> 进行目标状态估计与存在概率计算；</li><li>不设置检测门限，直接利用原始量测数据进行递推处理。</li></ul><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/%E6%96%87%E7%8C%AE-JPDA-PF-TBD%E7%AE%97%E6%B3%95%E6%B5%81%E7%A8%8B%E5%9B%BE.png" alt="文献-JPDA-PF-TBD算法流程图" style="zoom: 25%;" /></p><h3 id="4-仿真结果"><a href="#4-仿真结果" class="headerlink" title="4. 仿真结果"></a>4. 仿真结果</h3><h4 id="4-1-单目标仿真（匀速直线运动）"><a href="#4-1-单目标仿真（匀速直线运动）" class="headerlink" title="4.1 单目标仿真（匀速直线运动）"></a>4.1 单目标仿真（匀速直线运动）</h4><p>假设目标做匀速直线运动，信噪比SNR分别设置为9dB、6dB、3dB</p><p>首先是SNR=9dB时</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260508152543926.png" alt="image-20260508152543926"></p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260508152723846.png" alt="image-20260508152723846"></p><p>SNR=6dB时</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260508152756597.png" alt="image-20260508152756597"></p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260508152815845.png" alt="image-20260508152815845"></p><p>SNR=3dB时</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260508153107730.png" alt="image-20260508153107730"></p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260508153156181.png" alt="image-20260508153156181"></p><div class="table-container"><table><thead><tr><th>算法</th><th>9DB</th><th>6dB</th><th>3dB</th></tr></thead><tbody><tr><td>PF-TBD</td><td>84%</td><td>80%</td><td>74%</td></tr><tr><td>NN-PF-TBD</td><td>98%</td><td>90%</td><td>78%</td></tr><tr><td><strong>PDA-PF-TBD</strong></td><td><strong>96%</strong></td><td><strong>94%</strong></td><td><strong>92%</strong></td></tr></tbody></table></div><h4 id="4-2-多目标仿真（航迹交叉场景）"><a href="#4-2-多目标仿真（航迹交叉场景）" class="headerlink" title="4.2 多目标仿真（航迹交叉场景）"></a>4.2 多目标仿真（航迹交叉场景）</h4><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260508155223270.png" alt="image-20260508155223270"></p><center>(a)目标跟踪轨迹对比</center><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260508160151754.png" alt="image-20260508160151754"></p><center>(b)目标1位置RMSE</center><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260508160205432.png" alt="image-20260508160205432"></p><center>(c)目标2位置RMSE</center><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260508160210007.png" alt="image-20260508160210007"></p><center>(d)目标3位置RMSE</center><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260508160654886.png" alt="image-20260508160654886"></p><div class="table-container"><table><thead><tr><th>算法</th><th>目标1</th><th>目标2</th><th>目标3</th></tr></thead><tbody><tr><td>PF-TBD</td><td>72%</td><td>88%</td><td>68%</td></tr><tr><td>NN-PF-TBD</td><td>76%</td><td>98%</td><td>90%</td></tr><tr><td><strong>JPDA-PF-TBD</strong></td><td><strong>92%</strong></td><td><strong>96%</strong></td><td><strong>96%</strong></td></tr></tbody></table></div><ul><li>JPDA-PF-TBD在航迹交叉时仍保持<strong>&gt;92%</strong>检测概率</li><li>NN-PF-TBD在目标1出现<strong>误跟现象</strong>（将目标2或3的量测错误关联到目标1）</li><li>PF-TBD完全不适用于多目标场景</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 水声相关 </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>课题进展17-JPDA跟踪误差劣于GNN问题</title>
+      <link href="/posts/45315/"/>
+      <url>/posts/45315/</url>
+      
+        <content type="html"><![CDATA[<h1 id="课题进展17-JPDA跟踪误差劣于GNN"><a href="#课题进展17-JPDA跟踪误差劣于GNN" class="headerlink" title="课题进展17-JPDA跟踪误差劣于GNN"></a>课题进展17-JPDA跟踪误差劣于GNN</h1><h2 id="1-问题描述"><a href="#1-问题描述" class="headerlink" title="1. 问题描述"></a>1. 问题描述</h2><p>在转弯交叉运动场景中，使用JPDA得到的跟踪误差比GNN的要大</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260422185956957.png" alt="image-20260422185956957"></p><center>图1 位置RMSE和速度RMSE</center><h2 id="2-原因分析"><a href="#2-原因分析" class="headerlink" title="2. 原因分析"></a>2. 原因分析</h2><p><strong>没有加入杂波和漏检</strong></p><p>在没有杂波的环境中，GNN的表现就是近似最优的。JPDA 的复杂逻辑是用来在满屏都是杂乱噪点（高杂波）且目标经常隐身（低检测概率）的环境下保命的。在没有杂波的干净环境里，JPDA 的“软分配”反而把原本清晰的正确量测给“模糊化”了漏检。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 水声相关 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 数据关联 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>课题进展16-联合概率数据关联算法</title>
+      <link href="/posts/7364/"/>
+      <url>/posts/7364/</url>
+      
+        <content type="html"><![CDATA[<h1 id="课题进展-联合概率数据关联算法-JPDA"><a href="#课题进展-联合概率数据关联算法-JPDA" class="headerlink" title="课题进展-联合概率数据关联算法(JPDA)"></a>课题进展-联合概率数据关联算法(JPDA)</h1><h2 id="1-概率数据关联算法-PDA"><a href="#1-概率数据关联算法-PDA" class="headerlink" title="1. 概率数据关联算法(PDA)"></a>1. 概率数据关联算法(PDA)</h2><p>在跟踪一个目标时，传感器会收到多个量测点，其中至多一个量测来自目标，其余来自杂波（如海洋噪声、混响、生物干扰等）。</p><p>PDA不硬性选择一个量测作为目标量测，而是对所有可能源于目标的量测赋予一个概率，然后概率加权融合这些量测来更新目标状态。</p><h2 id="2-PDA在多目标下的失效"><a href="#2-PDA在多目标下的失效" class="headerlink" title="2. PDA在多目标下的失效"></a>2. PDA在多目标下的失效</h2><p>考虑一个两目标场景（目标A、目标B），两个量测（z1、z2）。如果两个目标的预测位置很近，跟踪门会发生重叠。</p><p><strong>PDA独立处理每个目标：</strong><br>为目标A计算$\beta_i$时，只考虑它自己的跟踪门内的量测，忽略目标B的存在<br>这会导致：如果z1靠近目标A、z2靠近目标B，但两个门重叠，PDA可能将z1以高概率关联给目标A，将z2高概率关联给目标B，看似没问题。但若两个量测都靠近两个目标，PDA可能将<strong>同一个量测同时高概率关联给两个目标</strong>，造成状态估计的偏差甚至发散。</p><p><strong>根本问题</strong>：<br>一个量测最多只能源于一个目标（或杂波）。PDA 没有强制这一约束，而 <strong>JPDA 通过联合事件显式保证了这一约束</strong>。</p><h2 id="3-JPDA的核心思想"><a href="#3-JPDA的核心思想" class="headerlink" title="3. JPDA的核心思想"></a>3. JPDA的核心思想</h2><ol><li>枚举所有可能的“目标-量测分配”方案，满足：<br>每个量测最多分配给一个目标<br>每个目标最多分配一个量测<br>未分配的量测视为杂波<br>未分配到量测的目标视为漏检</li><li>计算每个联合事件的概率</li><li>对于每个目标，将其所有可能的分配（包括漏检事件）对应的量测进行概率加权融合，更新该目标的状态</li></ol><p>这样JPDA就解决了“量测竞争”问题，保证了全局一致性。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 水声相关 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 数据关联 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>课题进展15-多目标跟踪的数据关联算法文献阅读</title>
+      <link href="/posts/27563/"/>
+      <url>/posts/27563/</url>
+      
+        <content type="html"><![CDATA[<h1 id="课题进展15-文献阅读"><a href="#课题进展15-文献阅读" class="headerlink" title="课题进展15-文献阅读"></a>课题进展15-文献阅读</h1><h2 id="《双观测站水下纯方位多目标跟踪的数据关联算法》"><a href="#《双观测站水下纯方位多目标跟踪的数据关联算法》" class="headerlink" title="《双观测站水下纯方位多目标跟踪的数据关联算法》"></a>《双观测站水下纯方位多目标跟踪的数据关联算法》</h2><h3 id="1-研究问题"><a href="#1-研究问题" class="headerlink" title="1. 研究问题"></a>1. 研究问题</h3><p>针对双观测站纯方位系统定位多个目标时，产生的大量虚假点量测数据和虚假量测数据都呈平方倍数增长的问题，提出了修正最近邻域法（MNNF）和修正概率数据关联算法（MPDA）。</p><p>三角交叉定位会产生 $n×n$ 交叉点，其中真实目标数为$n$，虚假点为$n×(n-1)$，所以当存在多个目标和虚假量测时，量测数据量呈<strong>平方倍数增长</strong>，传统数据关联方法（如NNF、JPDA）难以直接应用。</p><h3 id="2-改进算法"><a href="#2-改进算法" class="headerlink" title="2. 改进算法"></a>2. 改进算法</h3><h4 id="（1）修正最近邻域法（MNNF）"><a href="#（1）修正最近邻域法（MNNF）" class="headerlink" title="（1）修正最近邻域法（MNNF）"></a>（1）修正最近邻域法（MNNF）</h4><p><strong>基础：</strong>最新邻域法，选取<strong>新息加权范数</strong>最小的量测作为真实值</p><p>新息：指的是<strong>实际量测值</strong>与<strong>滤波器预测值</strong>之间的差值，代表量测带来的新信息</p><p>新息越大，说明这个实际量测值与我们预期偏离越远；新息越小，说明它越接近预期。</p><p>加权范数：仅仅看新息是不够的，因为不同方向的误差、不同传感器的精度都不同，所以需要加权。</p><p>加权矩阵：通常使用新息协方差矩阵 $S(k)$ 的逆矩阵。$S(k)$ 反映了当前预测的不确定性。如果某个方向的预测非常不准（方差大），那么即使新息较大，也会被“宽容”处理。</p><p>计算公式：$新息加权范数² = V(k)^T <em> S(k)^{-1} </em> V(k)$</p><p><strong>改进点：</strong>增加了对跟踪门内没有有效量测的处理</p><p>定义两个事件：</p><ul><li>$S_0$：跟踪门内不存在有效量测 → 用预测值代替更新值。</li><li>$S_1$：跟踪门内存在有效量测→ 使用NNF选择最优量测。</li></ul><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/%E6%96%87%E7%8C%AE-%E4%BF%AE%E6%AD%A3%E6%9C%80%E8%BF%91%E9%82%BB%E5%9F%9F%E7%AE%97%E6%B3%95%E6%B5%81%E7%A8%8B%E5%9B%BE.png" alt="文献-修正最近邻域算法流程图" style="zoom: 67%;" /></p><center>图1 修正最近邻域算法流程图</center><h4 id="（2）修正概率数据关联算法（MPDA）"><a href="#（2）修正概率数据关联算法（MPDA）" class="headerlink" title="（2）修正概率数据关联算法（MPDA）"></a>（2）修正概率数据关联算法（MPDA）</h4><p><strong>基础：</strong>联合概率数据关联算法（JPDA），但JPDA计算复杂，实时性差。</p><p>联合概率数据关联算法（JPDA）：核心思想是不武断地某个量测唯一分配给某个目标，而是计算每一个候选量测与每一个可能目标之间的关联概率，然后对所有可能的目标—量测关联事件进行联合加权。适用于杂波环境（存在大量虚假量测）下，多个目标的跟踪。</p><ul><li>优点：精度高，通过概率加权，在杂波和密集目标环境下比NNF等硬分配方法更鲁棒、更准确；处理模糊性强，天生适合处理目标交叉、靠的很近、以及量测归属模糊的情况。</li><li>缺点：计算量大，联合事件的数量随目标和量测数量指数增长，容易造成“组合爆炸”</li></ul><p><strong>改进点：</strong></p><ol><li>不计算所有复杂的联合事件，而是找到跟踪门重叠区域的公共量测</li><li>对这些公共量测统一做一个弱加权处理（乘一个小于1的衰减因子），而非公共区域量测保持不变</li><li>最后进行归一化，得到一个简化的关联概率</li></ol><h3 id="3-滤波与系统模型"><a href="#3-滤波与系统模型" class="headerlink" title="3. 滤波与系统模型"></a>3. 滤波与系统模型</h3><p><strong>滤波方法：</strong>扩展卡尔曼滤波器（EKF），用于处理非线性系统<br><strong>目标运动模型：</strong>匀速直线运动，状态向量为$[x,y,v_x,v_y]^T$<br><strong>观测方程：</strong>由两个观测站的方位角构成。</p><h3 id="4-仿真实验与结果"><a href="#4-仿真实验与结果" class="headerlink" title="4. 仿真实验与结果"></a>4. 仿真实验与结果</h3><p>参数设置</p><ul><li>两个观测站坐标：（0,0）和（1000,0）</li><li>目标做匀速直线运动，采样间隔1s，共600次</li><li>50次蒙特卡洛仿真</li></ul><p>仿真结果：</p><p><strong>方位角量测误差为1°时的结果</strong></p><p><img src = "https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260420163624090.png" ></p><center>图2 MNNF预测轨迹图</center><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260420164654002.png" alt="image-20260420164654002"></p><center>图3 MPDA预测轨迹图</center><p><strong>方位角量测误差为3°时的结果</strong></p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260420192848985.png" alt="image-20260420192848985"></p><center>图4 MNNF预测轨迹图</center><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260420193011329.png" alt="image-20260420193011329"></p><center>图5 MPDA预测轨迹图</center><div class="table-container"><table><thead><tr><th>量测角误差/°</th><th>MPDA关联正确率/%</th><th>MNNF关联正确率/%</th></tr></thead><tbody><tr><td>1</td><td>95.6</td><td>81.2</td></tr><tr><td>2</td><td>92.1</td><td>72.3</td></tr><tr><td>3</td><td>90.4</td><td>54.7</td></tr><tr><td>4</td><td>77.5</td><td>25.8</td></tr><tr><td>5</td><td>64.3</td><td>14.9</td></tr></tbody></table></div><p>可以看出MPDA算法的整体关联正确率远远优于MNNF算法，MPDA 算法在量测角误差角达到 3°时关联正确率仍可达90%以上，而超过3°以后其跟踪性能就大幅下降；而 MNNF 算法只有在量测角误差为1°左右时关联性能较为不错。这是因为纯方位系统属于无源跟踪系统，其量测值只有方位角信息，若测量的角度偏差变大会直接影响算法的性能。MPDA 方法考虑到了各个量测与目标的关联概率，尽可能的减少误跟的可能性，但依然受限于量测角的误差大小。而 MNNF 法本质上选取离上一个预测值最近的量测作为估计值，更容易收到误差以及虚假量测的干扰。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 水声相关 </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>课题进展14-机动转弯交叉运动目标</title>
+      <link href="/posts/31290/"/>
+      <url>/posts/31290/</url>
+      
+        <content type="html"><![CDATA[<h1 id="课题进展14-机动转弯交叉运动目标"><a href="#课题进展14-机动转弯交叉运动目标" class="headerlink" title="课题进展14-机动转弯交叉运动目标"></a>课题进展14-机动转弯交叉运动目标</h1><h2 id="1-运动建模"><a href="#1-运动建模" class="headerlink" title="1. 运动建模"></a>1. 运动建模</h2><p>现添加一个新的运动场景，让目标做机动转弯交叉运动。</p><p>目标运动状态：<br>目标1：（-200，200，6，3）<br>目标2：（200，200，-6，3）</p><p>平面匀速转弯状态转移矩阵：</p><script type="math/tex; mode=display">F_{CT} = \begin{bmatrix} 1 & 0 & \frac{\sin(\omega dt)}{\omega} & -\frac{1 - \cos(\omega dt)}{\omega} \\ 0 & 1 & \frac{1 - \cos(\omega dt)}{\omega} & \frac{\sin(\omega dt)}{\omega} \\ 0 & 0 & \cos(\omega dt) & -\sin(\omega dt) \\ 0 & 0 & \sin(\omega dt) & \cos(\omega dt) \end{bmatrix}</script><p>匀速转弯率$\omega$：</p><ul><li>当$\omega$为负时，顺时针转弯；为正时，逆时针转弯。</li><li>$\omega$越大，转弯角度就越大。</li></ul><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260408154340292.png" alt="image-20260408154340292"></p><center>图1 转弯交叉运动时的跟踪轨迹图</center><p>但是这时的GDOP在跟踪后半段并没有被限制在一个范围内，反而升高了，如图2所示：</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260408161638684.png" alt="image-20260408161638684"></p><center>图2 目标的GDOP</center><h2 id="2-原因分析"><a href="#2-原因分析" class="headerlink" title="2. 原因分析"></a>2. 原因分析</h2><h3 id="（1）距离因素"><a href="#（1）距离因素" class="headerlink" title="（1）距离因素"></a>（1）距离因素</h3><p>在纯方位角定位中，距离$r$是决定GDOP的核心因素之一。目标离观测站越远，误差椭圆会放大得越厉害（GDOP呈线性增加）。</p><p>双方的速度：</p><ul><li>目标的合速度：初始速度为$v<em>x=6$，$v_y=3$，合成速度$$ V</em>{target}=\sqrt{6^{2}+3^{2}}\approx 6. 7 1 \mathrm{~ m / s} $$</li><li>平台速度：$v_{plat}=5$</li></ul><p>这意味着平台的速度比目标慢。在整个仿真过程中，目标始终在远离平台，由于平台跑不过目标，两者之间的绝对距离在交叉后不断拉大，直接导致了GDOP的增大。</p><p><strong>总结来说：目标飞得比平台快，且越飞越远，导致观测距离变长、交汇角变窄。在绝对的物理劣势面前，仅靠改变航向的算法已经无力回天，GDOP 必然上升。</strong></p><h2 id="3-解决方法"><a href="#3-解决方法" class="headerlink" title="3.解决方法"></a>3.解决方法</h2><p>将平台速度$v_{plat}$提高到7m/s即可解决问题。</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260408193245541.png" alt="image-20260408193245541"></p><center>图3 提高平台速度之后的GDOP</center><p>从图3中可以看出，提高平台速度之后，目标的GDOP呈现下降趋势，并且在跟踪后期GDOP稳定在400-500区间。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 水声相关 </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>课题进展13-交叉运动跟踪目标错误问题</title>
+      <link href="/posts/45320/"/>
+      <url>/posts/45320/</url>
+      
+        <content type="html"><![CDATA[<h1 id="课题进展13-交叉运动跟踪目标错误"><a href="#课题进展13-交叉运动跟踪目标错误" class="headerlink" title="课题进展13-交叉运动跟踪目标错误"></a>课题进展13-交叉运动跟踪目标错误</h1><h2 id="1-问题描述"><a href="#1-问题描述" class="headerlink" title="1. 问题描述"></a>1. 问题描述</h2><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260407202004230.png" alt="image-20260407202004230"></p><center>图1 交叉运动跟踪轨迹图</center><p>从图中可以看出，在两个目标在做交叉运动时，在交叉之后的后半段，跟踪出现了错误，本应该是目标1的轨迹跟踪成了目标2，目标2的轨迹跟踪了目标1，刚好相反。</p><h2 id="2-原因分析"><a href="#2-原因分析" class="headerlink" title="2. 原因分析"></a>2. 原因分析</h2><p>这个问题在多目标跟踪领域被称为“<strong>航迹互换</strong>”，具体原因可以拆解为三个层面：</p><h3 id="（1）物理层：交叉点的量测极度模糊"><a href="#（1）物理层：交叉点的量测极度模糊" class="headerlink" title="（1）物理层：交叉点的量测极度模糊"></a>（1）物理层：交叉点的量测极度模糊</h3><p>当目标1和目标2在中间发生交叉时，它们在物理空间上的位置几乎完全重合。这时候无论平台在什么位置，测得的目标1的方位角与目标2的方位角几乎是一模一样的。</p><h3 id="（2）算法层：代价函数与分配策略过于简单"><a href="#（2）算法层：代价函数与分配策略过于简单" class="headerlink" title="（2）算法层：代价函数与分配策略过于简单"></a>（2）算法层：代价函数与分配策略过于简单</h3><ul><li><strong>缺乏统计特性的欧式距离</strong>：现在使用的是简单的欧式距离作为分配代价，只考虑了角度差的绝对值，而没有考虑预测的不确定性，在交叉点，四组交叉组合的欧氏距离都非常小。</li><li><strong>贪心算法的盲目性</strong>：现在使用的是贪心算法，它按顺序先给目标1寻找最小代价的量测。由于交叉点量测极度接近，加上随机噪声的干扰，原本属于目标2的量测可能会在某一两帧恰好与目标1的预测值很接近，贪心算法就将目标2的量测“错配”给目标1，然后目标2被迫捡起目标1的量测。</li></ul><h2 id="3-算法改进"><a href="#3-算法改进" class="headerlink" title="3. 算法改进"></a>3. 算法改进</h2><p>将贪心算法改为匈牙利算法</p><p>贪心算法：只看眼前。假设由于随机噪声，目标 2 的量测（比如 0.1 度）比目标 1 的量测（比如 0.15 度）更靠近目标 1 的预测值，它就会直接把目标 2 的量测“抢走”给目标 1。接着目标 2 只能捡剩下的。</p><p>匈牙利算法：顾全大局。不看单一的最小值，而是计算所有可能组合的“代价总和”。它会比较 <code>(目标1配量测A + 目标2配量测B)</code> 与 <code>(目标1配量测B + 目标2配量测A)</code> 的总误差，并选择总误差最小的那种分配方式。这大大降低了因为局部噪声导致错配的概率。</p><h2 id="4-仿真结果"><a href="#4-仿真结果" class="headerlink" title="4. 仿真结果"></a>4. 仿真结果</h2><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260408112122865.png" alt="image-20260408112122865"></p><center>图1 优化之后的跟踪轨迹图</center><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260408112147155.png" alt="image-20260408112147155"></p><center>图2 位置和速度的RMSE以及GDOP</center><p>从图2中可以看出，在使用匈牙利算法之后，目标在做交叉运动时就能够准确跟踪正确的目标，航迹交换问题得到了消除。</p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>课题进展12-平台机动轨迹优化问题</title>
+      <link href="/posts/38057/"/>
+      <url>/posts/38057/</url>
+      
+        <content type="html"><![CDATA[<h1 id="课题进展12-平台机动轨迹优化问题"><a href="#课题进展12-平台机动轨迹优化问题" class="headerlink" title="课题进展12-平台机动轨迹优化问题"></a>课题进展12-平台机动轨迹优化问题</h1><h2 id="1-问题描述"><a href="#1-问题描述" class="headerlink" title="1. 问题描述"></a>1. 问题描述</h2><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260407145926151.png" alt="image-20260407145926151"></p><center>图1 双平台跟踪双目标轨迹图</center><p>平台机动轨迹呈现出“剧烈且紧凑的卷曲”状态</p><h2 id="2-问题原因"><a href="#2-问题原因" class="headerlink" title="2. 问题原因"></a>2. 问题原因</h2><p>平台运动学参数设定比例失调</p><ul><li>平台速度极慢：1m/s</li><li>最大转弯率极大：15度/秒</li><li>相比之下，两个目标的合速度都在5m/s左右，远快于平台</li></ul><p>在物理学中，转弯半径公式：<script type="math/tex">R={\frac{v} {\omega}}</script></p><p>将参数代入（<script type="math/tex">\omega</script>需转换为弧度）：</p><script type="math/tex; mode=display">R=\frac{1} {1 5 \times\frac{\pi} {1 8 0}} \approx3 . 8 2 \; ( \mathrm{m} )</script><p>这意味着，观测平台转一个完整的圈只需要一个半径不到 4 米的极小空间。在图片高达 1000x800 米的宏大坐标系中，平台每秒 1 米的移动距离极其微小，而方向却可以剧烈改变，因此在图上画出的就是一团“紧缩的黑线”，看起来像是在原地打转或剧烈机动。</p><h2 id="3-自适应代价权重"><a href="#3-自适应代价权重" class="headerlink" title="3. 自适应代价权重"></a>3. 自适应代价权重</h2><p><strong>哪个目标当前的位置不确定性更大，平台就优先通过机动去改善哪个目标的GDOP</strong></p><p>使用协方差矩阵$P$的迹（Trace），因为协方差矩阵对角线上的元素代表了各个状态量的方差，方差之和（迹）越大，说明整体误差椭圆越大。</p><p>权重计算公式：</p><script type="math/tex; mode=display">w_{1}=\frac{\mathrm{t r} ( P_{1} )} {\mathrm{t r} ( P_{1} )+\mathrm{t r} ( P_{2} )}</script><script type="math/tex; mode=display">w_2 = \frac{\text{tr}(P_2)}{\text{tr}(P_1) + \text{tr}(P_2)}</script><p>这里的$P_1$和$P_2$分别代表系统对目标1和目标2状态估计的误差协方差矩阵，是一种<strong>不确定程度</strong>。</p><ul><li>$P$ 矩阵里的数值越大，误差椭圆就越大，说明系统<strong>越不确定</strong>目标到底在哪（比如目标刚刚做了一个剧烈机动，或者很久没被观测到了）</li><li>$P$ 矩阵里的数值越小，误差椭圆就越小，说明系统对目标的定位<strong>越自信、越精准</strong>。</li></ul><h2 id="4-仿真结果"><a href="#4-仿真结果" class="headerlink" title="4. 仿真结果"></a>4. 仿真结果</h2><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260407193433925.png" alt="image-20260407193433925"></p><center>图2 跟踪轨迹图</center><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260407193605471.png" alt="image-20260407193605471"></p><center>图3 相关统计结果</center><p>从图3中可以看出在使用平台轨迹优化之后，目标的GDOP明显下降了，并且维持在一个范围内。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 水声相关 </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>课题进展11-纯方位跟踪轨迹文献阅读</title>
+      <link href="/posts/11631/"/>
+      <url>/posts/11631/</url>
+      
+        <content type="html"><![CDATA[<h1 id="课题进展11-文献阅读"><a href="#课题进展11-文献阅读" class="headerlink" title="课题进展11-文献阅读"></a>课题进展11-文献阅读</h1><h2 id="《AUV纯方位跟踪轨迹优化方法》"><a href="#《AUV纯方位跟踪轨迹优化方法》" class="headerlink" title="《AUV纯方位跟踪轨迹优化方法》"></a>《AUV纯方位跟踪轨迹优化方法》</h2><h2 id="1-研究问题"><a href="#1-研究问题" class="headerlink" title="1. 研究问题"></a>1. 研究问题</h2><p>在纯方位跟踪系统中，AUV只能通过被动声纳获取目标的方位角信息，而无法直接获得距离和速度信息。这种系统的<strong>弱可观测性</strong>使得目标运动要素（位置、速度、航向）的估计精度较低，且容易发散。</p><p>主要挑战：</p><p><strong>可观测性弱</strong>：仅凭方位角序列，目标运动要素（位置、速度、航向）的估计精度低，且容易滤波发散；</p><p><strong>目标存在悖论：</strong>提高目标运动要素估计精度 VS 尽快与目标汇合，这两个之间往往相互矛盾—为了精确定位需要AUV做特定机动，而快速追及目标又需要不同的机动策略。</p><h2 id="2-系统建模"><a href="#2-系统建模" class="headerlink" title="2. 系统建模"></a>2. 系统建模</h2><ul><li>目标运动模型：匀速直线运动（CV模型）</li><li>AUV运动模型：可机动模型</li></ul><p>AUV和目标的运动状态如下：</p><script type="math/tex; mode=display">\begin{array}{l} \boldsymbol {x} _ {\mathrm {T}} (k) = \left[ x _ {\mathrm {T}} (k) y _ {\mathrm {T}} (k) \dot {x} _ {\mathrm {T}} (k) \dot {y} _ {\mathrm {T}} (k) \right] \\ \boldsymbol {x} _ {\mathrm {O}} (k) = \left[ x _ {\mathrm {O}} (k) y _ {\mathrm {O}} (k) \dot {x} _ {\mathrm {O}} (k) \dot {y} _ {\mathrm {O}} (k) \right] \\ \end{array}</script><p>系统的状态向量为相对状态向量：</p><script type="math/tex; mode=display">\pmb{x} ( k )=\pmb{x}_{\mathrm{T}} ( k )-\pmb{x}_{\mathrm{O}} ( k )=[ x_{1} ( k ) ~ ~ x_{2} ( k ) ~ ~ x_{3} ( k ) ~ ~ x_{4} ( k ) ]</script><p>状态方程为</p><script type="math/tex; mode=display">\begin{array}{l} \boldsymbol {x} (k + 1) = \boldsymbol {A} \boldsymbol {x} (k) + \boldsymbol {u} (k, k + 1) + \boldsymbol {\omega} (k) \\ \boldsymbol {z} (k) = \arctan \left(x _ {1} (k) / x _ {2} (k)\right) + \boldsymbol {v} (k) \\ \end{array}</script><p>$A$表示状态转移矩阵，$T$为采样时间间隔，$w(k)$为过程噪声，$z(k)$为被动声纳测得的目标方位角，$\boldsymbol{\upsilon} ( k )$是测量噪声，$u(k)$代表的是由AUV自身机动引起的、对相对运动状态的影响项，可以理解为控制输入项或机动补偿项。</p><h2 id="3-整体方案架构"><a href="#3-整体方案架构" class="headerlink" title="3. 整体方案架构"></a>3. 整体方案架构</h2><p>作者提出<strong>基于距离的分段轨迹优化方法</strong>，核心思想是将跟踪过程按距离（即目标运动要素收敛程度）分为两个阶段，采用不同策略。</p><h3 id="3-1-阶段一：基于位置误差GDOP的轨迹优化"><a href="#3-1-阶段一：基于位置误差GDOP的轨迹优化" class="headerlink" title="3.1 阶段一：基于位置误差GDOP的轨迹优化"></a>3.1 阶段一：基于位置误差GDOP的轨迹优化</h3><p>定义优化目标为：</p><script type="math/tex; mode=display">C_{GDOP}(k)=tr(P(k∣k))</script><p>其中$P(k∣k)$是EKF（扩展卡尔曼滤波）输出的位置状态协方差矩阵。</p><p>每个时刻选择使$C_{GDOP}$最小的AUV机动方式，即在各时刻实现最优定位精度。同时引入<strong>相对运动指标</strong>：</p><script type="math/tex; mode=display">相对运动指标 = \frac{\text{AUV速度} \times \text{测量周期}}{\text{初始目标距离} \times \text{测向精度}}</script><p>该指标反映AUV相对于目标的可观测能力强弱</p><h3 id="3-2-阶段二：基于短期预测的机动策略"><a href="#3-2-阶段二：基于短期预测的机动策略" class="headerlink" title="3.2 阶段二：基于短期预测的机动策略"></a>3.2 阶段二：基于短期预测的机动策略</h3><p>该阶段分为<strong>预测</strong>、<strong>评估</strong>、<strong>决策</strong>三步</p><h4 id="（1）预测"><a href="#（1）预测" class="headerlink" title="（1）预测"></a>（1）预测</h4><p>预测就是假设AUV短期可能的状态。AUV在每个指令周期内，根据自身机动性能约束（最大转弯角速度，转弯半径、最大/最小速度），枚举短期内所有可能的状态集合<script type="math/tex">L = \{l_1, \cdots, l_n\}</script>（前进、左转、右转、加速等）。</p><h4 id="（2）评估（收益函数构建）"><a href="#（2）评估（收益函数构建）" class="headerlink" title="（2）评估（收益函数构建）"></a>（2）评估（收益函数构建）</h4><p>对每个预测状态，从三个维度计算收益：</p><ul><li><p>距离收益$C_1$：AUV越接近目标，收益越高</p><script type="math/tex; mode=display">C_1 = [1 + \log(d + 1)]^{-1}</script></li><li><p>航向调整收益$C_2$：航向变化越小，收益越高</p><script type="math/tex; mode=display">C_{2}=\left( 1+\omega T / 2 \pi\right)^{-1}</script></li><li><p>速度收益$C_3$：根据期望速度和最大速度的关系定义</p><script type="math/tex; mode=display">C _ {3} = \left\{ \begin{array}{l l} 0, & v _ {b} < 0 \\ 1, & 0 \leq v _ {b} \leq v _ {m a x} \\ \left[ 1 + \lg \left(d ^ {\prime} + 1\right) \right] ^ {- 1}, & v _ {b} > v _ {m a x} \end{array} \right.</script></li></ul><h4 id="（3）决策"><a href="#（3）决策" class="headerlink" title="（3）决策"></a>（3）决策</h4><p>综合三因子加权计算，选择综合收益最大的状态执行：</p><script type="math/tex; mode=display">C=\operatorname*{max} ( \omega_{1} C_{1}+\omega_{2} C_{2}+\omega_{3} C_{3} )</script><h2 id="4-仿真结果与分析"><a href="#4-仿真结果与分析" class="headerlink" title="4. 仿真结果与分析"></a>4. 仿真结果与分析</h2><p>AUV速度为2m/s，目标速度分别为1m/s、1.5m/s、2m/s、2.5m/s、3m/s。</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260407095032098.png" alt="image-20260407095032098"></p><center>图1 目标速度为1m/s和1.5m/s时AUV与目标相对运动态势</center><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260407095421560.png" alt="image-20260407095421560"></p><center>图2 目标速度为2m/s和2.5m/s时AUV与目标相对运动态势</center><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260407095547257.png" alt="image-20260407095547257"></p><center>图3 目标速度为3m/s时AUV与目标相对运动态势</center><p>从图1-图3中可以看出，当目标速度为1m/s、1.5m/s、2m/s、2.5m/s时，AUV能够与目标汇合。当目标速度较小时，AUV能够自主改变航向等待目标的到来。但是当目标速度为3m/s时，AUV无法追踪上目标。</p><p>无法追踪上目标的原因：</p><ul><li><p>目标比AUV移动的更快，即使AUV采取最优的机动策略，也无法缩小与目标之间的距离。</p></li><li><p>在纯方位跟踪系统中，AUV只能获得目标的方位角，无法直接获得距离信息，为了估计目标的位置和速度，AUV必须进行机动（转弯、变速），否则系统不可观测。</p></li></ul><p>那为什么目标速度为2.5m/s时，AUV可以追上：</p><p>核心原理在于：AUV可以利用几何关系和路径规划，通过走“捷径”来弥补速度的不足。相当于你虽然跑的慢，但是抄近道，反而能比车更早到达前面的某个路口，在那里等着它汇合。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 水声相关 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 纯方位跟踪 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>课题进度10-目标轨迹优化</title>
+      <link href="/posts/49024/"/>
+      <url>/posts/49024/</url>
+      
+        <content type="html"><![CDATA[<h1 id="课题进展10-目标轨迹优化"><a href="#课题进展10-目标轨迹优化" class="headerlink" title="课题进展10-目标轨迹优化"></a>课题进展10-目标轨迹优化</h1><h2 id="1-问题描述"><a href="#1-问题描述" class="headerlink" title="1. 问题描述"></a>1. 问题描述</h2><p>由于平台阵型的影响，导致对目标的GDOP较小，所以前期跟踪波动比较大，那么可以根据GDOP自适应调整平台的位置，使得跟踪抖动降低。通过让平台根据当前的跟踪状态“智能”地调整自身的航向和速度，不仅能大幅降低跟踪抖动，还能有效避免目标进入 GDOP 的“盲区”。</p><h2 id="2-实现逻辑-闭环反馈系统"><a href="#2-实现逻辑-闭环反馈系统" class="headerlink" title="2. 实现逻辑:闭环反馈系统"></a>2. 实现逻辑:闭环反馈系统</h2><h3 id="（1）预测目标位置"><a href="#（1）预测目标位置" class="headerlink" title="（1）预测目标位置"></a>（1）预测目标位置</h3><p>在时刻 $k$，你无法知道目标在 $k+1$ 时刻的真实位置。因此，你必须依赖 UKF 在当前时刻预测出的目标状态（$x_{pred}$）</p><h3 id="（2）构建代价函数"><a href="#（2）构建代价函数" class="headerlink" title="（2）构建代价函数"></a>（2）构建代价函数</h3><p>利用预测的目标位置和平台可能的候选位置，计算预期的GDOP。由于是双目标跟踪，需要权衡两个目标，代价函数通常设为：</p><script type="math/tex; mode=display">J = w_1GDOP_1+w_2GDOP_2</script><p>其中$w_1$，$w_2$为权重，如果某个目标快丢失了或协方差矩阵$P$很大，可以动态调高它的权重。</p><h3 id="（3）平台机动决策"><a href="#（3）平台机动决策" class="headerlink" title="（3）平台机动决策"></a>（3）平台机动决策</h3><p>在平台动力学约束的范围内（例如最大速度限制、最大转弯角速率限制），搜索一个能在下一时刻让代价函数$J$最小的平台控制指令（航向角和加速度）。</p><h3 id="（4）执行与观测"><a href="#（4）执行与观测" class="headerlink" title="（4）执行与观测"></a>（4）执行与观测</h3><p>平台移动到新位置，获取新的量测，UKF更新，循环往复。</p><h2 id="3-难点"><a href="#3-难点" class="headerlink" title="3. 难点"></a>3. 难点</h2><ul><li>GDOP 的计算严重依赖于目标与平台的相对几何位置。如果你像之前仿真里的“目标 2”那样，初始速度估计完全错误，UKF 预测出的目标位置就是错的。<strong>基于一个错误的目标位置去优化平台轨迹，会导致平台向完全相反的方向机动</strong>，反而进一步恶化几何构型，导致彻底跟丢。</li><li>改善目标 1 的 GDOP，往往意味着要拉大两个平台对目标 1 的张角；但这很可能导致两个平台对目标 2 的张角变小，使得目标 2 的 GDOP 急剧恶化。如何寻找帕累托最优（Pareto Optimum）是多目标主动跟踪的难点。</li><li>真实世界的平台（飞机、舰船）不能瞬间“平移”到 GDOP 最佳的位置，它们有惯性和运动学死角。如果目标速度很快，平台可能会处于“永远在追赶最佳观测点，但永远追不上”的状态。</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 水声相关 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 目标跟踪 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>课题进度09-模型改进</title>
+      <link href="/posts/637/"/>
+      <url>/posts/637/</url>
+      
+        <content type="html"><![CDATA[<h1 id="课题进度09-模型改进"><a href="#课题进度09-模型改进" class="headerlink" title="课题进度09-模型改进"></a>课题进度09-模型改进</h1><h2 id="1-改进方法"><a href="#1-改进方法" class="headerlink" title="1. 改进方法"></a>1. 改进方法</h2><p>对于双平台三角定位多目标产生虚假点的问题，这是三角交叉定位的固有缺陷，可以通过增加几何约束或者改进数据关联算法来减小虚假目标点的影响。</p><h3 id="（1）轨迹级而非点级思路：利用时间连续性"><a href="#（1）轨迹级而非点级思路：利用时间连续性" class="headerlink" title="（1）轨迹级而非点级思路：利用时间连续性"></a>（1）轨迹级而非点级思路：利用时间连续性</h3><p>虚假目标往往是“单次交会合理、但随时间难以形成平滑轨迹”。</p><p>运动一致性检验：通过无迹卡尔曼滤波估计轨迹状态，计算预测-量测的残差，残差长期过大的轨迹判为虚假航迹，直接丢弃。</p><h3 id="（2）增加轨迹确认阈值"><a href="#（2）增加轨迹确认阈值" class="headerlink" title="（2）增加轨迹确认阈值"></a>（2）增加轨迹确认阈值</h3><p>一条轨迹在连续多次更新过程中，真正被测量数据成功关联的次数要达到某个阈值，才把它从“临时轨迹”升级为“确认航迹”。</p><h2 id="2-仿真流程"><a href="#2-仿真流程" class="headerlink" title="2. 仿真流程"></a>2. 仿真流程</h2><p>（1）参数设置：平台和目标的运动状态以及滤波器的参数</p><p>（2）三角交叉定位生成初始航迹：给定两平台位置和方位角求解目标位置，但是其中包含虚假目标点，使用前3个时刻的交会位置估计初始状态。</p><p>（3）UKF预测：用初始状态对下一时刻的目标状态进行预测</p><p>（4）GNN关联：航迹与测量进行匹配。每条轨迹选一个代价最小且未被别的轨迹占用的测量</p><p>（5）UKF更新：轨迹匹配到合适的测量，则更新本时刻的轨迹，如果没有则只用预测值而不更新。</p><h2 id="3-仿真结果"><a href="#3-仿真结果" class="headerlink" title="3. 仿真结果"></a>3. 仿真结果</h2><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260326163200437.png" alt="image-20260326163200437"></p><center>图1 目标跟踪轨迹图</center><p>现在仿真只是前3个时刻使用的是几何交会结果，而在后面的滤波循环中并没有使用几何位置，而用的是UKF预测和原始方位观测。</p><p>从图中可以看出目标2的跟踪轨迹前半段波动比较大，原因在于目标2靠近两平台连线的延长线一侧，方位夹角较小，几何条件差。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 水声相关 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 目标跟踪 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>课题进度08-多段航迹问题</title>
+      <link href="/posts/14999/"/>
+      <url>/posts/14999/</url>
+      
+        <content type="html"><![CDATA[<h1 id="课题进展08-多段航迹的问题"><a href="#课题进展08-多段航迹的问题" class="headerlink" title="课题进展08-多段航迹的问题"></a>课题进展08-多段航迹的问题</h1><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260324145411458.png" alt="image-20260324145411458"></p><p>问题描述：</p><p>双平台对双目标进行跟踪时，得到的目标跟踪轨迹是多段航迹，理论上来讲只会有两段关于目标的跟踪轨迹。</p><p>原因分析：</p><p><strong>1.航迹起始策略</strong>：每个时刻对所有角度创建新航迹</p><p>在主循环中，当没有航迹时，对所有可能的角度对都创建新航迹。对于两个平台，两个目标，组合后就会有4个角度对，其中有两个虚假目标点。（这是三角定位固有的缺陷）这些虚假目标点被初始化为航迹，成为虚假航迹。</p><p>更严重的是，<strong>每个后续时间步</strong>，所有未被当前航迹关联的角度对（包括交叉配对）都会再次被用来起始新航迹。这导致虚假航迹不断产生，形成大量短轨迹片段。</p><p><strong>2.数据关联不完善</strong></p><p>匈牙利算法实现有问题：最初的算法只是一个简单的贪心算法，并非真正的匈牙利算法</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 水声相关 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 目标跟踪 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>课题进展07-概率数据关联的文献阅读</title>
+      <link href="/posts/62561/"/>
+      <url>/posts/62561/</url>
+      
+        <content type="html"><![CDATA[<h1 id="课题进展07-文献阅读"><a href="#课题进展07-文献阅读" class="headerlink" title="课题进展07-文献阅读"></a>课题进展07-文献阅读</h1><h2 id="《基于概率数据关联和容积卡尔曼滤波的多目标跟踪》"><a href="#《基于概率数据关联和容积卡尔曼滤波的多目标跟踪》" class="headerlink" title="《基于概率数据关联和容积卡尔曼滤波的多目标跟踪》"></a>《基于概率数据关联和容积卡尔曼滤波的多目标跟踪》</h2><h3 id="1-研究问题"><a href="#1-研究问题" class="headerlink" title="1. 研究问题"></a>1. 研究问题</h3><p>传统单平台纯方位跟踪需要观测平台机动性高于目标才能保证系统可观测性，为克服这一问题，作者采用<strong>多个固定传感器</strong>协同观测，融合多传感器信息以估计目标状态。</p><p>主要挑战为：</p><p><strong>非线性测量模型</strong>：方位角与目标位置之间为非线性关系</p><p><strong>多目标数据关联</strong>：多个传感器同时接收到多个目标的方位测量，需正确匹配测量值与目标。</p><p><strong>非线性滤波</strong>：传统卡尔曼滤波不适用于非线性系统。</p><h3 id="2-方法框架"><a href="#2-方法框架" class="headerlink" title="2. 方法框架"></a>2. 方法框架</h3><h4 id="（1）状态空间模型与测量模型"><a href="#（1）状态空间模型与测量模型" class="headerlink" title="（1）状态空间模型与测量模型"></a>（1）状态空间模型与测量模型</h4><p>目标状态向量为：</p><script type="math/tex; mode=display">\mathbf{x}_{k}=\left[ x_{k} , \dot{x}_{k} , y_{k} , \dot{y}_{k} \right]^{\mathrm{T}}</script><p>状态模型：</p><script type="math/tex; mode=display">\begin{array} {r c} {\mathbf{x}_{k}=f \left( \mathbf{x}_{k-1} \right)+\mathbf{v}_{k-1}} \\ {=\mathbf{F} \mathbf{x}_{k-1}+\mathbf{v}_{k-1}} \\ \end{array}</script><p>其中$F$为状态转移矩阵，作用是<strong>根据上一时刻的状态预测当前时刻的状态</strong></p><p>$v_{k-1}$为过程噪声，代表目标运动中未被模型捕获的随机扰动（如加速度波动、风浪等），假设过程噪声为零均值高斯白噪声。</p><p>其协方差矩阵 <strong>Q</strong> 描述了这些扰动的<strong>强度</strong>和<strong>在不同状态分量上的相关性</strong>。</p><script type="math/tex; mode=display">{\bf F}=\left[ \begin{array} {c c c c} {1} & {\Delta{\bf T}} & {0} & {0} \\ {0} & {1} & {0} & {0} \\ {0} & {0} & {1} & {\Delta{\bf T}} \\ {0} & {0} & {1} & {1} \\ \end{array} \right]</script><p>$\Delta{\bf T}$为采样间隔</p><p>测量模型：</p><script type="math/tex; mode=display">z_{k}^{n}=\operatorname{arctan} \left( \frac{y_{k}-y_{s}^{n}} {x_{k}-x_{s}^{n}} \right)+w_{k}^{n}</script><p>即传感器n测得的目标方位角</p><p>$w_k$为测量噪声，相当于传感器的测量误差。假设为<strong>零均值高斯白噪声</strong></p><h4 id="（2）CKF-容积卡尔曼滤波"><a href="#（2）CKF-容积卡尔曼滤波" class="headerlink" title="（2）CKF(容积卡尔曼滤波)"></a>（2）CKF(容积卡尔曼滤波)</h4><p><strong>CKF的引入</strong></p><p>在贝叶斯滤波框架下，预测和更新步骤都需要计算形如以下的多维积分</p><script type="math/tex; mode=display">\int_{\mathbb{R}^{m}} g ( \mathbf{x} ) \cdot\mathcal{N} ( \mathbf{x} ; \hat{\mathbf{x}} , \mathbf{P} ) \, d \mathbf{x}</script><p>这个积分在非线性情况下没有解析解，EKF用一阶泰勒近似，UKF用二阶sigma点近似，而CKF使用<strong>三阶球面-径向容积规则</strong>，用2m个确定性点（m为状态维数）精确逼近上述积分。</p><p><strong>核心思想：球面-径向容积规则</strong></p><p>CKF 的出发点是：将高斯加权积分分解为<strong>球面积分</strong>和<strong>径向积分</strong>两部分，然后用三阶规则近似。</p><p>设$\mathbf{x}=\hat{\mathbf{x}}+\sqrt{\mathbf{P}} \boldsymbol{\xi}$，其中${\boldsymbol{\xi}} \sim{\mathcal{N}} ( {\bf0} , {\bf I} )$，则积分可写为：</p><script type="math/tex; mode=display">\int_{\mathbb{R}^{m}} g ( \mathbf{x} ) \mathcal{N} ( \mathbf{x} ; \hat{\mathbf{x}} , \mathbf{P} ) d \mathbf{x}=\frac{1} {\sqrt{( 2 \pi)^{m}}} \int_{\mathbb{R}^{m}} g ( \hat{\mathbf{x}}+\sqrt{\mathbf{P}} \boldsymbol{\xi} ) e^{-\frac{1} {2} \boldsymbol{\xi}^{\mathrm{T}} \boldsymbol{\xi}} d \boldsymbol{\xi}</script><p>CKF 采用三阶球面-径向容积规则，得到如下近似：</p><script type="math/tex; mode=display">\int_{\mathbb{R}^{m}} g ( \mathbf{x} ) \mathcal{N} ( \mathbf{x} ; \hat{\mathbf{x}} , \mathbf{P} ) d \mathbf{x} \approx\frac{1} {2 m} \sum_{i=1}^{2 m} g \left( \hat{\mathbf{x}}+\sqrt{\mathbf{P}} \boldsymbol{\xi}_{i} \right)</script><p><strong>优点：</strong></p><ul><li>相较于 EKF（扩展卡尔曼滤波），CKF 无需计算雅可比矩阵，避免了线性化误差。</li><li>相较于 UKF（无迹卡尔曼滤波），CKF 具有更高的数值稳定性和计算效率。</li></ul><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">graph TD</span><br><span class="line">  A[初始化] --&gt; B[生成容积点/权重]</span><br><span class="line">  B --&gt; C[预测步骤]</span><br><span class="line">  C --&gt; D[更新步骤]</span><br><span class="line">  D --&gt; E&#123;下一时刻?&#125;</span><br><span class="line">  E --&gt;|是| C</span><br><span class="line">  E --&gt;|否| F[结束]</span><br></pre></td></tr></table></figure><h4 id="（3）PDA-概率数据关联算法"><a href="#（3）PDA-概率数据关联算法" class="headerlink" title="（3）PDA(概率数据关联算法)"></a>（3）PDA(概率数据关联算法)</h4><p><strong>含义</strong>：是一种在<strong>杂波环境</strong>下进行单目标跟踪的概率方法，在存在多个测量候选（包括来自目标的真实测量和杂波/虚警）的情况下，不强制选择一个测量作为目标来源，而是对所有候选测量赋予一个关联概率，然后用这些<strong>概率加权</strong>组合所有候选测量来更新目标状态。</p><p><strong>核心思想</strong>：</p><p>假设：</p><ul><li>每个时刻，最多只有一个测量来自被跟踪目标（其他均为杂波）。</li><li>测量集合${\bf z}<em>{k}={z</em>{k}^{1} , z<em>{k}^{2} , \ldots, z</em>{k}^{m_{k}} }$, 其中$m_k$为当前时刻的测量总数。</li><li>定义事件$\theta<em>{i}$ 表示第i个测量是来自目标的真实测量，$\theta</em>{0}$表示没有测量来自目标（全为杂波）</li></ul><p>关联概率计算：</p><p>对于每个有效测量i，其关联概率$\beta_{i}$为：</p><script type="math/tex; mode=display">\beta_{i}=\frac{e_{i}} {b+\sum_{j=1}^{m_{k}} e_{j}} , \quad i=1 , \ldots, m_{k}</script><script type="math/tex; mode=display">\beta_{0}={\frac{b} {b+\sum_{j=1}^{m_{k}} e_{j}}}</script><p>其中：</p><ul><li>$e<em>{i}={\mathcal N} ( z</em>{k}^{i} ; {\hat{z}}<em>{k | k-1} , {\mathbf S}</em>{k} )$ :测量似然（高斯分布）</li><li>$b=\lambda\cdot( 2 \pi)^{d / 2} {\sqrt{| {\bf S}<em>{k} |}} \cdot{\frac{1-P</em>{D}} {P_{D}}}$ ：杂波密度项</li></ul><p>在论文中，作者做了简化：</p><ul><li>假设所有测量均来自目标（无杂波），即$b=0,\beta_0=0$</li><li>且假设各测量的先验概率相等</li></ul><p>所以：</p><script type="math/tex; mode=display">\beta_{i}=\frac{\mathcal{N} ( z_{k}^{i} ; \hat{z}_{k | k-1} , \mathbf{S}_{k} )} {\sum_{j=1}^{m_{k}} \mathcal{N} ( z_{k}^{j} ; \hat{z}_{k | k-1} , \mathbf{S}_{k} )}</script><h3 id="3-仿真实验与结果"><a href="#3-仿真实验与结果" class="headerlink" title="3. 仿真实验与结果"></a>3. 仿真实验与结果</h3><h4 id="（1）实验设置"><a href="#（1）实验设置" class="headerlink" title="（1）实验设置"></a>（1）实验设置</h4><ul><li>三个固定平台，坐标分别为（-3000, 1）、（1000, 5）、（5000, 1）三角阵型</li><li>两个近匀速运动目标，仿真时长 500 秒，采样间隔 1 秒</li><li>过程噪声强度$q<em>s = 0.01$，测量噪声方差$\sigma</em>{\theta}^{2}=1^{\circ}$</li></ul><h4 id="（2）仿真结果"><a href="#（2）仿真结果" class="headerlink" title="（2）仿真结果"></a>（2）仿真结果</h4><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260324101624242.png" alt="image-20260324101624242"></p> <center>图1 目标运动轨迹</center><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260324102305061.png" alt="image-20260324102305061"></p><center>图2 第一个目标的UKF和CKF的RMSE</center><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260324102547986.png" alt="image-20260324102547986"></p><center>图3 第二个目标的UKF和CKF的RMSE</center><p>从图2和图3中可以看出，两种方法都可以处理非线性多目标跟踪场景，并且CKF-PDA的位置误差低于UKF-PDA。</p><p>在计算复杂度方面，比较了这两种算法的运行时间。CKF-PDA为0.024秒，UKF-PDA为0.026秒。这表明CKF-PDA的效率略高于UKF-PDA。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 水声相关 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 数据关联 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>课题进度06-双平台双目标跟踪</title>
+      <link href="/posts/51414/"/>
+      <url>/posts/51414/</url>
+      
+        <content type="html"><![CDATA[<h1 id="课题进度06-双平台双目标跟踪"><a href="#课题进度06-双平台双目标跟踪" class="headerlink" title="课题进度06-双平台双目标跟踪"></a>课题进度06-双平台双目标跟踪</h1><h2 id="1-参数设置"><a href="#1-参数设置" class="headerlink" title="1. 参数设置"></a>1. 参数设置</h2><p>采样周期：1s</p><p>总仿真时间：100s</p><p>平台1位置：（-400，0），单位：m；速度：（0，1），单位：m/s</p><p>平台2位置：（400，0），单位：m；速度：（0，1），单位m/s</p><p>两个平台向正北方向前进</p><p>目标1位置：(200,50)；速度：（-1，2）；从左侧向右下运动</p><p>目标2位置：(600,300)；速度：(-2，-1)；从右侧向左上运动</p><p>滤波算法：扩展卡尔曼滤波（EKF）</p><p>数据关联算法：全局最近邻算法（GNN）</p><h2 id="2-仿真结果"><a href="#2-仿真结果" class="headerlink" title="2. 仿真结果"></a>2. 仿真结果</h2><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260320103904130.png" alt="image-20260320103904130"></p><p>问题：绘制的关联航迹是一段一段的，没有形成完整的跟踪航迹。</p><p>原因：</p><p><strong>（1）GNN 关联错误导致航迹丢失或交换</strong></p><p>当两个目标运动轨迹交叉或距离较近时，GNN（全局最近邻）采用硬分配策略，每个测量只能分配给一个航迹。如果某时刻分配错误（例如目标1的测量误配给目标2），则两条航迹都可能出现偏差，后续时刻可能因误差累积导致测量落在门限外，航迹无法更新，最终被删除。</p><p><strong>（2）门限设置过于严格</strong></p><p>使用的门限 <code>gating_threshold = chi2inv(0.95, 2)</code> 约为 5.99，这意味着只有马氏距离小于 5.99 的测量才被认为可能属于该航迹。如果预测协方差较小（例如滤波器过于自信），真实测量可能被拒之门外，导致航迹无法更新.</p><p><strong>（3）测量组合产生大量虚假候选点</strong></p><p>将两个平台的所有角度测量两两组合，通过三角交叉定位得到位置候选。当存在多个目标时，组合数会快速增长（例如每个平台有2个测量，则产生4个候选点），其中可能包含大量虚假交点（如不同目标的错误配对）。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 水声相关 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 目标跟踪 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>课题进度05-数据关联算法</title>
+      <link href="/posts/1154/"/>
+      <url>/posts/1154/</url>
+      
+        <content type="html"><![CDATA[<h1 id="课题进度05-数据关联算法"><a href="#课题进度05-数据关联算法" class="headerlink" title="课题进度05-数据关联算法"></a>课题进度05-数据关联算法</h1><h2 id="1-数据关联"><a href="#1-数据关联" class="headerlink" title="1. 数据关联"></a>1. 数据关联</h2><p>包括量测与目标航迹之间的关联，以及不同传感器之间的航迹关联</p><p>方法：</p><p>确定性数据关联：最近邻、全局最近邻、多假设跟踪</p><p>概率性数据关联：概率性数据关联、联合概率性数据关联、概率多假设跟踪</p><p>确定性关联计算效率高，在环境简单、量测和目标之间的关系明确时效果较好，然而在目标密集或量测噪声大的场景易于出现关联错误。</p><p>概率性关联能够更加全面地处理量测数据的不确定性和目标之间的相互影响，可以更好地应对似然模糊的数据。</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260316112015409.png" alt="image-20260316112015409"></p><h2 id="2-确定性关联"><a href="#2-确定性关联" class="headerlink" title="2. 确定性关联"></a>2. 确定性关联</h2><h3 id="2-1-最近邻数据关联算法（NN）"><a href="#2-1-最近邻数据关联算法（NN）" class="headerlink" title="2.1 最近邻数据关联算法（NN）"></a>2.1 最近邻数据关联算法（NN）</h3><p>核心原理：在某一时刻的所有量测中，只将距离跟踪目标预测位置最近的量测认定为与跟踪目标相关的真实量测。</p><p>工作步骤：</p><p>（1）<strong>状态预测</strong>：基于目标的上一时刻状态（位置、速度），利用卡尔曼滤波等滤波算法，预测出目标在当前时刻的<strong>位置</strong>（即预测位置）。</p><p>（2）<strong>建立关联门</strong>：以预测位置为中心，划定一个特定的区域，称为“关联门”或“波门”（Gate）。只有落入这个区域内的观测点迹，才有可能与该目标关联。关联门的大小通常由预测的不确定性（如协方差矩阵）决定，是筛选候选观测的第一道关卡。</p><p>（3）<strong>计算统计距离</strong>：对于落入关联门内的每一个候选观测，计算其与目标预测位置之间的“距离”。这个距离不是简单的欧氏距离，而是一个经过加权的<strong>统计距离</strong>（也称为马氏距离）。计算公式通常如下：</p><ul><li><p>残差（观测值与预测值的差）：</p><script type="math/tex; mode=display">e_{i j} ( k )=Z_{j} ( k )-H \hat{X}_{i} ( k | k-1 )</script><p>其中，$Z_j(k)$是第$j$个观测，$\hat{X}_i(k|k-1)$是目标$i$的状态预测，$H$是观测矩阵。</p></li><li><p>统计距离：</p><script type="math/tex; mode=display">d_{i j}^{2}=e_{i j} ( k )^{T} S ( k )^{-1} e_{i j} ( k )</script><p>其中，$S(k)$是残差的协方差矩阵。这个距离综合考虑了预测的不确定性，使得算法能更智能地判断“接近程度”。</p></li></ul><p>（4）<strong>确定关联对</strong>：在所有候选观测中，选择<strong>统计距离最小</strong>的那个观测，作为与该目标当前时刻关联的观测点迹。如果一个观测同时落入多个目标的关联门内，通常会根据距离最近的原则分配给其中一个目标，或者采用更复杂的分配策略。</p><p>（5）<strong>更新目标状态</strong>：将最终关联上的观测值用于卡尔曼滤波等跟踪算法中，更新目标的当前状态，为下一时刻的预测做准备。</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/%E6%9C%80%E8%BF%91%E9%82%BB%E5%85%B3%E8%81%94%E6%B5%81%E7%A8%8B%E5%9B%BE.png" alt="最近邻关联流程图" style="zoom: 67%;" /></p><p><strong>优缺点分析</strong></p><p>优点：</p><p>计算量小，易于实现：原理直观，计算简单，对计算资源要求低，非常适合于工程应用。</p><p>在稀疏目标环境下表现良好：当目标数量少且距离较远时，关联关系明确，算法能可靠地工作。</p><p>缺点：</p><p>抗干扰能力差：在目标密集或杂波（虚警）多的环境中，很容易将杂波点或邻近目标的点误认为是当前目标的点，导致<strong>错误关联</strong>和<strong>目标丢失</strong>。</p><p>缺少全局观念：只追求每个目标的“局部最优”，可能导致整体关联效果变差。</p><h3 id="2-2-全局最近邻数据关联（GNN）"><a href="#2-2-全局最近邻数据关联（GNN）" class="headerlink" title="2.2 全局最近邻数据关联（GNN）"></a>2.2 全局最近邻数据关联（GNN）</h3><p><strong>含义</strong>：是一种在目标跟踪中用于解决“观测-航迹”关联问题的优化方法，将关联视为一个全局优化问题，通过求解一个“一对一”的最优分配，使所有已确认航迹与其关联观测的总代价最小。</p><h4 id="（1）核心思想"><a href="#（1）核心思想" class="headerlink" title="（1）核心思想"></a>（1）核心思想</h4><p><strong>在满足每个航迹最多关联一个观测、每个观测最多关联一个航迹的约束下，找到一组关联对，使得所有关联对的总代价（如统计距离之和）最小</strong>。</p><h4 id="（2）算法流程"><a href="#（2）算法流程" class="headerlink" title="（2）算法流程"></a>（2）算法流程</h4><p>GNN通常在每一帧（每个采样时刻）执行以下步骤：</p><p><strong>1.状态预测</strong>：利用上一时刻的目标状态（如位置、速度），通过卡尔曼滤波等预测模型，计算每个航迹在当前时刻的预测位置及预测协方差。</p><p><strong>2.门限筛选（Gating）</strong>：为每个航迹设定一个关联门（如马氏距离阈值），将落在门内的观测作为候选。这一步可以剔除明显不合理的观测，减小后续分配问题的规模。</p><p><strong>3.构建代价矩阵</strong>：对于所有通过了门限的“航迹-观测”对，计算一个代价（通常是统计距离）。若某对组合未通过门限，则代价设为无穷大或一个很大的值，表示不可关联。同时，还需考虑<strong>虚警（观测可能源于杂波）</strong>和<strong>漏检（航迹可能没有对应观测）</strong>的可能性，通常会为每个航迹增加一个虚拟的“漏检”选项，为每个观测增加一个虚拟的“新航迹”或“杂波”选项。</p><p><strong>4.求解最优分配</strong>：将代价矩阵输入分配求解算法（匈牙利算法），得到一组“一对一”的关联对，使得总代价最小。</p><p><strong>5.关联结果处理：</strong></p><ul><li>关联上的航迹：用对应的观测更新状态（如卡尔曼更新）。</li><li>未关联到观测的航迹：进行漏检处理（如延长预测、降低置信度），若连续多次漏检则终止航迹。</li><li>未关联到航迹的观测：用于启动新航迹（航迹起始）或作为虚警丢弃。</li></ul><h4 id="（3）代价矩阵的构建"><a href="#（3）代价矩阵的构建" class="headerlink" title="（3）代价矩阵的构建"></a>（3）代价矩阵的构建</h4><p>代价矩阵是GNN的核心。代价通常定义为<strong>统计距离的平方</strong>，即马氏距离的平方：</p><script type="math/tex; mode=display">d_{i j}^{2}=\mathbf{e}_{i j}^{\top} \mathbf{S}_{i}^{-1} \mathbf{e}_{i j}</script><p>其中：</p><ul><li><script type="math/tex">\mathbf{e}_{i j}=\mathbf{z}_{j}-\mathbf{H} \hat{\mathbf{x}}_{i}</script> :观测<script type="math/tex">z_j</script>与航迹<script type="math/tex">i</script>的预测观测之间的残差。</li><li><script type="math/tex">\mathbf{S}_{i}=\mathbf{H} \mathbf{P}_{i} \mathbf{H}^{\top}+\mathbf{R}</script>: 残差协方差矩阵（<script type="math/tex">P_i</script>为状态预测协方差，<script type="math/tex">R</script>为观测噪声协方差）</li><li>这个代价反映了观测与预测之间的“异常程度”，考虑了预测的不确定性。</li></ul><p>在构建代价矩阵时，还需考虑以下几种情况：</p><ul><li><strong>航迹-观测</strong>对：若观测未通过航迹的门限，则代价设为∞。</li><li><strong>航迹-漏检</strong>：每个航迹都有一个“漏检”的虚拟观测，其代价通常设为与航迹相关的常数（如对数似然比阈值），用于表示“宁愿不关联也不随意关联”的容忍度。</li><li><strong>杂波-观测</strong>：每个观测都有一个“杂波”或“新航迹”的虚拟航迹，其代价设为与观测相关的常数（如基于杂波密度计算）。</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 水声相关 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 数据关联 </tag>
             
         </tags>
       

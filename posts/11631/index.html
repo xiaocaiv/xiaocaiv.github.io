@@ -1,0 +1,366 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>课题进展11-纯方位跟踪轨迹文献阅读 | XiaoCai's Blog</title><meta name="author" content="Alice"><meta name="copyright" content="Alice"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="课题进展11-文献阅读《AUV纯方位跟踪轨迹优化方法》1. 研究问题在纯方位跟踪系统中，AUV只能通过被动声纳获取目标的方位角信息，而无法直接获得距离和速度信息。这种系统的弱可观测性使得目标运动要素（位置、速度、航向）的估计精度较低，且容易发散。 主要挑战： 可观测性弱：仅凭方位角序列，目标运动要素（位置、速度、航向）的估计精度低，且容易滤波发散； 目标存在悖论：提高目标运动要素估计精度 VS 尽">
+<meta property="og:type" content="article">
+<meta property="og:title" content="课题进展11-纯方位跟踪轨迹文献阅读">
+<meta property="og:url" content="http://xiaocaiv.github.io/posts/11631/index.html">
+<meta property="og:site_name" content="XiaoCai&#39;s Blog">
+<meta property="og:description" content="课题进展11-文献阅读《AUV纯方位跟踪轨迹优化方法》1. 研究问题在纯方位跟踪系统中，AUV只能通过被动声纳获取目标的方位角信息，而无法直接获得距离和速度信息。这种系统的弱可观测性使得目标运动要素（位置、速度、航向）的估计精度较低，且容易发散。 主要挑战： 可观测性弱：仅凭方位角序列，目标运动要素（位置、速度、航向）的估计精度低，且容易滤波发散； 目标存在悖论：提高目标运动要素估计精度 VS 尽">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://xiaocaiv.github.io/images/ali.jpg">
+<meta property="article:published_time" content="2026-03-24T02:36:46.000Z">
+<meta property="article:modified_time" content="2026-07-22T02:48:58.390Z">
+<meta property="article:author" content="Alice">
+<meta property="article:tag" content="纯方位跟踪">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://xiaocaiv.github.io/images/ali.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "课题进展11-纯方位跟踪轨迹文献阅读",
+  "url": "http://xiaocaiv.github.io/posts/11631/",
+  "image": "http://xiaocaiv.github.io/images/ali.jpg",
+  "datePublished": "2026-03-24T02:36:46.000Z",
+  "dateModified": "2026-07-22T02:48:58.390Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Alice",
+      "url": "http://xiaocaiv.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/favicon1.png"><link rel="canonical" href="http://xiaocaiv.github.io/posts/11631/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '课题进展11-纯方位跟踪轨迹文献阅读',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href= "/css/my.css"><meta name="generator" content="Hexo 8.1.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/ali.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">41</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">23</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/images/default.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">XiaoCai's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">课题进展11-纯方位跟踪轨迹文献阅读</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">课题进展11-纯方位跟踪轨迹文献阅读</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-03-24T02:36:46.000Z" title="发表于 2026-03-24 10:36:46">2026-03-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-07-22T02:48:58.390Z" title="更新于 2026-07-22 10:48:58">2026-07-22</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%B0%B4%E5%A3%B0%E7%9B%B8%E5%85%B3/">水声相关</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="课题进展11-文献阅读"><a href="#课题进展11-文献阅读" class="headerlink" title="课题进展11-文献阅读"></a>课题进展11-文献阅读</h1><h2 id="《AUV纯方位跟踪轨迹优化方法》"><a href="#《AUV纯方位跟踪轨迹优化方法》" class="headerlink" title="《AUV纯方位跟踪轨迹优化方法》"></a>《AUV纯方位跟踪轨迹优化方法》</h2><h2 id="1-研究问题"><a href="#1-研究问题" class="headerlink" title="1. 研究问题"></a>1. 研究问题</h2><p>在纯方位跟踪系统中，AUV只能通过被动声纳获取目标的方位角信息，而无法直接获得距离和速度信息。这种系统的<strong>弱可观测性</strong>使得目标运动要素（位置、速度、航向）的估计精度较低，且容易发散。</p>
+<p>主要挑战：</p>
+<p><strong>可观测性弱</strong>：仅凭方位角序列，目标运动要素（位置、速度、航向）的估计精度低，且容易滤波发散；</p>
+<p><strong>目标存在悖论：</strong>提高目标运动要素估计精度 VS 尽快与目标汇合，这两个之间往往相互矛盾—为了精确定位需要AUV做特定机动，而快速追及目标又需要不同的机动策略。</p>
+<h2 id="2-系统建模"><a href="#2-系统建模" class="headerlink" title="2. 系统建模"></a>2. 系统建模</h2><ul>
+<li>目标运动模型：匀速直线运动（CV模型）</li>
+<li>AUV运动模型：可机动模型</li>
+</ul>
+<p>AUV和目标的运动状态如下：</p>
+<script type="math/tex; mode=display">
+\begin{array}{l} \boldsymbol {x} _ {\mathrm {T}} (k) = \left[ x _ {\mathrm {T}} (k) y _ {\mathrm {T}} (k) \dot {x} _ {\mathrm {T}} (k) \dot {y} _ {\mathrm {T}} (k) \right] \\ \boldsymbol {x} _ {\mathrm {O}} (k) = \left[ x _ {\mathrm {O}} (k) y _ {\mathrm {O}} (k) \dot {x} _ {\mathrm {O}} (k) \dot {y} _ {\mathrm {O}} (k) \right] \\ \end{array}</script><p>系统的状态向量为相对状态向量：</p>
+<script type="math/tex; mode=display">
+\pmb{x} ( k )=\pmb{x}_{\mathrm{T}} ( k )-\pmb{x}_{\mathrm{O}} ( k )=[ x_{1} ( k ) ~ ~ x_{2} ( k ) ~ ~ x_{3} ( k ) ~ ~ x_{4} ( k ) ]</script><p>状态方程为</p>
+<script type="math/tex; mode=display">
+\begin{array}{l} \boldsymbol {x} (k + 1) = \boldsymbol {A} \boldsymbol {x} (k) + \boldsymbol {u} (k, k + 1) + \boldsymbol {\omega} (k) \\ \boldsymbol {z} (k) = \arctan \left(x _ {1} (k) / x _ {2} (k)\right) + \boldsymbol {v} (k) \\ \end{array}</script><p>$A$表示状态转移矩阵，$T$为采样时间间隔，$w(k)$为过程噪声，$z(k)$为被动声纳测得的目标方位角，$\boldsymbol{\upsilon} ( k )$是测量噪声，$u(k)$代表的是由AUV自身机动引起的、对相对运动状态的影响项，可以理解为控制输入项或机动补偿项。</p>
+<h2 id="3-整体方案架构"><a href="#3-整体方案架构" class="headerlink" title="3. 整体方案架构"></a>3. 整体方案架构</h2><p>作者提出<strong>基于距离的分段轨迹优化方法</strong>，核心思想是将跟踪过程按距离（即目标运动要素收敛程度）分为两个阶段，采用不同策略。</p>
+<h3 id="3-1-阶段一：基于位置误差GDOP的轨迹优化"><a href="#3-1-阶段一：基于位置误差GDOP的轨迹优化" class="headerlink" title="3.1 阶段一：基于位置误差GDOP的轨迹优化"></a>3.1 阶段一：基于位置误差GDOP的轨迹优化</h3><p>定义优化目标为：</p>
+<script type="math/tex; mode=display">
+C_{GDOP}(k)=tr(P(k∣k))</script><p>其中$P(k∣k)$是EKF（扩展卡尔曼滤波）输出的位置状态协方差矩阵。</p>
+<p>每个时刻选择使$C_{GDOP}$最小的AUV机动方式，即在各时刻实现最优定位精度。同时引入<strong>相对运动指标</strong>：</p>
+<script type="math/tex; mode=display">
+相对运动指标 = \frac{\text{AUV速度} \times \text{测量周期}}{\text{初始目标距离} \times \text{测向精度}}</script><p>该指标反映AUV相对于目标的可观测能力强弱</p>
+<h3 id="3-2-阶段二：基于短期预测的机动策略"><a href="#3-2-阶段二：基于短期预测的机动策略" class="headerlink" title="3.2 阶段二：基于短期预测的机动策略"></a>3.2 阶段二：基于短期预测的机动策略</h3><p>该阶段分为<strong>预测</strong>、<strong>评估</strong>、<strong>决策</strong>三步</p>
+<h4 id="（1）预测"><a href="#（1）预测" class="headerlink" title="（1）预测"></a>（1）预测</h4><p>预测就是假设AUV短期可能的状态。AUV在每个指令周期内，根据自身机动性能约束（最大转弯角速度，转弯半径、最大/最小速度），枚举短期内所有可能的状态集合<script type="math/tex">L = \{l_1, \cdots, l_n\}</script>（前进、左转、右转、加速等）。</p>
+<h4 id="（2）评估（收益函数构建）"><a href="#（2）评估（收益函数构建）" class="headerlink" title="（2）评估（收益函数构建）"></a>（2）评估（收益函数构建）</h4><p>对每个预测状态，从三个维度计算收益：</p>
+<ul>
+<li><p>距离收益$C_1$：AUV越接近目标，收益越高</p>
+<script type="math/tex; mode=display">
+C_1 = [1 + \log(d + 1)]^{-1}</script></li>
+<li><p>航向调整收益$C_2$：航向变化越小，收益越高</p>
+<script type="math/tex; mode=display">
+C_{2}=\left( 1+\omega T / 2 \pi\right)^{-1}</script></li>
+<li><p>速度收益$C_3$：根据期望速度和最大速度的关系定义</p>
+<script type="math/tex; mode=display">
+C _ {3} = \left\{ \begin{array}{l l} 0, & v _ {b} < 0 \\ 1, & 0 \leq v _ {b} \leq v _ {m a x} \\ \left[ 1 + \lg \left(d ^ {\prime} + 1\right) \right] ^ {- 1}, & v _ {b} > v _ {m a x} \end{array} \right.</script></li>
+</ul>
+<h4 id="（3）决策"><a href="#（3）决策" class="headerlink" title="（3）决策"></a>（3）决策</h4><p>综合三因子加权计算，选择综合收益最大的状态执行：</p>
+<script type="math/tex; mode=display">
+C=\operatorname*{max} ( \omega_{1} C_{1}+\omega_{2} C_{2}+\omega_{3} C_{3} )</script><h2 id="4-仿真结果与分析"><a href="#4-仿真结果与分析" class="headerlink" title="4. 仿真结果与分析"></a>4. 仿真结果与分析</h2><p>AUV速度为2m/s，目标速度分别为1m/s、1.5m/s、2m/s、2.5m/s、3m/s。</p>
+<p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260407095032098.png" alt="image-20260407095032098"></p>
+<center>图1 目标速度为1m/s和1.5m/s时AUV与目标相对运动态势</center>
+
+<p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260407095421560.png" alt="image-20260407095421560"></p>
+<center>图2 目标速度为2m/s和2.5m/s时AUV与目标相对运动态势</center>
+
+<p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260407095547257.png" alt="image-20260407095547257"></p>
+<center>图3 目标速度为3m/s时AUV与目标相对运动态势</center>
+
+<p>从图1-图3中可以看出，当目标速度为1m/s、1.5m/s、2m/s、2.5m/s时，AUV能够与目标汇合。当目标速度较小时，AUV能够自主改变航向等待目标的到来。但是当目标速度为3m/s时，AUV无法追踪上目标。</p>
+<p>无法追踪上目标的原因：</p>
+<ul>
+<li><p>目标比AUV移动的更快，即使AUV采取最优的机动策略，也无法缩小与目标之间的距离。</p>
+</li>
+<li><p>在纯方位跟踪系统中，AUV只能获得目标的方位角，无法直接获得距离信息，为了估计目标的位置和速度，AUV必须进行机动（转弯、变速），否则系统不可观测。</p>
+</li>
+</ul>
+<p>那为什么目标速度为2.5m/s时，AUV可以追上：</p>
+<p>核心原理在于：AUV可以利用几何关系和路径规划，通过走“捷径”来弥补速度的不足。相当于你虽然跑的慢，但是抄近道，反而能比车更早到达前面的某个路口，在那里等着它汇合。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://xiaocaiv.github.io">Alice</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://xiaocaiv.github.io/posts/11631/">http://xiaocaiv.github.io/posts/11631/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://xiaocaiv.github.io" target="_blank">XiaoCai's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%BA%AF%E6%96%B9%E4%BD%8D%E8%B7%9F%E8%B8%AA/">纯方位跟踪</a></div><div class="post-share"><div class="social-share" data-image="/images/ali.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/38057/" title="课题进展12-平台机动轨迹优化问题"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">课题进展12-平台机动轨迹优化问题</div></div><div class="info-2"><div class="info-item-1">课题进展12-平台机动轨迹优化问题1. 问题描述 图1 双平台跟踪双目标轨迹图  平台机动轨迹呈现出“剧烈且紧凑的卷曲”状态 2. 问题原因平台运动学参数设定比例失调  平台速度极慢：1m/s 最大转弯率极大：15度/秒 相比之下，两个目标的合速度都在5m/s左右，远快于平台  在物理学中，转弯半径公式：R={\frac{v} {\omega}} 将参数代入（\omega需转换为弧度）：  R=\frac{1} {1 5 \times\frac{\pi} {1 8 0}} \approx3 . 8 2 \; ( \mathrm{m} )这意味着，观测平台转一个完整的圈只需要一个半径不到 4 米的极小空间。在图片高达 1000x800 米的宏大坐标系中，平台每秒 1 米的移动距离极其微小，而方向却可以剧烈改变，因此在图上画出的就是一团“紧缩的黑线”，看起来像是在原地打转或剧烈机动。 3. 自适应代价权重哪个目标当前的位置不确定性更大，平台就优先通过机动去改善哪个目标的GDOP 使用协方差矩阵$P$的迹（Trace），因为协方差矩阵对角线上的元素代表了各个状态量的方差，方差之和（迹）...</div></div></div></a><a class="pagination-related" href="/posts/49024/" title="课题进度10-目标轨迹优化"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">课题进度10-目标轨迹优化</div></div><div class="info-2"><div class="info-item-1">课题进展10-目标轨迹优化1. 问题描述由于平台阵型的影响，导致对目标的GDOP较小，所以前期跟踪波动比较大，那么可以根据GDOP自适应调整平台的位置，使得跟踪抖动降低。通过让平台根据当前的跟踪状态“智能”地调整自身的航向和速度，不仅能大幅降低跟踪抖动，还能有效避免目标进入 GDOP 的“盲区”。 2. 实现逻辑:闭环反馈系统（1）预测目标位置在时刻 $k$，你无法知道目标在 $k+1$ 时刻的真实位置。因此，你必须依赖 UKF 在当前时刻预测出的目标状态（$x_{pred}$） （2）构建代价函数利用预测的目标位置和平台可能的候选位置，计算预期的GDOP。由于是双目标跟踪，需要权衡两个目标，代价函数通常设为：  J = w_1GDOP_1+w_2GDOP_2其中$w_1$，$w_2$为权重，如果某个目标快丢失了或协方差矩阵$P$很大，可以动态调高它的权重。 （3）平台机动决策在平台动力学约束的范围内（例如最大速度限制、最大转弯角速率限制），搜索一个能在下一时刻让代价函数$J$最小的平台控制指令（航向角和加速度）。 （4）执行与观测平台移动到新位置，获取新的量测，UKF更新，循环...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/ali.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Alice</div><div class="author-info-description">记录美好生活，分享技术知识。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">41</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">23</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xiaocaiv"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/xiaocaiv" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:2961197321@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">允许别人做别人，允许自己做自己</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%BE%E9%A2%98%E8%BF%9B%E5%B1%9511-%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB"><span class="toc-text">课题进展11-文献阅读</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E3%80%8AAUV%E7%BA%AF%E6%96%B9%E4%BD%8D%E8%B7%9F%E8%B8%AA%E8%BD%A8%E8%BF%B9%E4%BC%98%E5%8C%96%E6%96%B9%E6%B3%95%E3%80%8B"><span class="toc-text">《AUV纯方位跟踪轨迹优化方法》</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E7%A0%94%E7%A9%B6%E9%97%AE%E9%A2%98"><span class="toc-text">1. 研究问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E7%B3%BB%E7%BB%9F%E5%BB%BA%E6%A8%A1"><span class="toc-text">2. 系统建模</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%95%B4%E4%BD%93%E6%96%B9%E6%A1%88%E6%9E%B6%E6%9E%84"><span class="toc-text">3. 整体方案架构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E9%98%B6%E6%AE%B5%E4%B8%80%EF%BC%9A%E5%9F%BA%E4%BA%8E%E4%BD%8D%E7%BD%AE%E8%AF%AF%E5%B7%AEGDOP%E7%9A%84%E8%BD%A8%E8%BF%B9%E4%BC%98%E5%8C%96"><span class="toc-text">3.1 阶段一：基于位置误差GDOP的轨迹优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E9%98%B6%E6%AE%B5%E4%BA%8C%EF%BC%9A%E5%9F%BA%E4%BA%8E%E7%9F%AD%E6%9C%9F%E9%A2%84%E6%B5%8B%E7%9A%84%E6%9C%BA%E5%8A%A8%E7%AD%96%E7%95%A5"><span class="toc-text">3.2 阶段二：基于短期预测的机动策略</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%881%EF%BC%89%E9%A2%84%E6%B5%8B"><span class="toc-text">（1）预测</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%882%EF%BC%89%E8%AF%84%E4%BC%B0%EF%BC%88%E6%94%B6%E7%9B%8A%E5%87%BD%E6%95%B0%E6%9E%84%E5%BB%BA%EF%BC%89"><span class="toc-text">（2）评估（收益函数构建）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%883%EF%BC%89%E5%86%B3%E7%AD%96"><span class="toc-text">（3）决策</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E4%BB%BF%E7%9C%9F%E7%BB%93%E6%9E%9C%E4%B8%8E%E5%88%86%E6%9E%90"><span class="toc-text">4. 仿真结果与分析</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/41396/" title="Ubuntu与IMX6ULL开发板网络通讯设置">Ubuntu与IMX6ULL开发板网络通讯设置</a><time datetime="2026-07-21T07:47:00.000Z" title="发表于 2026-07-21 15:47:00">2026-07-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/56201/" title="博客迁移">博客迁移</a><time datetime="2026-07-21T07:13:28.000Z" title="发表于 2026-07-21 15:13:28">2026-07-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/33693/" title="课题进度21-舰船辐射噪声">课题进度21-舰船辐射噪声</a><time datetime="2026-04-27T03:11:59.000Z" title="发表于 2026-04-27 11:11:59">2026-04-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/21575/" title="课题进度20-撰写小论文">课题进度20-撰写小论文</a><time datetime="2026-04-22T03:11:27.000Z" title="发表于 2026-04-22 11:11:27">2026-04-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/6215/" title="课题进度19-增加杂波">课题进度19-增加杂波</a><time datetime="2026-04-18T03:10:44.000Z" title="发表于 2026-04-18 11:10:44">2026-04-18</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/images/default.jpg);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Alice</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.2</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.1</a></span></div><div class="footer_custom_text"><p> <a style="margin-inline:5px"target="_blank" href="https://hexo.io/zh-cn/"><img src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&logo=hexo" title="博客框架为 Hexo v8.1.0"></a> <a style="margin-inline:5px"target="_blank" href="https://butterfly.js.org/"><img src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=flat&logo=butterfly" title="主题为 Butterfly v5.5.1"></a> <a style="margin-inline:5px"target="_blank" href="https://github.com"><img src="https://img.shields.io/badge/Source-Github-d021d6?style=flat&logo=github" title="本站项目由 Github 托管"></a> <a style="margin-inline:5px"target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img src="https://img.shields.io/badge/Copyright-BY--NC--SA-red?style=flat&logo=alchemy" title="本站采用知识共享署名-非商业性使用"></a> </p></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.1"></script><script src="/js/main.js?v=5.5.1"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script></div><script src="/scripts/footer_time.js"></script><div class="aplayer no-destroy" data-id="17375390739" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="false" data-listFolded="true" data-lrcType="-1"> </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"]):not([href="/scripts/footer_time.js/"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      const usePjax = true
+      true
+        ? (usePjax ? pjax.loadUrl('/404.html') : window.location.href = '/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.1"></script></div></div></body></html>

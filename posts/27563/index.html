@@ -1,0 +1,397 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>课题进展15-多目标跟踪的数据关联算法文献阅读 | XiaoCai's Blog</title><meta name="author" content="Alice"><meta name="copyright" content="Alice"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="课题进展15-文献阅读《双观测站水下纯方位多目标跟踪的数据关联算法》1. 研究问题针对双观测站纯方位系统定位多个目标时，产生的大量虚假点量测数据和虚假量测数据都呈平方倍数增长的问题，提出了修正最近邻域法（MNNF）和修正概率数据关联算法（MPDA）。 三角交叉定位会产生 $n×n$ 交叉点，其中真实目标数为$n$，虚假点为$n×(n-1)$，所以当存在多个目标和虚假量测时，量测数据量呈平方倍数增长">
+<meta property="og:type" content="article">
+<meta property="og:title" content="课题进展15-多目标跟踪的数据关联算法文献阅读">
+<meta property="og:url" content="http://xiaocaiv.github.io/posts/27563/index.html">
+<meta property="og:site_name" content="XiaoCai&#39;s Blog">
+<meta property="og:description" content="课题进展15-文献阅读《双观测站水下纯方位多目标跟踪的数据关联算法》1. 研究问题针对双观测站纯方位系统定位多个目标时，产生的大量虚假点量测数据和虚假量测数据都呈平方倍数增长的问题，提出了修正最近邻域法（MNNF）和修正概率数据关联算法（MPDA）。 三角交叉定位会产生 $n×n$ 交叉点，其中真实目标数为$n$，虚假点为$n×(n-1)$，所以当存在多个目标和虚假量测时，量测数据量呈平方倍数增长">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://xiaocaiv.github.io/images/ali.jpg">
+<meta property="article:published_time" content="2026-04-09T02:56:19.000Z">
+<meta property="article:modified_time" content="2026-07-22T02:58:33.808Z">
+<meta property="article:author" content="Alice">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://xiaocaiv.github.io/images/ali.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "课题进展15-多目标跟踪的数据关联算法文献阅读",
+  "url": "http://xiaocaiv.github.io/posts/27563/",
+  "image": "http://xiaocaiv.github.io/images/ali.jpg",
+  "datePublished": "2026-04-09T02:56:19.000Z",
+  "dateModified": "2026-07-22T02:58:33.808Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Alice",
+      "url": "http://xiaocaiv.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/favicon1.png"><link rel="canonical" href="http://xiaocaiv.github.io/posts/27563/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '课题进展15-多目标跟踪的数据关联算法文献阅读',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href= "/css/my.css"><meta name="generator" content="Hexo 8.1.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/ali.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">41</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">23</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/images/default.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">XiaoCai's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">课题进展15-多目标跟踪的数据关联算法文献阅读</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">课题进展15-多目标跟踪的数据关联算法文献阅读</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-04-09T02:56:19.000Z" title="发表于 2026-04-09 10:56:19">2026-04-09</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-07-22T02:58:33.808Z" title="更新于 2026-07-22 10:58:33">2026-07-22</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%B0%B4%E5%A3%B0%E7%9B%B8%E5%85%B3/">水声相关</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="课题进展15-文献阅读"><a href="#课题进展15-文献阅读" class="headerlink" title="课题进展15-文献阅读"></a>课题进展15-文献阅读</h1><h2 id="《双观测站水下纯方位多目标跟踪的数据关联算法》"><a href="#《双观测站水下纯方位多目标跟踪的数据关联算法》" class="headerlink" title="《双观测站水下纯方位多目标跟踪的数据关联算法》"></a>《双观测站水下纯方位多目标跟踪的数据关联算法》</h2><h3 id="1-研究问题"><a href="#1-研究问题" class="headerlink" title="1. 研究问题"></a>1. 研究问题</h3><p>针对双观测站纯方位系统定位多个目标时，产生的大量虚假点量测数据和虚假量测数据都呈平方倍数增长的问题，提出了修正最近邻域法（MNNF）和修正概率数据关联算法（MPDA）。</p>
+<p>三角交叉定位会产生 $n×n$ 交叉点，其中真实目标数为$n$，虚假点为$n×(n-1)$，所以当存在多个目标和虚假量测时，量测数据量呈<strong>平方倍数增长</strong>，传统数据关联方法（如NNF、JPDA）难以直接应用。</p>
+<h3 id="2-改进算法"><a href="#2-改进算法" class="headerlink" title="2. 改进算法"></a>2. 改进算法</h3><h4 id="（1）修正最近邻域法（MNNF）"><a href="#（1）修正最近邻域法（MNNF）" class="headerlink" title="（1）修正最近邻域法（MNNF）"></a>（1）修正最近邻域法（MNNF）</h4><p><strong>基础：</strong>最新邻域法，选取<strong>新息加权范数</strong>最小的量测作为真实值</p>
+<p>新息：指的是<strong>实际量测值</strong>与<strong>滤波器预测值</strong>之间的差值，代表量测带来的新信息</p>
+<p>新息越大，说明这个实际量测值与我们预期偏离越远；新息越小，说明它越接近预期。</p>
+<p>加权范数：仅仅看新息是不够的，因为不同方向的误差、不同传感器的精度都不同，所以需要加权。</p>
+<p>加权矩阵：通常使用新息协方差矩阵 $S(k)$ 的逆矩阵。$S(k)$ 反映了当前预测的不确定性。如果某个方向的预测非常不准（方差大），那么即使新息较大，也会被“宽容”处理。</p>
+<p>计算公式：$新息加权范数² = V(k)^T <em> S(k)^{-1} </em> V(k)$</p>
+<p><strong>改进点：</strong>增加了对跟踪门内没有有效量测的处理</p>
+<p>定义两个事件：</p>
+<ul>
+<li>$S_0$：跟踪门内不存在有效量测 → 用预测值代替更新值。</li>
+<li>$S_1$：跟踪门内存在有效量测→ 使用NNF选择最优量测。</li>
+</ul>
+<p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/%E6%96%87%E7%8C%AE-%E4%BF%AE%E6%AD%A3%E6%9C%80%E8%BF%91%E9%82%BB%E5%9F%9F%E7%AE%97%E6%B3%95%E6%B5%81%E7%A8%8B%E5%9B%BE.png" alt="文献-修正最近邻域算法流程图" style="zoom: 67%;" /></p>
+<center>图1 修正最近邻域算法流程图</center>
+
+<h4 id="（2）修正概率数据关联算法（MPDA）"><a href="#（2）修正概率数据关联算法（MPDA）" class="headerlink" title="（2）修正概率数据关联算法（MPDA）"></a>（2）修正概率数据关联算法（MPDA）</h4><p><strong>基础：</strong>联合概率数据关联算法（JPDA），但JPDA计算复杂，实时性差。</p>
+<p>联合概率数据关联算法（JPDA）：核心思想是不武断地某个量测唯一分配给某个目标，而是计算每一个候选量测与每一个可能目标之间的关联概率，然后对所有可能的目标—量测关联事件进行联合加权。适用于杂波环境（存在大量虚假量测）下，多个目标的跟踪。</p>
+<ul>
+<li>优点：精度高，通过概率加权，在杂波和密集目标环境下比NNF等硬分配方法更鲁棒、更准确；处理模糊性强，天生适合处理目标交叉、靠的很近、以及量测归属模糊的情况。</li>
+<li>缺点：计算量大，联合事件的数量随目标和量测数量指数增长，容易造成“组合爆炸”</li>
+</ul>
+<p><strong>改进点：</strong></p>
+<ol>
+<li>不计算所有复杂的联合事件，而是找到跟踪门重叠区域的公共量测</li>
+<li>对这些公共量测统一做一个弱加权处理（乘一个小于1的衰减因子），而非公共区域量测保持不变</li>
+<li>最后进行归一化，得到一个简化的关联概率</li>
+</ol>
+<h3 id="3-滤波与系统模型"><a href="#3-滤波与系统模型" class="headerlink" title="3. 滤波与系统模型"></a>3. 滤波与系统模型</h3><p><strong>滤波方法：</strong>扩展卡尔曼滤波器（EKF），用于处理非线性系统<br><strong>目标运动模型：</strong>匀速直线运动，状态向量为$[x,y,v_x,v_y]^T$<br><strong>观测方程：</strong>由两个观测站的方位角构成。</p>
+<h3 id="4-仿真实验与结果"><a href="#4-仿真实验与结果" class="headerlink" title="4. 仿真实验与结果"></a>4. 仿真实验与结果</h3><p>参数设置</p>
+<ul>
+<li>两个观测站坐标：（0,0）和（1000,0）</li>
+<li>目标做匀速直线运动，采样间隔1s，共600次</li>
+<li>50次蒙特卡洛仿真</li>
+</ul>
+<p>仿真结果：</p>
+<p><strong>方位角量测误差为1°时的结果</strong></p>
+<p><img src = "https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260420163624090.png" ></p>
+<center>图2 MNNF预测轨迹图</center>
+
+<p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260420164654002.png" alt="image-20260420164654002"></p>
+<center>图3 MPDA预测轨迹图</center>
+
+<p><strong>方位角量测误差为3°时的结果</strong></p>
+<p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260420192848985.png" alt="image-20260420192848985"></p>
+<center>图4 MNNF预测轨迹图</center>
+
+<p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260420193011329.png" alt="image-20260420193011329"></p>
+<center>图5 MPDA预测轨迹图</center>
+
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>量测角误差/°</th>
+<th>MPDA关联正确率/%</th>
+<th>MNNF关联正确率/%</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>95.6</td>
+<td>81.2</td>
+</tr>
+<tr>
+<td>2</td>
+<td>92.1</td>
+<td>72.3</td>
+</tr>
+<tr>
+<td>3</td>
+<td>90.4</td>
+<td>54.7</td>
+</tr>
+<tr>
+<td>4</td>
+<td>77.5</td>
+<td>25.8</td>
+</tr>
+<tr>
+<td>5</td>
+<td>64.3</td>
+<td>14.9</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>可以看出MPDA算法的整体关联正确率远远优于MNNF算法，MPDA 算法在量测角误差角达到 3°时关联正确率仍可达90%以上，而超过3°以后其跟踪性能就大幅下降；而 MNNF 算法只有在量测角误差为1°左右时关联性能较为不错。这是因为纯方位系统属于无源跟踪系统，其量测值只有方位角信息，若测量的角度偏差变大会直接影响算法的性能。MPDA 方法考虑到了各个量测与目标的关联概率，尽可能的减少误跟的可能性，但依然受限于量测角的误差大小。而 MNNF 法本质上选取离上一个预测值最近的量测作为估计值，更容易收到误差以及虚假量测的干扰。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://xiaocaiv.github.io">Alice</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://xiaocaiv.github.io/posts/27563/">http://xiaocaiv.github.io/posts/27563/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://xiaocaiv.github.io" target="_blank">XiaoCai's Blog</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/images/ali.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/7364/" title="课题进展16-联合概率数据关联算法"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">课题进展16-联合概率数据关联算法</div></div><div class="info-2"><div class="info-item-1">课题进展-联合概率数据关联算法(JPDA)1. 概率数据关联算法(PDA)在跟踪一个目标时，传感器会收到多个量测点，其中至多一个量测来自目标，其余来自杂波（如海洋噪声、混响、生物干扰等）。 PDA不硬性选择一个量测作为目标量测，而是对所有可能源于目标的量测赋予一个概率，然后概率加权融合这些量测来更新目标状态。 2. PDA在多目标下的失效考虑一个两目标场景（目标A、目标B），两个量测（z1、z2）。如果两个目标的预测位置很近，跟踪门会发生重叠。 PDA独立处理每个目标：为目标A计算$\beta_i$时，只考虑它自己的跟踪门内的量测，忽略目标B的存在这会导致：如果z1靠近目标A、z2靠近目标B，但两个门重叠，PDA可能将z1以高概率关联给目标A，将z2高概率关联给目标B，看似没问题。但若两个量测都靠近两个目标，PDA可能将同一个量测同时高概率关联给两个目标，造成状态估计的偏差甚至发散。 根本问题：一个量测最多只能源于一个目标（或杂波）。PDA 没有强制这一约束，而 JPDA 通过联合事件显式保证了这一约束。 3. JPDA的核心思想 枚举所有可能的“目标-量测分配”方案，满足：每个...</div></div></div></a><a class="pagination-related" href="/posts/31290/" title="课题进展14-机动转弯交叉运动目标"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">课题进展14-机动转弯交叉运动目标</div></div><div class="info-2"><div class="info-item-1">课题进展14-机动转弯交叉运动目标1. 运动建模现添加一个新的运动场景，让目标做机动转弯交叉运动。 目标运动状态：目标1：（-200，200，6，3）目标2：（200，200，-6，3） 平面匀速转弯状态转移矩阵：  F_{CT} = \begin{bmatrix} 1 & 0 & \frac{\sin(\omega dt)}{\omega} & -\frac{1 - \cos(\omega dt)}{\omega} \\ 0 & 1 & \frac{1 - \cos(\omega dt)}{\omega} & \frac{\sin(\omega dt)}{\omega} \\ 0 & 0 & \cos(\omega dt) & -\sin(\omega dt) \\ 0 & 0 & \sin(\omega dt) & \cos(\omega dt) \end{bmatrix}匀速转弯率$\omega$：  当$\omega$为负时，顺时针转弯；为正时，逆时针转弯。 $\omega$越大，转弯角度就越大。   图1 转弯交叉运动时的跟踪轨迹图  但是这时的GDOP在跟踪后半段并没...</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/ali.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Alice</div><div class="author-info-description">记录美好生活，分享技术知识。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">41</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">23</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xiaocaiv"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/xiaocaiv" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:2961197321@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">允许别人做别人，允许自己做自己</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%BE%E9%A2%98%E8%BF%9B%E5%B1%9515-%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB"><span class="toc-text">课题进展15-文献阅读</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E3%80%8A%E5%8F%8C%E8%A7%82%E6%B5%8B%E7%AB%99%E6%B0%B4%E4%B8%8B%E7%BA%AF%E6%96%B9%E4%BD%8D%E5%A4%9A%E7%9B%AE%E6%A0%87%E8%B7%9F%E8%B8%AA%E7%9A%84%E6%95%B0%E6%8D%AE%E5%85%B3%E8%81%94%E7%AE%97%E6%B3%95%E3%80%8B"><span class="toc-text">《双观测站水下纯方位多目标跟踪的数据关联算法》</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E7%A0%94%E7%A9%B6%E9%97%AE%E9%A2%98"><span class="toc-text">1. 研究问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%94%B9%E8%BF%9B%E7%AE%97%E6%B3%95"><span class="toc-text">2. 改进算法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%881%EF%BC%89%E4%BF%AE%E6%AD%A3%E6%9C%80%E8%BF%91%E9%82%BB%E5%9F%9F%E6%B3%95%EF%BC%88MNNF%EF%BC%89"><span class="toc-text">（1）修正最近邻域法（MNNF）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%EF%BC%882%EF%BC%89%E4%BF%AE%E6%AD%A3%E6%A6%82%E7%8E%87%E6%95%B0%E6%8D%AE%E5%85%B3%E8%81%94%E7%AE%97%E6%B3%95%EF%BC%88MPDA%EF%BC%89"><span class="toc-text">（2）修正概率数据关联算法（MPDA）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%BB%A4%E6%B3%A2%E4%B8%8E%E7%B3%BB%E7%BB%9F%E6%A8%A1%E5%9E%8B"><span class="toc-text">3. 滤波与系统模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E4%BB%BF%E7%9C%9F%E5%AE%9E%E9%AA%8C%E4%B8%8E%E7%BB%93%E6%9E%9C"><span class="toc-text">4. 仿真实验与结果</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/41396/" title="Ubuntu与IMX6ULL开发板网络通讯设置">Ubuntu与IMX6ULL开发板网络通讯设置</a><time datetime="2026-07-21T07:47:00.000Z" title="发表于 2026-07-21 15:47:00">2026-07-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/56201/" title="博客迁移">博客迁移</a><time datetime="2026-07-21T07:13:28.000Z" title="发表于 2026-07-21 15:13:28">2026-07-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/33693/" title="课题进度21-舰船辐射噪声">课题进度21-舰船辐射噪声</a><time datetime="2026-04-27T03:11:59.000Z" title="发表于 2026-04-27 11:11:59">2026-04-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/21575/" title="课题进度20-撰写小论文">课题进度20-撰写小论文</a><time datetime="2026-04-22T03:11:27.000Z" title="发表于 2026-04-22 11:11:27">2026-04-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/6215/" title="课题进度19-增加杂波">课题进度19-增加杂波</a><time datetime="2026-04-18T03:10:44.000Z" title="发表于 2026-04-18 11:10:44">2026-04-18</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/images/default.jpg);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Alice</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.2</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.1</a></span></div><div class="footer_custom_text"><p> <a style="margin-inline:5px"target="_blank" href="https://hexo.io/zh-cn/"><img src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&logo=hexo" title="博客框架为 Hexo v8.1.0"></a> <a style="margin-inline:5px"target="_blank" href="https://butterfly.js.org/"><img src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=flat&logo=butterfly" title="主题为 Butterfly v5.5.1"></a> <a style="margin-inline:5px"target="_blank" href="https://github.com"><img src="https://img.shields.io/badge/Source-Github-d021d6?style=flat&logo=github" title="本站项目由 Github 托管"></a> <a style="margin-inline:5px"target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img src="https://img.shields.io/badge/Copyright-BY--NC--SA-red?style=flat&logo=alchemy" title="本站采用知识共享署名-非商业性使用"></a> </p></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.1"></script><script src="/js/main.js?v=5.5.1"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script></div><script src="/scripts/footer_time.js"></script><div class="aplayer no-destroy" data-id="17375390739" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="false" data-listFolded="true" data-lrcType="-1"> </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"]):not([href="/scripts/footer_time.js/"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      const usePjax = true
+      true
+        ? (usePjax ? pjax.loadUrl('/404.html') : window.location.href = '/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.1"></script></div></div></body></html>
