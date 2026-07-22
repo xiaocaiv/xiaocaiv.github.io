@@ -1,0 +1,424 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>课题进度25-舰船噪声特征提取文献阅读 | XiaoCai's Blog</title><meta name="author" content="Alice"><meta name="copyright" content="Alice"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="《基于小波变换的舰船噪声特征提取方法研究》一、研究背景与问题舰船噪声信号在采集过程中受到强烈的环境噪声干扰，传统特征提取方法在低信噪比条件下难以有效分离信号与噪声，导致舰船类型识别与状态监测的可靠性不足。 二、研究内容1. 小波变换传统的傅里叶变换（FT） 能将信号从时间域变换到频率域，告诉你信号里包含哪些频率成分，但它有一个致命缺陷：完全丢失了时间信息——你只能知道”信号中有 100 Hz 的成">
+<meta property="og:type" content="article">
+<meta property="og:title" content="课题进度25-舰船噪声特征提取文献阅读">
+<meta property="og:url" content="http://xiaocaiv.github.io/posts/64930/index.html">
+<meta property="og:site_name" content="XiaoCai&#39;s Blog">
+<meta property="og:description" content="《基于小波变换的舰船噪声特征提取方法研究》一、研究背景与问题舰船噪声信号在采集过程中受到强烈的环境噪声干扰，传统特征提取方法在低信噪比条件下难以有效分离信号与噪声，导致舰船类型识别与状态监测的可靠性不足。 二、研究内容1. 小波变换传统的傅里叶变换（FT） 能将信号从时间域变换到频率域，告诉你信号里包含哪些频率成分，但它有一个致命缺陷：完全丢失了时间信息——你只能知道”信号中有 100 Hz 的成">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://xiaocaiv.github.io/images/ali.jpg">
+<meta property="article:published_time" content="2026-05-22T03:24:09.000Z">
+<meta property="article:modified_time" content="2026-07-22T03:27:33.079Z">
+<meta property="article:author" content="Alice">
+<meta property="article:tag" content="舰船辐射噪声">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://xiaocaiv.github.io/images/ali.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "课题进度25-舰船噪声特征提取文献阅读",
+  "url": "http://xiaocaiv.github.io/posts/64930/",
+  "image": "http://xiaocaiv.github.io/images/ali.jpg",
+  "datePublished": "2026-05-22T03:24:09.000Z",
+  "dateModified": "2026-07-22T03:27:33.079Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Alice",
+      "url": "http://xiaocaiv.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/favicon1.png"><link rel="canonical" href="http://xiaocaiv.github.io/posts/64930/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '课题进度25-舰船噪声特征提取文献阅读',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href= "/css/my.css"><meta name="generator" content="Hexo 8.1.2"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/ali.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">24</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header" style="background-image: url(/images/default.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">XiaoCai's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">课题进度25-舰船噪声特征提取文献阅读</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-heartbeat"></i><span> 清单</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">课题进度25-舰船噪声特征提取文献阅读</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-22T03:24:09.000Z" title="发表于 2026-05-22 11:24:09">2026-05-22</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-07-22T03:27:33.079Z" title="更新于 2026-07-22 11:27:33">2026-07-22</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%B0%B4%E5%A3%B0%E7%9B%B8%E5%85%B3/">水声相关</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="《基于小波变换的舰船噪声特征提取方法研究》"><a href="#《基于小波变换的舰船噪声特征提取方法研究》" class="headerlink" title="《基于小波变换的舰船噪声特征提取方法研究》"></a>《基于小波变换的舰船噪声特征提取方法研究》</h1><h2 id="一、研究背景与问题"><a href="#一、研究背景与问题" class="headerlink" title="一、研究背景与问题"></a>一、研究背景与问题</h2><p>舰船噪声信号在采集过程中受到强烈的环境噪声干扰，传统特征提取方法在低信噪比条件下难以有效分离信号与噪声，导致舰船类型识别与状态监测的可靠性不足。</p>
+<h2 id="二、研究内容"><a href="#二、研究内容" class="headerlink" title="二、研究内容"></a>二、研究内容</h2><h3 id="1-小波变换"><a href="#1-小波变换" class="headerlink" title="1. 小波变换"></a>1. 小波变换</h3><p>传统的<strong>傅里叶变换（FT）</strong> 能将信号从时间域变换到频率域，告诉你信号里包含哪些频率成分，但它有一个致命缺陷：<strong>完全丢失了时间信息</strong>——你只能知道”信号中有 100 Hz 的成分”，却不知道这个 100 Hz 出现在什么时候。</p>
+<p><strong>短时傅里叶变换（STFT）</strong>通过加窗做了一些改进，但窗口大小固定，面临“测不准原理”的困境：</p>
+<ul>
+<li>窗口窄 → 时间分辨率高，频率分辨率低</li>
+<li>窗口宽 → 频率分辨率高，时间分辨率低</li>
+</ul>
+<p><strong>小波变换的核心思想</strong>：用可伸缩的”小波”替代固定窗口，对低频用宽窗口（频率分辨率高），对高频用窄窗口（时间分辨率高），实现<strong>自适应时频分析</strong>。</p>
+<p><strong>总结：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">傅里叶变换：      只能看到&quot;有哪些频率&quot;</span><br><span class="line">短时傅里叶变换：  固定大小的时频窗口</span><br><span class="line">小波变换：        低频→大窗口（看整体趋势）</span><br><span class="line">                 高频→小窗口（看瞬态细节）</span><br></pre></td></tr></table></figure>
+<h3 id="2-连续小波变换（CWT）预处理"><a href="#2-连续小波变换（CWT）预处理" class="headerlink" title="2. 连续小波变换（CWT）预处理"></a>2. 连续小波变换（CWT）预处理</h3><p>对舰船噪声信号$a(t)$进行连续小波变换，其时频表达式为：</p>
+<script type="math/tex; mode=display">
+\mathrm{CWT}(\tau, s) = \frac{1}{\sqrt{|s|}} \int_{-\infty}^{+\infty} a(t)\; \psi\!\left(\frac{t - \tau}{s}\right) dt \tag{1}</script><p>其中，$\psi(\cdot)$ 为母小波函数，$s$ 为尺度因子，$\tau$ 为平移因子。</p>
+<h3 id="3-离散小波变换（DWT）分解"><a href="#3-离散小波变换（DWT）分解" class="headerlink" title="3. 离散小波变换（DWT）分解"></a>3. 离散小波变换（DWT）分解</h3><p>选用 <strong>db4</strong> 小波基，对信号进行 <strong>C = 6</strong> 层离散小波分解。设 $l(\cdot)$ 为低通滤波器，$h(\cdot)$ 为高通滤波器，第 $c$ 层分解的递推公式为：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+F_l^{(c+1)}(n) &= \sum_{k} l(k - 2n)\; F_l^{(c)}(k) \\
+F_h^{(c)}(n)   &= \sum_{k} h(k - 2n)\; F_l^{(c)}(k)
+\end{aligned}</script><p>其中初始值 $F_l^{(0)}(n) = a(n)$。最终信号重构表达式为：</p>
+<script type="math/tex; mode=display">
+a(n) = F_l^{(C)} + \sum_{c=1}^{C} F_h^{(c)} \tag{2}</script><p>分解结果：<strong>$F_l^{(C)}$ 为低频近似系数</strong>（反映宏观趋势）；<strong>$F_h^{(c)}$ 为第 $c$ 层高频细节系数</strong>（$c=1,2,\dots,C$，反映微观结构）</p>
+<h3 id="4-能量特征向量构建"><a href="#4-能量特征向量构建" class="headerlink" title="4. 能量特征向量构建"></a>4. 能量特征向量构建</h3><p>设第 $c$ 层高频系数序列长度为 $S_c$，第 $C$ 层低频系数序列长度为 $S_C$，计算各层能量：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+E_{g,c}   &= \sum_{s=1}^{S_c} \bigl|F_h^{(c)}(s)\bigr|^2 \quad (c = 1,2,\dots,C) \\
+E_{m,C}   &= \sum_{s=1}^{S_C} \bigl|F_l^{(C)}(s)\bigr|^2 \\
+E_{total} &= E_{m,C} + \sum_{c=1}^{C} E_{g,c}
+\end{aligned}</script><h3 id="5-尺度间相关处理（核心方法）"><a href="#5-尺度间相关处理（核心方法）" class="headerlink" title="5. 尺度间相关处理（核心方法）"></a>5. 尺度间相关处理（核心方法）</h3><p>利用信号在相邻尺度间具有强相关性而噪声不相关的特点，对高频系数进行增强。</p>
+<p><strong>步骤一</strong>：计算相邻层高频系数的互相关：</p>
+<script type="math/tex; mode=display">
+\rho_c(n) = F_h^{(c)}(n) \cdot F_h^{(c+1)}(n) \tag{4}</script><p><strong>步骤二</strong>：分别计算原始高频能量和相关系数能量：</p>
+<script type="math/tex; mode=display">
+E_{F_h}^{(c)} = \sum_{n} \bigl[F_h^{(c)}(n)\bigr]^2, \qquad
+E_{\rho_c}    = \sum_{n} \bigl[\rho_c(n)\bigr]^2 \tag{5}</script><p><strong>步骤三</strong>：用能量比归一化相关系数，使其与原始系数具有可比幅值：</p>
+<script type="math/tex; mode=display">
+\tilde{\rho}_c(n) = \rho_c(n) \cdot \sqrt{\frac{E_{F_h}^{(c)}}{E_{\rho_c}}} \tag{6}</script><p><strong>步骤四</strong>：阈值筛选——仅保留相关性强于原始系数的分量：</p>
+<script type="math/tex; mode=display">
+nF_h^{(c)}(n) =
+\begin{cases}
+F_h^{(c)}(n), & \text{if } \bigl|\tilde{\rho}_c(n)\bigr| > \bigl|F_h^{(c)}(n)\bigr| \\
+0,            & \text{otherwise}
+\end{cases} \tag{7}</script><p><strong>步骤五</strong>：重构增强后的高频分量（保留最高层细节系数不变）：</p>
+<script type="math/tex; mode=display">
+\tilde{F}_h = \sum_{c=1}^{C-1} nF_h^{(c)} \;+\; F_h^{(C)} \tag{8}</script><h3 id="6-能量分布熵计算"><a href="#6-能量分布熵计算" class="headerlink" title="6. 能量分布熵计算"></a>6. 能量分布熵计算</h3><p>对低频近似系数 $F_l^{(C)}$ 和增强后的高频分量 $\tilde{F}_h$ 分别计算能量分布熵。</p>
+<p>以 $F_l^{(C)}$ 为例，设其长度为 $R$，每个样本点能量占比为：</p>
+<script type="math/tex; mode=display">
+p_r = \frac{\bigl[F_l^{(C)}(r)\bigr]^2}{\bigl\|F_l^{(C)}\bigr\|^2}, \qquad
+\bigl\|F_l^{(C)}\bigr\|^2 = \sum_{r=1}^{R} \bigl[F_l^{(C)}(r)\bigr]^2</script><p>能量分布熵定义为（用 $\ln R$ 归一化至 $(0,1)$ 区间）：</p>
+<script type="math/tex; mode=display">
+En\!\left(F_l^{(C)}\right) = -\frac{\sum_{r=1}^{R} p_r \ln p_r}{\ln R} \tag{9}</script><p>当能量完全均匀分布（$p_r = 1/R$）时，$En = 1$；能量完全集中于一点时，$En = 0$。</p>
+<p>同理计算 $\tilde{F}_h$ 的能量分布熵 $En(\tilde{F}_h)$，构成二维熵特征向量：</p>
+<script type="math/tex; mode=display">
+V = \Bigl[\, En\!\left(F_l^{(C)}\right),\; En\!\left(\tilde{F}_h\right) \Bigr] \tag{10}</script><h3 id="7-综合特征向量"><a href="#7-综合特征向量" class="headerlink" title="7. 综合特征向量"></a>7. 综合特征向量</h3><p>将能量特征 $Q$ 与熵特征 $V$ 合并，形成最终的综合特征向量：</p>
+<script type="math/tex; mode=display">
+Z = [Q,\; V]</script><p>该向量同时反映信号的<strong>宏观能量分布趋势</strong>（$Q$）与<strong>微观结构复杂度</strong>（$V$），实现低频主体与高频细节的互补表征。</p>
+<h3 id="8-分类识别"><a href="#8-分类识别" class="headerlink" title="8. 分类识别"></a>8. 分类识别</h3><p>采用距离度量对待识别样本特征 $X_N$ 与已知类别特征 $X_F$ 进行匹配：</p>
+<script type="math/tex; mode=display">
+S_f = DM(X_N,\; X_F) \tag{11}</script><p>$DM(\cdot)$ 为距离度量函数，$S_f$ 越小表示特征匹配度越高。</p>
+<hr>
+<h2 id="三、实验结果"><a href="#三、实验结果" class="headerlink" title="三、实验结果"></a>三、实验结果</h2><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>本文方法</th>
+<th>对比方法1</th>
+<th>对比方法2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>特征提取准确率 /%</td>
+<td><strong>96.87</strong></td>
+<td>86.72</td>
+<td>79.69</td>
+</tr>
+<tr>
+<td>特征稳定性</td>
+<td><strong>0.02</strong></td>
+<td>0.05</td>
+<td>0.07</td>
+</tr>
+<tr>
+<td>识别精度 /%</td>
+<td><strong>95.86</strong></td>
+<td>89.27</td>
+<td>79.81</td>
+</tr>
+<tr>
+<td>抗噪能力</td>
+<td><strong>0.92</strong></td>
+<td>0.74</td>
+<td>0.68</td>
+</tr>
+<tr>
+<td>故障灵敏度 /%</td>
+<td><strong>97.84</strong></td>
+<td>88.29</td>
+<td>76.91</td>
+</tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li>在 <strong>-30 dB 至 50 dB</strong> 信噪比范围内，能量分布熵变化范围为 <strong>0.23–0.48</strong>，变化趋势合理且稳定。</li>
+<li>方法能有效分离舰船噪声的低频主体特征与高频细节特征。</li>
+</ul>
+<hr>
+<h2 id="四、主要创新点"><a href="#四、主要创新点" class="headerlink" title="四、主要创新点"></a>四、主要创新点</h2><ol>
+<li><p><strong>提出尺度间相关处理增强机制</strong>：利用相邻小波分解层之间信号分量强相关而噪声不相关的特性，通过式 (4)–(8) 的相关-阈值筛选流程，对高频细节系数进行选择性增强。这是本文方法区别于传统小波能量特征提取的关键所在，直接提升了抗噪能力（0.92）和故障灵敏度（97.84%）。</p>
+</li>
+<li><p><strong>构建能量-熵二维联合特征向量</strong>：将传统的小波能量占比特征 $Q$ 与能量分布熵 $V$ 相结合，形成 $Z = [Q, V]$ 的联合表征。$Q$ 刻画各频段能量的宏观分布比例，$V$ 刻画能量在频段内部的微观均匀程度——二者互补，对舰船噪声信号形成更为全面的数学描述。</p>
+</li>
+<li><p><strong>宽信噪比范围内的鲁棒性验证</strong>：实验覆盖 <strong>-30 dB 至 50 dB</strong> 的大跨度信噪比条件，证明了方法在极低信噪比（-30 dB）下仍能保持有效的特征提取能力，为实际海洋噪声环境中的工程应用提供了可靠性依据。</p>
+</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://xiaocaiv.github.io">Alice</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://xiaocaiv.github.io/posts/64930/">http://xiaocaiv.github.io/posts/64930/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://xiaocaiv.github.io" target="_blank">XiaoCai's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%88%B0%E8%88%B9%E8%BE%90%E5%B0%84%E5%99%AA%E5%A3%B0/">舰船辐射噪声</a></div><div class="post-share"><div class="social-share" data-image="/images/ali.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/60609/" title="课题进度26-LOFAR谱和DEMON谱特征提取"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">课题进度26-LOFAR谱和DEMON谱特征提取</div></div><div class="info-2"><div class="info-item-1">LOFAR谱和DEMON谱特征提取一、ShipsEar数据集该数据集分为5类，如下所示：     类别 描述 包含船型 5秒片段数（约）     A 小型作业船 渔船、拖网渔船、贻贝船、拖船、挖泥船 ~345   B 小型休闲/轻型船 摩托艇、引航船、帆船 ~297   C 中型客运船 客运渡轮 ~785   D 大型商船 远洋班轮、滚装船（Ro-Ro） ~435   E 背景噪声 自然环境噪声（风、雨、浪、海流），无船舶 ~188     一、LOFAR谱LOFAR 直接对原始声信号的低频段做频谱分析，捕获舰船机械设备产生的离散线谱和宽带连续谱。 提取信息：噪声信号的连续谱和低谱线谱 物理来源：机械噪声（主机、辅机、齿轮啮合产生的离散线谱）+ 螺旋桨空化产生的宽带连续谱 呈现特征：低频段出现稳定的恒定频率线谱（机械线谱，不随航速变化）；连续谱整体呈先升后降的”峰丘”形状，谱峰位置和航速相关 二、DEMON谱分析对象：高频窄带（3–5 kHz 空化噪声频段）的包络 提取信息：螺旋桨调制产生的周期性 物理来源：螺旋桨旋转时，叶片周期性切割水流导致空化噪声—轴频+叶频（轴频×叶片数量...</div></div></div></a><a class="pagination-related" href="/posts/52239/" title="课题进度24-ShipsEar舰船噪声数据集"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">课题进度24-ShipsEar舰船噪声数据集</div></div><div class="info-2"><div class="info-item-1">ShipsEar舰船噪声数据集1. 概述ShipsEar 是目前水声目标识别（UATR）领域最广泛使用的公开基准数据集之一。由西班牙维戈大学（University of Vigo）的 Santos-Domínguez 等人于 2016年 发表在 Applied Acoustics（Elsevier）期刊上。它的发布填补了水下声学领域长期缺乏公开音频数据库的空白。 2. 数据采集    项目 详情     采集地点 西班牙西北部大西洋沿岸 Vigo 港及 Ría de Vigo 入口航道（42°14.50′N, 008°43.40′W）   采集时间 2012年秋季 — 2013年夏季   水深 浅水环境，最大深度 &lt;45 m   船舶距离 通常距水听器 &lt;300–350 m   录制设备 MarSensing Lda DigitalHyd SR-1 自主数字记录仪   ADC 24-bit sigma-delta   采样率 52,734 Hz（预处理后常降采样至 16 kHz 或 22.05 kHz）   水听器灵敏度 −193.5 dB re 1V/1μPa，频率...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/posts/33693/" title="课题进度21-舰船辐射噪声"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-27</div><div class="info-item-2">课题进度21-舰船辐射噪声</div></div><div class="info-2"><div class="info-item-1">课题进展21-舰船辐射噪声1. 舰船辐射噪声的组成 根据大量的舰船噪声数据分析，可确认噪声源主要由三部分组成，分别是水动力、机械振动和螺旋桨 1.1 机械振动噪声机械噪声指的是航行或作业船上的各种机械的振动，通过船体向水中辐射而形成的噪声，是低航速时舰船辐射噪声的主要成分。频谱特征：以低频线谱为主，集中在1kHz以下，具有显著的周期性。识别价值：这些线谱如同舰船的“声学指纹”，是进行目标分类和识别（判断舰船类型）的关键特征 1.2 螺旋桨噪声螺旋桨在旋转过程中与水流相互作用直接产生并辐射的噪声，主要还是空化噪声。 1.3 水动力噪声水动力噪声是由不规则的水流流过运动船只表面而形成，一般情况下，舰船水动力噪声在强度方面往往被机械噪声和螺旋桨噪声所覆盖。频率特征：连续谱，通常类似于“白噪声” 2. 噪声特征提取方法2.1 LOFAR谱分析（Low Frequency Analysis and Recording）低谱分析与记录谱，通过短时傅里叶变换对输入的舰船辐射噪声进行分析，从而得出其时频变化数据。 LOFAR 直接对原始声信号的低频段做频谱分析，捕获舰船机械设备产生的离散线谱和宽...</div></div></div></a><a class="pagination-related" href="/posts/22757/" title="课题进度23-舰船辐射噪声仿真"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-10</div><div class="info-item-2">课题进度23-舰船辐射噪声仿真</div></div><div class="info-2"><div class="info-item-1">舰船辐射噪声仿真1. 理想舰船辐射噪声仿真原理 图1 舰船辐射噪声仿真流程  辐射噪声主要是由宽带连续谱、包络调制信号和线谱叠加组成。仿真模型可表示为：  S ( t ) = [ 1 + M ( t ) ] s_{c} ( t ) + s_{l} ( t )其中，$s_c(t)$为仿真辐射噪声中的连续谱分量，$M(t)$为调制信息，二者构成辐射噪声数据中的调制谱分量，$s_l(t)为线谱分量$。 2. 仿真参数    船型 A b     排水量/t 20000 5000   航速/v(m/s) 7 5   叶片数/片 4 3   线谱数量 5 5   经验线谱/Hz [280, 481, 740, 800, 920] [320, 455, 560, 730, 890]     3. 仿真结果 图2 船型A辐射噪声时域波形   图3 船型A辐射噪声频谱图   图4 船型B辐射噪声时域波形   图5 船型B辐射噪声频谱图  从图3和图5的频谱图中可以看出，在500Hz之前幅度呈上升趋势，在500Hz之后幅度随之下降。 这是因为在前半段，离散线谱（轴频、叶频谐波及机械噪声）主要集中在...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/ali.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Alice</div><div class="author-info-description">记录美好生活，分享技术知识。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">47</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">24</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xiaocaiv"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/xiaocaiv" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:2961197321@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">允许别人做别人，允许自己做自己</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E3%80%8A%E5%9F%BA%E4%BA%8E%E5%B0%8F%E6%B3%A2%E5%8F%98%E6%8D%A2%E7%9A%84%E8%88%B0%E8%88%B9%E5%99%AA%E5%A3%B0%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96%E6%96%B9%E6%B3%95%E7%A0%94%E7%A9%B6%E3%80%8B"><span class="toc-text">《基于小波变换的舰船噪声特征提取方法研究》</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E7%A0%94%E7%A9%B6%E8%83%8C%E6%99%AF%E4%B8%8E%E9%97%AE%E9%A2%98"><span class="toc-text">一、研究背景与问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%A0%94%E7%A9%B6%E5%86%85%E5%AE%B9"><span class="toc-text">二、研究内容</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%B0%8F%E6%B3%A2%E5%8F%98%E6%8D%A2"><span class="toc-text">1. 小波变换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%BF%9E%E7%BB%AD%E5%B0%8F%E6%B3%A2%E5%8F%98%E6%8D%A2%EF%BC%88CWT%EF%BC%89%E9%A2%84%E5%A4%84%E7%90%86"><span class="toc-text">2. 连续小波变换（CWT）预处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E7%A6%BB%E6%95%A3%E5%B0%8F%E6%B3%A2%E5%8F%98%E6%8D%A2%EF%BC%88DWT%EF%BC%89%E5%88%86%E8%A7%A3"><span class="toc-text">3. 离散小波变换（DWT）分解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E8%83%BD%E9%87%8F%E7%89%B9%E5%BE%81%E5%90%91%E9%87%8F%E6%9E%84%E5%BB%BA"><span class="toc-text">4. 能量特征向量构建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%B0%BA%E5%BA%A6%E9%97%B4%E7%9B%B8%E5%85%B3%E5%A4%84%E7%90%86%EF%BC%88%E6%A0%B8%E5%BF%83%E6%96%B9%E6%B3%95%EF%BC%89"><span class="toc-text">5. 尺度间相关处理（核心方法）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E8%83%BD%E9%87%8F%E5%88%86%E5%B8%83%E7%86%B5%E8%AE%A1%E7%AE%97"><span class="toc-text">6. 能量分布熵计算</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E7%BB%BC%E5%90%88%E7%89%B9%E5%BE%81%E5%90%91%E9%87%8F"><span class="toc-text">7. 综合特征向量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-%E5%88%86%E7%B1%BB%E8%AF%86%E5%88%AB"><span class="toc-text">8. 分类识别</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="toc-text">三、实验结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E4%B8%BB%E8%A6%81%E5%88%9B%E6%96%B0%E7%82%B9"><span class="toc-text">四、主要创新点</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/41396/" title="Ubuntu与IMX6ULL开发板网络通讯设置">Ubuntu与IMX6ULL开发板网络通讯设置</a><time datetime="2026-07-21T07:47:00.000Z" title="发表于 2026-07-21 15:47:00">2026-07-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/56201/" title="博客迁移">博客迁移</a><time datetime="2026-07-21T07:13:28.000Z" title="发表于 2026-07-21 15:13:28">2026-07-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/4230/" title="ClaudeCode安装教程">ClaudeCode安装教程</a><time datetime="2026-06-03T03:30:00.000Z" title="发表于 2026-06-03 11:30:00">2026-06-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/60609/" title="课题进度26-LOFAR谱和DEMON谱特征提取">课题进度26-LOFAR谱和DEMON谱特征提取</a><time datetime="2026-05-28T03:24:59.000Z" title="发表于 2026-05-28 11:24:59">2026-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/64930/" title="课题进度25-舰船噪声特征提取文献阅读">课题进度25-舰船噪声特征提取文献阅读</a><time datetime="2026-05-22T03:24:09.000Z" title="发表于 2026-05-22 11:24:09">2026-05-22</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/images/default.jpg);"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Alice</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.2</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.1</a></span></div><div class="footer_custom_text"><p> <a style="margin-inline:5px"target="_blank" href="https://hexo.io/zh-cn/"><img src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&logo=hexo" title="博客框架为 Hexo v8.1.0"></a> <a style="margin-inline:5px"target="_blank" href="https://butterfly.js.org/"><img src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=flat&logo=butterfly" title="主题为 Butterfly v5.5.1"></a> <a style="margin-inline:5px"target="_blank" href="https://github.com"><img src="https://img.shields.io/badge/Source-Github-d021d6?style=flat&logo=github" title="本站项目由 Github 托管"></a> <a style="margin-inline:5px"target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img src="https://img.shields.io/badge/Copyright-BY--NC--SA-red?style=flat&logo=alchemy" title="本站采用知识共享署名-非商业性使用"></a> </p></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.1"></script><script src="/js/main.js?v=5.5.1"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        loader: {
+          load: [
+            // Four font extension packages (optional)
+            //- '[tex]/bbm',
+            //- '[tex]/bboldx',
+            //- '[tex]/dsfont',
+            '[tex]/mhchem'
+          ],
+          paths: {
+            'mathjax-newcm': '[mathjax]/../@mathjax/mathjax-newcm-font',
+
+            //- // Four font extension packages (optional)
+            //- 'mathjax-bbm-extension': '[mathjax]/../@mathjax/mathjax-bbm-font-extension',
+            //- 'mathjax-bboldx-extension': '[mathjax]/../@mathjax/mathjax-bboldx-font-extension',
+            //- 'mathjax-dsfont-extension': '[mathjax]/../@mathjax/mathjax-dsfont-font-extension',
+            'mathjax-mhchem-extension': '[mathjax]/../@mathjax/mathjax-mhchem-font-extension'
+          }
+        },
+        output: {
+          font: 'mathjax-newcm',
+        },
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'none',
+          packages: {
+            '[+]': [
+              'mhchem'
+            ]
+          }
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          menuOptions: {
+            settings: {
+              enrich: false  // Turn off Braille and voice narration text automatic generation
+            }
+          },
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script></div><script src="/scripts/footer_time.js"></script><div class="aplayer no-destroy" data-id="17375390739" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="false" data-listFolded="true" data-lrcType="-1"> </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/metingjs/dist/Meting.min.js"></script><script>(() => {
+  const destroyAplayer = () => {
+    if (window.aplayers) {
+      for (let i = 0; i < window.aplayers.length; i++) {
+        if (!window.aplayers[i].options.fixed) {
+          window.aplayers[i].destroy()
+        }
+      }
+    }
+  }
+
+  const runMetingJS = () => {
+    typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+  }
+
+  btf.addGlobalFn('pjaxSend', destroyAplayer, 'destroyAplayer')
+  btf.addGlobalFn('pjaxComplete', loadMeting, 'runMetingJS')
+})()</script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>(() => {
+  const pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"]):not([href="/scripts/footer_time.js/"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      const usePjax = true
+      true
+        ? (usePjax ? pjax.loadUrl('/404.html') : window.location.href = '/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})()</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索文章" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.5.1"></script></div></div></body></html>

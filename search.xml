@@ -56,6 +56,138 @@
     
     
     <entry>
+      <title>ClaudeCode安装教程</title>
+      <link href="/posts/4230/"/>
+      <url>/posts/4230/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Claude-Code-安装教程"><a href="#Claude-Code-安装教程" class="headerlink" title="Claude Code 安装教程"></a>Claude Code 安装教程</h1><p>“工欲善其事必先利其器”</p><h2 id="1-Node-js的安装"><a href="#1-Node-js的安装" class="headerlink" title="1. Node.js的安装"></a>1. Node.js的安装</h2><p>首先打开Node.js的官网<a href="https://nodejs.org/zh-cn">Node.js — 在任何地方运行 JavaScript</a></p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260507153941303.png" alt="image-20260507153941303"></p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260507154017858.png" alt="image-20260507154017858"></p><p>点击”Windows安装程序”，将安装包下载下来，然后双击安装，一直保持默认点击next就可以，当然也可以更改安装路径。</p><p>然后win+R打开终端，输入命令<code>node -v</code>，如果出现了版本号则说明安装成功<br>输入<code>npm -v</code> 查看npm是否安装成功，npm是Node.js的默认包管理工具，用来下载安装项目所需的依赖库和工具。</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260507155207511.png" alt="image-20260507155207511"></p><p>然后在输入下面的命令切换npm为国内镜像，方便下载Claude Code</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config set registry https://registry.npmmirror.com/</span><br></pre></td></tr></table></figure><h2 id="2-Git的安装"><a href="#2-Git的安装" class="headerlink" title="2. Git的安装"></a>2. Git的安装</h2><p>进入Git的官网<a href="https://git-scm.cn/install/windows">Git - Windows 安装指南 - Git 版本控制系统</a></p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260507154359221.png" alt="image-20260507154359221"></p><p>选择自己电脑适用的版本进行下载，跟Node.js一样也是傻瓜式安装，安装时保持默认即可。</p><p>安装好之后，在终端中输入<code>git -v</code> ，如果出现版本号则说明安装成功。</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260507155309413.png" alt="image-20260507155309413"></p><h2 id="3-cc-switch的安装"><a href="#3-cc-switch的安装" class="headerlink" title="3. cc switch的安装"></a>3. cc switch的安装</h2><p>由于Claude Code安装好之后默认使用模型是Claude，但是由于Claude限制大陆账号，所以就需要切换成其他模型，就要用到cc switch这个软件。</p><p>cc switch是一个在GitHub上的开源软件，可以直接下载使用，打开GitHub官网，搜索“cc switch”，选择第一个</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260507162627285.png" alt="image-20260507162627285"></p><p>点击它的发行版</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260507162705406.png" alt="image-20260507162705406"></p><p>一直往下翻，找到“CC-Switch-v3.14.1-Windows.msi”</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260507162748586.png" alt="image-20260507162748586"></p><p>下载好之后一路默认安装即可</p><h2 id="4-安装Claude-Code"><a href="#4-安装Claude-Code" class="headerlink" title="4. 安装Claude Code"></a>4. 安装Claude Code</h2><p>在终端中输入以下命令：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g @anthropic-ai/claude-code</span><br></pre></td></tr></table></figure><p>然后输入<code>claude --version</code>， 如果出现版本号即为安装成功</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260507170533855.png" alt="image-20260507170533855"></p><p>然后在文件夹中找到这个路径：C:\Users\自己的用户名，找到.claude.json文件，用记事本打开</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260507175559775.png" alt="image-20260507175559775"></p><p>在最后一个字段的结尾加上,但是尾部要加上英文逗号。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;hasCompletedOnboarding&quot;: true</span><br></pre></td></tr></table></figure><h2 id="5-接入DeepSeek-v4-Pro模型"><a href="#5-接入DeepSeek-v4-Pro模型" class="headerlink" title="5. 接入DeepSeek v4 Pro模型"></a>5. 接入DeepSeek v4 Pro模型</h2><p>打开DeepSeek网页，点击“API开放平台”</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260507174505206.png" alt="image-20260507174505206"></p><p>下一步创建API key，创建好之后一定要复制下来！不然后续无法再查看，另外也不要透露给其他人，否则别人就可以免费使用你的token。</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260507174934671.png" alt="image-20260507174934671"></p><p>接下来在CC Switch主界面中点击“+”，</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260507175100584.png" alt="image-20260507175100584"></p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260507175115252.png" alt="image-20260507175115252"></p><p>然后在主模型中输入<code>deepseek-v4-pro[1m]</code>，这样就切换成了DeepSeek最新的模型。</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260507175205997.png" alt="image-20260507175205997"></p><p>最后点击“添加”</p><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/image-20260507180100184.png" alt="image-20260507180100184"></p><p>在终端中输入<code>/model</code>即可切换模型</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> AIAgent </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>课题进度26-LOFAR谱和DEMON谱特征提取</title>
+      <link href="/posts/60609/"/>
+      <url>/posts/60609/</url>
+      
+        <content type="html"><![CDATA[<h1 id="LOFAR谱和DEMON谱特征提取"><a href="#LOFAR谱和DEMON谱特征提取" class="headerlink" title="LOFAR谱和DEMON谱特征提取"></a>LOFAR谱和DEMON谱特征提取</h1><h2 id="一、ShipsEar数据集"><a href="#一、ShipsEar数据集" class="headerlink" title="一、ShipsEar数据集"></a>一、ShipsEar数据集</h2><p>该数据集分为5类，如下所示：</p><div class="table-container"><table><thead><tr><th style="text-align:center">类别</th><th>描述</th><th>包含船型</th><th style="text-align:center">5秒片段数（约）</th></tr></thead><tbody><tr><td style="text-align:center"><strong>A</strong></td><td>小型作业船</td><td>渔船、拖网渔船、贻贝船、拖船、挖泥船</td><td style="text-align:center">~345</td></tr><tr><td style="text-align:center"><strong>B</strong></td><td>小型休闲/轻型船</td><td>摩托艇、引航船、帆船</td><td style="text-align:center">~297</td></tr><tr><td style="text-align:center"><strong>C</strong></td><td>中型客运船</td><td>客运渡轮</td><td style="text-align:center">~785</td></tr><tr><td style="text-align:center"><strong>D</strong></td><td>大型商船</td><td>远洋班轮、滚装船（Ro-Ro）</td><td style="text-align:center">~435</td></tr><tr><td style="text-align:center"><strong>E</strong></td><td>背景噪声</td><td>自然环境噪声（风、雨、浪、海流），无船舶</td><td style="text-align:center">~188</td></tr></tbody></table></div><h2 id="一、LOFAR谱"><a href="#一、LOFAR谱" class="headerlink" title="一、LOFAR谱"></a>一、LOFAR谱</h2><p>LOFAR 直接对原始声信号的<strong>低频段做频谱分析</strong>，捕获舰船机械设备产生的离散线谱和宽带连续谱。</p><p>提取信息：噪声信号的连续谱和低谱线谱</p><p>物理来源：机械噪声（主机、辅机、齿轮啮合产生的离散线谱）+ 螺旋桨空化产生的宽带连续谱</p><p>呈现特征：低频段出现稳定的<strong>恒定频率线谱</strong>（机械线谱，不随航速变化）；连续谱整体呈先升后降的”峰丘”形状，谱峰位置和航速相关</p><h2 id="二、DEMON谱"><a href="#二、DEMON谱" class="headerlink" title="二、DEMON谱"></a>二、DEMON谱</h2><p>分析对象：高频窄带（3–5 kHz 空化噪声频段）的<strong>包络</strong></p><p>提取信息：螺旋桨调制产生的周期性</p><p>物理来源：螺旋桨旋转时，叶片周期性切割水流导致空化噪声—轴频+叶频（轴频×叶片数量）+各阶谐波</p><p>呈现特征：低频段（0–100 Hz）出现<strong>轴频及其谐波</strong>、<strong>叶频及其谐波</strong>的离散线谱</p><p>两者互补：LOFAR 告诉你<strong>是什么船</strong>，DEMON 告诉你<strong>它航行得多快、处于什么工况</strong>。</p><h2 id="三、各类舰船噪声的特征"><a href="#三、各类舰船噪声的特征" class="headerlink" title="三、各类舰船噪声的特征"></a>三、各类舰船噪声的特征</h2><h3 id="1、A类—渔船"><a href="#1、A类—渔船" class="headerlink" title="1、A类—渔船"></a>1、A类—渔船</h3><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/A%E7%B1%BB%E6%97%B6%E5%9F%9F%E6%B3%A2%E5%BD%A2.svg" alt="A类时域波形"></p><center>图1 A类时域波形</center><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/A%E7%B1%BB%E9%A2%91%E8%B0%B1%E5%9B%BE.svg" alt="A类频谱图"></p><center>图2 A类频谱图</center><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/A%E7%B1%BBLOFAR%E8%B0%B1.svg" alt="A类LOFAR谱"></p><center>图3 A类LOFAR谱图</center><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/A%E7%B1%BBDEMON%E8%B0%B1dB.svg" alt="A类DEMON谱dB"></p><center>图4 A类DEMON谱图</center><h3 id="2、B类—帆船，摩托艇"><a href="#2、B类—帆船，摩托艇" class="headerlink" title="2、B类—帆船，摩托艇"></a>2、B类—帆船，摩托艇</h3><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/B%E7%B1%BB%E6%97%B6%E5%9F%9F%E6%B3%A2%E5%BD%A2.svg" alt="B类时域波形"></p><center>图5 B类时域波形</center><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/B%E7%B1%BB%E9%A2%91%E8%B0%B1%E5%9B%BE.svg" alt="B类频谱图"></p><center>图6 B类频谱图</center><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/B%E7%B1%BBLOFAR%E8%B0%B1.svg" alt="B类LOFAR谱"></p><center>图7 B类LOFAR谱图</center><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/B%E7%B1%BBDEMON%E8%B0%B1.svg" alt="B类DEMON谱"></p><center>图8 B类DEMON谱图</center><h3 id="3、C类—客轮"><a href="#3、C类—客轮" class="headerlink" title="3、C类—客轮"></a>3、C类—客轮</h3><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/C%E7%B1%BB%E6%97%B6%E5%9F%9F%E6%B3%A2%E5%BD%A2.svg" alt="C类时域波形"></p><center>图9 C类时域波形</center><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/C%E7%B1%BB%E9%A2%91%E8%B0%B1%E5%9B%BE.svg" alt="C类频谱图"></p><center>图10 C类频谱图</center><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/C%E7%B1%BBLOFAR%E8%B0%B1.svg" alt="C类LOFAR谱"></p><center>图11 C类LOFAR谱图</center><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/C%E7%B1%BBDEMON%E8%B0%B1dB.svg" alt="C类DEMON谱dB"></p><center>图12 D类DEMON谱图</center><h3 id="4、D类—远洋客轮"><a href="#4、D类—远洋客轮" class="headerlink" title="4、D类—远洋客轮"></a>4、D类—远洋客轮</h3><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/D%E7%B1%BB%E6%97%B6%E5%9F%9F%E6%B3%A2%E5%BD%A2.svg" alt="D类时域波形"></p><center>图13 D类时域波形</center><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/D%E7%B1%BB%E9%A2%91%E8%B0%B1%E5%9B%BE.svg" alt="D类频谱图"></p><center>图14 D类频谱图</center><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/D%E7%B1%BBLOFAR%E8%B0%B1.svg" alt="D类LOFAR谱"></p><center>图15 D类LOFAR谱图</center><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/D%E7%B1%BBDEMON%E8%B0%B1dB.svg" alt="D类DEMON谱dB"></p><center>图16 D类DEMON谱图</center>]]></content>
+      
+      
+      <categories>
+          
+          <category> 水声相关 </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>课题进度25-舰船噪声特征提取文献阅读</title>
+      <link href="/posts/64930/"/>
+      <url>/posts/64930/</url>
+      
+        <content type="html"><![CDATA[<h1 id="《基于小波变换的舰船噪声特征提取方法研究》"><a href="#《基于小波变换的舰船噪声特征提取方法研究》" class="headerlink" title="《基于小波变换的舰船噪声特征提取方法研究》"></a>《基于小波变换的舰船噪声特征提取方法研究》</h1><h2 id="一、研究背景与问题"><a href="#一、研究背景与问题" class="headerlink" title="一、研究背景与问题"></a>一、研究背景与问题</h2><p>舰船噪声信号在采集过程中受到强烈的环境噪声干扰，传统特征提取方法在低信噪比条件下难以有效分离信号与噪声，导致舰船类型识别与状态监测的可靠性不足。</p><h2 id="二、研究内容"><a href="#二、研究内容" class="headerlink" title="二、研究内容"></a>二、研究内容</h2><h3 id="1-小波变换"><a href="#1-小波变换" class="headerlink" title="1. 小波变换"></a>1. 小波变换</h3><p>传统的<strong>傅里叶变换（FT）</strong> 能将信号从时间域变换到频率域，告诉你信号里包含哪些频率成分，但它有一个致命缺陷：<strong>完全丢失了时间信息</strong>——你只能知道”信号中有 100 Hz 的成分”，却不知道这个 100 Hz 出现在什么时候。</p><p><strong>短时傅里叶变换（STFT）</strong>通过加窗做了一些改进，但窗口大小固定，面临“测不准原理”的困境：</p><ul><li>窗口窄 → 时间分辨率高，频率分辨率低</li><li>窗口宽 → 频率分辨率高，时间分辨率低</li></ul><p><strong>小波变换的核心思想</strong>：用可伸缩的”小波”替代固定窗口，对低频用宽窗口（频率分辨率高），对高频用窄窗口（时间分辨率高），实现<strong>自适应时频分析</strong>。</p><p><strong>总结：</strong></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">傅里叶变换：      只能看到&quot;有哪些频率&quot;</span><br><span class="line">短时傅里叶变换：  固定大小的时频窗口</span><br><span class="line">小波变换：        低频→大窗口（看整体趋势）</span><br><span class="line">                 高频→小窗口（看瞬态细节）</span><br></pre></td></tr></table></figure><h3 id="2-连续小波变换（CWT）预处理"><a href="#2-连续小波变换（CWT）预处理" class="headerlink" title="2. 连续小波变换（CWT）预处理"></a>2. 连续小波变换（CWT）预处理</h3><p>对舰船噪声信号$a(t)$进行连续小波变换，其时频表达式为：</p><script type="math/tex; mode=display">\mathrm{CWT}(\tau, s) = \frac{1}{\sqrt{|s|}} \int_{-\infty}^{+\infty} a(t)\; \psi\!\left(\frac{t - \tau}{s}\right) dt \tag{1}</script><p>其中，$\psi(\cdot)$ 为母小波函数，$s$ 为尺度因子，$\tau$ 为平移因子。</p><h3 id="3-离散小波变换（DWT）分解"><a href="#3-离散小波变换（DWT）分解" class="headerlink" title="3. 离散小波变换（DWT）分解"></a>3. 离散小波变换（DWT）分解</h3><p>选用 <strong>db4</strong> 小波基，对信号进行 <strong>C = 6</strong> 层离散小波分解。设 $l(\cdot)$ 为低通滤波器，$h(\cdot)$ 为高通滤波器，第 $c$ 层分解的递推公式为：</p><script type="math/tex; mode=display">\begin{aligned}F_l^{(c+1)}(n) &= \sum_{k} l(k - 2n)\; F_l^{(c)}(k) \\F_h^{(c)}(n)   &= \sum_{k} h(k - 2n)\; F_l^{(c)}(k)\end{aligned}</script><p>其中初始值 $F_l^{(0)}(n) = a(n)$。最终信号重构表达式为：</p><script type="math/tex; mode=display">a(n) = F_l^{(C)} + \sum_{c=1}^{C} F_h^{(c)} \tag{2}</script><p>分解结果：<strong>$F_l^{(C)}$ 为低频近似系数</strong>（反映宏观趋势）；<strong>$F_h^{(c)}$ 为第 $c$ 层高频细节系数</strong>（$c=1,2,\dots,C$，反映微观结构）</p><h3 id="4-能量特征向量构建"><a href="#4-能量特征向量构建" class="headerlink" title="4. 能量特征向量构建"></a>4. 能量特征向量构建</h3><p>设第 $c$ 层高频系数序列长度为 $S_c$，第 $C$ 层低频系数序列长度为 $S_C$，计算各层能量：</p><script type="math/tex; mode=display">\begin{aligned}E_{g,c}   &= \sum_{s=1}^{S_c} \bigl|F_h^{(c)}(s)\bigr|^2 \quad (c = 1,2,\dots,C) \\E_{m,C}   &= \sum_{s=1}^{S_C} \bigl|F_l^{(C)}(s)\bigr|^2 \\E_{total} &= E_{m,C} + \sum_{c=1}^{C} E_{g,c}\end{aligned}</script><h3 id="5-尺度间相关处理（核心方法）"><a href="#5-尺度间相关处理（核心方法）" class="headerlink" title="5. 尺度间相关处理（核心方法）"></a>5. 尺度间相关处理（核心方法）</h3><p>利用信号在相邻尺度间具有强相关性而噪声不相关的特点，对高频系数进行增强。</p><p><strong>步骤一</strong>：计算相邻层高频系数的互相关：</p><script type="math/tex; mode=display">\rho_c(n) = F_h^{(c)}(n) \cdot F_h^{(c+1)}(n) \tag{4}</script><p><strong>步骤二</strong>：分别计算原始高频能量和相关系数能量：</p><script type="math/tex; mode=display">E_{F_h}^{(c)} = \sum_{n} \bigl[F_h^{(c)}(n)\bigr]^2, \qquadE_{\rho_c}    = \sum_{n} \bigl[\rho_c(n)\bigr]^2 \tag{5}</script><p><strong>步骤三</strong>：用能量比归一化相关系数，使其与原始系数具有可比幅值：</p><script type="math/tex; mode=display">\tilde{\rho}_c(n) = \rho_c(n) \cdot \sqrt{\frac{E_{F_h}^{(c)}}{E_{\rho_c}}} \tag{6}</script><p><strong>步骤四</strong>：阈值筛选——仅保留相关性强于原始系数的分量：</p><script type="math/tex; mode=display">nF_h^{(c)}(n) =\begin{cases}F_h^{(c)}(n), & \text{if } \bigl|\tilde{\rho}_c(n)\bigr| > \bigl|F_h^{(c)}(n)\bigr| \\0,            & \text{otherwise}\end{cases} \tag{7}</script><p><strong>步骤五</strong>：重构增强后的高频分量（保留最高层细节系数不变）：</p><script type="math/tex; mode=display">\tilde{F}_h = \sum_{c=1}^{C-1} nF_h^{(c)} \;+\; F_h^{(C)} \tag{8}</script><h3 id="6-能量分布熵计算"><a href="#6-能量分布熵计算" class="headerlink" title="6. 能量分布熵计算"></a>6. 能量分布熵计算</h3><p>对低频近似系数 $F_l^{(C)}$ 和增强后的高频分量 $\tilde{F}_h$ 分别计算能量分布熵。</p><p>以 $F_l^{(C)}$ 为例，设其长度为 $R$，每个样本点能量占比为：</p><script type="math/tex; mode=display">p_r = \frac{\bigl[F_l^{(C)}(r)\bigr]^2}{\bigl\|F_l^{(C)}\bigr\|^2}, \qquad\bigl\|F_l^{(C)}\bigr\|^2 = \sum_{r=1}^{R} \bigl[F_l^{(C)}(r)\bigr]^2</script><p>能量分布熵定义为（用 $\ln R$ 归一化至 $(0,1)$ 区间）：</p><script type="math/tex; mode=display">En\!\left(F_l^{(C)}\right) = -\frac{\sum_{r=1}^{R} p_r \ln p_r}{\ln R} \tag{9}</script><p>当能量完全均匀分布（$p_r = 1/R$）时，$En = 1$；能量完全集中于一点时，$En = 0$。</p><p>同理计算 $\tilde{F}_h$ 的能量分布熵 $En(\tilde{F}_h)$，构成二维熵特征向量：</p><script type="math/tex; mode=display">V = \Bigl[\, En\!\left(F_l^{(C)}\right),\; En\!\left(\tilde{F}_h\right) \Bigr] \tag{10}</script><h3 id="7-综合特征向量"><a href="#7-综合特征向量" class="headerlink" title="7. 综合特征向量"></a>7. 综合特征向量</h3><p>将能量特征 $Q$ 与熵特征 $V$ 合并，形成最终的综合特征向量：</p><script type="math/tex; mode=display">Z = [Q,\; V]</script><p>该向量同时反映信号的<strong>宏观能量分布趋势</strong>（$Q$）与<strong>微观结构复杂度</strong>（$V$），实现低频主体与高频细节的互补表征。</p><h3 id="8-分类识别"><a href="#8-分类识别" class="headerlink" title="8. 分类识别"></a>8. 分类识别</h3><p>采用距离度量对待识别样本特征 $X_N$ 与已知类别特征 $X_F$ 进行匹配：</p><script type="math/tex; mode=display">S_f = DM(X_N,\; X_F) \tag{11}</script><p>$DM(\cdot)$ 为距离度量函数，$S_f$ 越小表示特征匹配度越高。</p><hr><h2 id="三、实验结果"><a href="#三、实验结果" class="headerlink" title="三、实验结果"></a>三、实验结果</h2><div class="table-container"><table><thead><tr><th>指标</th><th>本文方法</th><th>对比方法1</th><th>对比方法2</th></tr></thead><tbody><tr><td>特征提取准确率 /%</td><td><strong>96.87</strong></td><td>86.72</td><td>79.69</td></tr><tr><td>特征稳定性</td><td><strong>0.02</strong></td><td>0.05</td><td>0.07</td></tr><tr><td>识别精度 /%</td><td><strong>95.86</strong></td><td>89.27</td><td>79.81</td></tr><tr><td>抗噪能力</td><td><strong>0.92</strong></td><td>0.74</td><td>0.68</td></tr><tr><td>故障灵敏度 /%</td><td><strong>97.84</strong></td><td>88.29</td><td>76.91</td></tr></tbody></table></div><ul><li>在 <strong>-30 dB 至 50 dB</strong> 信噪比范围内，能量分布熵变化范围为 <strong>0.23–0.48</strong>，变化趋势合理且稳定。</li><li>方法能有效分离舰船噪声的低频主体特征与高频细节特征。</li></ul><hr><h2 id="四、主要创新点"><a href="#四、主要创新点" class="headerlink" title="四、主要创新点"></a>四、主要创新点</h2><ol><li><p><strong>提出尺度间相关处理增强机制</strong>：利用相邻小波分解层之间信号分量强相关而噪声不相关的特性，通过式 (4)–(8) 的相关-阈值筛选流程，对高频细节系数进行选择性增强。这是本文方法区别于传统小波能量特征提取的关键所在，直接提升了抗噪能力（0.92）和故障灵敏度（97.84%）。</p></li><li><p><strong>构建能量-熵二维联合特征向量</strong>：将传统的小波能量占比特征 $Q$ 与能量分布熵 $V$ 相结合，形成 $Z = [Q, V]$ 的联合表征。$Q$ 刻画各频段能量的宏观分布比例，$V$ 刻画能量在频段内部的微观均匀程度——二者互补，对舰船噪声信号形成更为全面的数学描述。</p></li><li><p><strong>宽信噪比范围内的鲁棒性验证</strong>：实验覆盖 <strong>-30 dB 至 50 dB</strong> 的大跨度信噪比条件，证明了方法在极低信噪比（-30 dB）下仍能保持有效的特征提取能力，为实际海洋噪声环境中的工程应用提供了可靠性依据。</p></li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> 水声相关 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 舰船辐射噪声 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>课题进度24-ShipsEar舰船噪声数据集</title>
+      <link href="/posts/52239/"/>
+      <url>/posts/52239/</url>
+      
+        <content type="html"><![CDATA[<h1 id="ShipsEar舰船噪声数据集"><a href="#ShipsEar舰船噪声数据集" class="headerlink" title="ShipsEar舰船噪声数据集"></a>ShipsEar舰船噪声数据集</h1><h2 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h2><p><strong>ShipsEar</strong> 是目前水声目标识别（UATR）领域最广泛使用的公开基准数据集之一。由西班牙维戈大学（University of Vigo）的 Santos-Domínguez 等人于 <strong>2016年</strong> 发表在 <em>Applied Acoustics</em>（Elsevier）期刊上。它的发布填补了水下声学领域长期缺乏公开音频数据库的空白。</p><h2 id="2-数据采集"><a href="#2-数据采集" class="headerlink" title="2. 数据采集"></a>2. 数据采集</h2><div class="table-container"><table><thead><tr><th>项目</th><th>详情</th></tr></thead><tbody><tr><td><strong>采集地点</strong></td><td>西班牙西北部大西洋沿岸 Vigo 港及 Ría de Vigo 入口航道（42°14.50′N, 008°43.40′W）</td></tr><tr><td><strong>采集时间</strong></td><td>2012年秋季 — 2013年夏季</td></tr><tr><td><strong>水深</strong></td><td>浅水环境，最大深度 &lt;45 m</td></tr><tr><td><strong>船舶距离</strong></td><td>通常距水听器 &lt;300–350 m</td></tr><tr><td><strong>录制设备</strong></td><td>MarSensing Lda DigitalHyd SR-1 自主数字记录仪</td></tr><tr><td><strong>ADC</strong></td><td>24-bit sigma-delta</td></tr><tr><td><strong>采样率</strong></td><td>52,734 Hz（预处理后常降采样至 16 kHz 或 22.05 kHz）</td></tr><tr><td><strong>水听器灵敏度</strong></td><td>−193.5 dB re 1V/1μPa，频率响应 1 Hz–28 kHz 平坦</td></tr><tr><td><strong>总录音数</strong></td><td><strong>90 条 WAV 录音</strong></td></tr></tbody></table></div><h2 id="3-数据集构成"><a href="#3-数据集构成" class="headerlink" title="3. 数据集构成"></a>3. 数据集构成</h2><p>数据集包含 <strong>11种不同类型船舶</strong> 的辐射噪声录音，按船舶大小和用途归为 <strong>4类目标</strong> + <strong>1类环境噪声</strong>，共 5 类：</p><div class="table-container"><table><thead><tr><th style="text-align:center">类别</th><th>描述</th><th>包含船型</th><th style="text-align:center">5秒片段数（约）</th></tr></thead><tbody><tr><td style="text-align:center"><strong>A</strong></td><td>小型作业船</td><td>渔船、拖网渔船、贻贝船、拖船、挖泥船</td><td style="text-align:center">~345</td></tr><tr><td style="text-align:center"><strong>B</strong></td><td>小型休闲/轻型船</td><td>摩托艇、引航船、帆船</td><td style="text-align:center">~297</td></tr><tr><td style="text-align:center"><strong>C</strong></td><td>中型客运船</td><td>客运渡轮</td><td style="text-align:center">~785</td></tr><tr><td style="text-align:center"><strong>D</strong></td><td>大型商船</td><td>远洋班轮、滚装船（Ro-Ro）</td><td style="text-align:center">~435</td></tr><tr><td style="text-align:center"><strong>E</strong></td><td>背景噪声</td><td>自然环境噪声（风、雨、浪、海流），无船舶</td><td style="text-align:center">~188</td></tr></tbody></table></div>]]></content>
+      
+      
+      <categories>
+          
+          <category> 水声相关 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> ShipsEar数据集 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>课题进度23-舰船辐射噪声仿真</title>
+      <link href="/posts/22757/"/>
+      <url>/posts/22757/</url>
+      
+        <content type="html"><![CDATA[<h1 id="舰船辐射噪声仿真"><a href="#舰船辐射噪声仿真" class="headerlink" title="舰船辐射噪声仿真"></a>舰船辐射噪声仿真</h1><h2 id="1-理想舰船辐射噪声仿真原理"><a href="#1-理想舰船辐射噪声仿真原理" class="headerlink" title="1. 理想舰船辐射噪声仿真原理"></a>1. 理想舰船辐射噪声仿真原理</h2><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/%E8%88%B0%E8%88%B9%E8%BE%90%E5%B0%84%E5%99%AA%E5%A3%B0%E4%BB%BF%E7%9C%9F.png" alt="舰船辐射噪声仿真"></p><center>图1 舰船辐射噪声仿真流程</center><p>辐射噪声主要是由宽带连续谱、包络调制信号和线谱叠加组成。仿真模型可表示为：</p><script type="math/tex; mode=display">S ( t ) = [ 1 + M ( t ) ] s_{c} ( t ) + s_{l} ( t )</script><p>其中，$s_c(t)$为仿真辐射噪声中的连续谱分量，$M(t)$为调制信息，二者构成辐射噪声数据中的调制谱分量，$s_l(t)为线谱分量$。</p><h2 id="2-仿真参数"><a href="#2-仿真参数" class="headerlink" title="2. 仿真参数"></a>2. 仿真参数</h2><div class="table-container"><table><thead><tr><th>船型</th><th>A</th><th>b</th></tr></thead><tbody><tr><td>排水量/t</td><td>20000</td><td>5000</td></tr><tr><td>航速/v(m/s)</td><td>7</td><td>5</td></tr><tr><td>叶片数/片</td><td>4</td><td>3</td></tr><tr><td>线谱数量</td><td>5</td><td>5</td></tr><tr><td>经验线谱/Hz</td><td>[280, 481, 740, 800, 920]</td><td>[320, 455, 560, 730, 890]</td></tr></tbody></table></div><h2 id="3-仿真结果"><a href="#3-仿真结果" class="headerlink" title="3. 仿真结果"></a>3. 仿真结果</h2><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/%E5%A4%A7%E5%9E%8B%E8%88%B9%E8%BE%90%E5%B0%84%E5%99%AA%E5%A3%B0%E6%97%B6%E5%9F%9F%E6%B3%A2%E5%BD%A2.png" alt="大型船辐射噪声时域波形"></p><center>图2 船型A辐射噪声时域波形</center><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/%E8%88%B9A%E8%BE%90%E5%B0%84%E5%99%AA%E5%A3%B0%E9%A2%91%E8%B0%B1.png" alt="船A辐射噪声频谱"></p><center>图3 船型A辐射噪声频谱图</center><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/%E8%88%B9B%E8%BE%90%E5%B0%84%E5%99%AA%E5%A3%B0%E6%97%B6%E5%9F%9F%E6%B3%A2%E5%BD%A2.png" alt="船B辐射噪声时域波形"></p><center>图4 船型B辐射噪声时域波形</center><p><img src="https://my-blogimages.oss-cn-qingdao.aliyuncs.com/typora-image/%E8%88%B9B%E8%BE%90%E5%B0%84%E5%99%AA%E5%A3%B0%E9%A2%91%E8%B0%B1.png" alt="船B辐射噪声频谱"></p><center>图5 船型B辐射噪声频谱图</center><p>从图3和图5的频谱图中可以看出，在500Hz之前幅度呈上升趋势，在500Hz之后幅度随之下降。</p><p>这是因为在前半段，离散线谱（轴频、叶频谐波及机械噪声）主要集中在中低频。频率越高，机械设备振动模态越丰富、与船壳耦合效率越高，能量随频率累积上升。这段主要由<strong>机械噪声</strong>和<strong>螺旋桨直接辐射</strong>贡献。</p><p>在下降段，</p><p>螺旋桨<strong>空化噪声</strong>是连续谱的主要来源。空化气泡的固有频率与气泡半径成反比（<code>f ∝ 1/R</code>），而气泡能量 ∝ R³。统计分布下，大气泡（低频）数量少但单泡能量大，小气泡（高频）数量多但单泡能量小——综合效果是高频能量以 <strong>≈ –6 dB/oct</strong> 衰减。这是经典水声学中的经验规律（Ross 模型）。</p><p>航速越高 → 空化越剧烈 → 大气泡占比越大 → 谱峰向低频移动。船型 A（12 kn）fn=400 Hz，船型 B（9.7 kn）fn=514 Hz，低速船的谱峰更靠右。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 水声相关 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 舰船辐射噪声 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>课题进度22-仿真改动</title>
+      <link href="/posts/54589/"/>
+      <url>/posts/54589/</url>
+      
+        <content type="html"><![CDATA[<h1 id="课题进展-仿真改动"><a href="#课题进展-仿真改动" class="headerlink" title="课题进展-仿真改动"></a>课题进展-仿真改动</h1><h2 id="1-增加运动约束（防碰撞-平滑）"><a href="#1-增加运动约束（防碰撞-平滑）" class="headerlink" title="1. 增加运动约束（防碰撞+平滑）"></a>1. 增加运动约束（防碰撞+平滑）</h2><p>增加了平台的最小间距50m，防止碰撞，平台与目标之间的最大距离1000m，防止飞太远。</p><p>代价函数改为：<br>（1）平台间距不足惩罚<br>（2）离目标太远惩罚<br>（3）航向突变惩罚（避免锯齿轨迹）</p><h2 id="2-初始航向指向目标区域"><a href="#2-初始航向指向目标区域" class="headerlink" title="2. 初始航向指向目标区域"></a>2. 初始航向指向目标区域</h2><p>在初始化窗口之后，用几何交会结果计算目标区域中心，将平台航向设为指向该方向。</p><h2 id="3-平台速度可变"><a href="#3-平台速度可变" class="headerlink" title="3. 平台速度可变"></a>3. 平台速度可变</h2><p>增加速度候选集合并入搜索循环<br>速度候选= [3, 5, 7, 10]</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 水声相关 </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>课题进度21-舰船辐射噪声</title>
       <link href="/posts/33693/"/>
       <url>/posts/33693/</url>
